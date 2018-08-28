@@ -34,12 +34,12 @@ function dataTable = gather(self)
   % find all of the files matching the namespec pattern
   files     = dir([namespec '*']);
   % acquire the outfiles
-  outfiles = cell(size(files));
+  outfiles  = cell(size(files));
   for ii = 1:length(files)
     outfiles{ii} = files(ii).name;
   end
   % sort the outfiles in a sensible manner
-  outfiles = self.natsortfiles(outfiles);
+  outfiles  = self.natsortfiles(outfiles);
   % get the dimensions of the data
   dim1      = length(outfiles);
   dim2      = length(csvread(outfiles{1}));
