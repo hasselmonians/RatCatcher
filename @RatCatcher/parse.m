@@ -67,7 +67,7 @@ function [filename, cellnum] = parse_core(experimenter, alpha)
 
     % parse the filenames
     old             = {'bender-', 'calculon-', 'clamps-', 'cm-19-', 'cm-20-', 'cm-41-', 'cm-47-', 'cm-48-', 'cm-51-', 'nibbler-', 'zoidberg-'};
-    new             = {'1_', '2_', '3_', '4_', '5_', '6_', '7_', '8_', '9_', '0_', '01_'};
+    new             = {'1_', '2_', '3_', '4_', '5_', '6_', '7_', '8_', '9_', '10_', '11_'};
     for ii = 1:length(old)
       filename      = strrep(filename, old{ii}, new{ii});
     end
