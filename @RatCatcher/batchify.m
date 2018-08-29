@@ -23,11 +23,10 @@ function arg = batchify(self)
   returnToCWD = pwd;
 
   % find the path to the analysis batch function
-  try
-    pathname = which([analysis '.batchFunction']);
-    pathname = pathname(1:end-15);
-  catch
+  pathname = which([analysis '.batchFunction']);
+  if numel(pathname) == 0
     disp('[ERROR] I don''t know which analysis you mean.')
+    return
   end
 
   % writes the batch scripts based on a data file known only to god (and the experimenter)
