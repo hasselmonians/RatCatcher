@@ -54,8 +54,9 @@ function dataTable = gather(self)
     % gather the data from the output files
     kmax    = data(:, 1);
     CI      = data(:, 2:3);
+    kcorr   = data(:, 4);
     % put the data in a MATLAB table
-    dataTable = table(outfiles, kmax, CI);
+    dataTable = table(outfiles, kmax, CI, kcorr);
   otherwise
     disp('[ERROR] I don''t know which analysis you mean.')
   end
