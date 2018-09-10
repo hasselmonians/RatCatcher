@@ -7,26 +7,26 @@ function [analysisObject, dataObject] = extract(dataTable, analysis, index)
     % analysis: a character vector that describes which analysis object to build
     % index: a scalar index that tells you how to index the datafile
 
-  if size(dataTable, 1) ~= 1
-    try
-      dataTable = dataTable(index, :);
-    catch err
-      disp(err.message)
-      disp('[ERROR] either index the dataTable (1 x n Table) or supply an index argument')
-      return
-    end
+  if size(dataTable, 1) == 1
+    % if dataTable is 1 x n
+    index = 1;
+  else
+    % if dataTable is m x n
+    assert(exist('index', 'var') && isscalar(index), 'If dataTable is an m x n table, then index should be a positive integer.')
   end
 
   % load the data file
   disp('[INFO] load the data file')
-  dataObject = load(dataTable.filenames);
+  load(dataTable.filenames{index});
+  root            = root.AppendKalmanVel;
+  dataObject      = root; delete root
   % process the data file
-  dataObject.cel = dataTable.cellnums;
+  dataObject.cel  = dataTable.cellnums(index, :);
 
   % determine next step based on analysis method
   switch analysis
   case 'BandwidthEstimator'
-    analysisObject = BandwidthEstimator(root);
+    analysisObject = BandwidthEstimator(dataObject);
   otherwise
     disp('[ERROR] I don''t know which analysis method you mean')
   end % switch
