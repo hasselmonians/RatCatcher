@@ -15,8 +15,6 @@ function [analysisObject, dataObject] = extract(dataTable, analysis, index)
       disp('[ERROR] either index the dataTable (1 x n Table) or supply an index argument')
       return
     end
-  else
-    dataTable = dataTable(index, :);
   end
 
   % load the data file
