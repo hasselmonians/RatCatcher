@@ -6,6 +6,9 @@ function [analysisObject, dataObject] = extract(dataTable, analysis, index)
       % if not, the index argument indexes for you
     % analysis: a character vector that describes which analysis object to build
     % index: a scalar index that tells you how to index the datafile
+  % Outputs:
+    % analysisObject: the struct produced by the analysis method
+    % dataObject: the root (Session) object specified by the dataTable and index
 
   if size(dataTable, 1) == 1
     % if dataTable is 1 x n
