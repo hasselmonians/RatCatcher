@@ -46,5 +46,11 @@ The paths to the raw data can be stitched onto the data table, for easy referenc
 dataTable = r.stitch(dataTable);
 ```
 
+You can go from a saved `dataTable` to an analysis object and the `Session` object (from `CMBHOME`) by using the `extract` function.
+
+```matlab
+[best, root] = RatCatcher.extract(dataTable, 'BandwidthEstimator', index);
+```
+
 ## License Information
 `RatCatcher` is written by Alec Hoyland and is released under the GNU General Public License 3.0. The `natsort` functions were written by Stephen Cobeldick (c) 2018.
