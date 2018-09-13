@@ -1,4 +1,4 @@
-function [analysisObject, dataObject] = extract(dataTable, analysis, index)
+function [analysisObject, dataObject] = extract(dataTable, index, analysis)
   % extracts the raw data and builds an analysis object
   % Arguments:
     % dataTable: the table built by RatCatcher.gather where the data information are stored
@@ -16,6 +16,10 @@ function [analysisObject, dataObject] = extract(dataTable, analysis, index)
   else
     % if dataTable is m x n
     assert(exist('index', 'var') && isscalar(index), 'If dataTable is an m x n table, then index should be a positive integer.')
+  end
+  
+  if nargin < 3
+      analysis = 'BandwidthEstimator';
   end
 
   % load the data file
