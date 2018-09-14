@@ -1,4 +1,4 @@
-function [analysisObject, dataObject] = extract(dataTable, index, analysis)
+function [analysisObject, dataObject] = extract(dataTable, index, analysis, verbose)
   % extracts the raw data and builds an analysis object
   % Arguments:
     % dataTable: the table built by RatCatcher.gather where the data information are stored
@@ -17,20 +17,24 @@ function [analysisObject, dataObject] = extract(dataTable, index, analysis)
     % if dataTable is m x n
     assert(exist('index', 'var') && isscalar(index), 'If dataTable is an m x n table, then index should be a positive integer.')
   end
-  
+
   if nargin < 3
+      analysis = 'BandwidthEstimator';
+      verbose  = false;
+  elseif isempty(analysis)
       analysis = 'BandwidthEstimator';
   end
 
   % load the data file
-  disp('[INFO] load the data file')
+  if verbose, disp('[INFO] load the data file'); end
   load(dataTable.filenames{index});
   root            = root.AppendKalmanVel;
-  dataObject      = root; delete root
+  dataObject      = root;
   % process the data file
   dataObject.cel  = dataTable.cellnums(index, :);
 
   % determine next step based on analysis method
+  if verbose, disp('[INFO] set up analysis object'); end
   switch analysis
   case 'BandwidthEstimator'
     analysisObject = BandwidthEstimator(dataObject);
