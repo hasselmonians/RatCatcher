@@ -29,6 +29,7 @@ function [analysisObject, dataObject] = extract(dataTable, index, analysis, verb
   if verbose, disp('[INFO] load the data file'); end
   load(dataTable.filenames{index});
   root            = root.AppendKalmanVel;
+  root            = root.FixTime;
   dataObject      = root;
   % process the data file
   dataObject.cel  = dataTable.cellnums(index, :);
