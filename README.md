@@ -49,7 +49,7 @@ dataTable = r.stitch(dataTable);
 You can go from a saved `dataTable` to an analysis object and the `Session` object (from `CMBHOME`) by using the `extract` function.
 
 ```matlab
-[best, root] = RatCatcher.extract(dataTable, 'BandwidthEstimator', index);
+[best, root] = RatCatcher.extract(dataTable, index, 'BandwidthEstimator');
 ```
 
 ## License Information
