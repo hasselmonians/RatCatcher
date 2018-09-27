@@ -43,7 +43,4 @@ function [analysisObject, dataObject] = extract(dataTable, index, analysis, verb
     disp('[ERROR] I don''t know which analysis method you mean')
   end % switch
 
-  dataObject = dataObject.AppendKalmanVel;
-  dataObject = dataObject.FixTime;
-
 end % function
