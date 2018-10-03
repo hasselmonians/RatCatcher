@@ -12,6 +12,7 @@ function output = index(self, dataTable)
 
   switch class(dataTable)
 
+  % if dataTable is a table, then find the filenames field
   case 'table'
     try
       filenames = dataTable.filenames;
@@ -19,12 +20,22 @@ function output = index(self, dataTable)
       disp('[ERROR] I don''t know what to do with this dataTable');
     end
 
+  % if dataTable is a cell, make sure it's n x 1
   case 'cell'
     assert(~isvector(dataTable), 'Cell array must be a vector or scalar')
     if size(dataTable, 1) < size(dataTable, 2)
       dataTable = dataTable';
     end
     filenames = dataTable;
+  end
+
+  % fetch the filenames to be indexed
+  names   = self.parse;
+
+  % index one-by-one
+  output  = NaN(length(names), 1);
+  for ii = 1:length(names)
+    output(ii) = find(strcmp(filenames, names{ii}));
   end
 
 end % function
