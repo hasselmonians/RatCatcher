@@ -51,11 +51,11 @@ function output = index(self, dataTable, cellnums)
 
   % fetch the filenames to be indexed
   [names, nums] = self.parse;
-  keyboard
+
   % index one-by-one
   output  = NaN(length(names), 1);
   for ii = 1:length(names)
-    output(ii) = find(strcmp(filenames, names{ii}) & all((cellnums == nums(ii, :))')')
+    output(ii) = find(strcmp(filenames, names{ii}) & all((cellnums == nums(ii, :))')');
   end
 
 end % function
