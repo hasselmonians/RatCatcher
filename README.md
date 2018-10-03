@@ -52,5 +52,12 @@ You can go from a saved `dataTable` to an analysis object and the `Session` obje
 [best, root] = RatCatcher.extract(dataTable, index, 'BandwidthEstimator');
 ```
 
+Conversely, a `dataTable` can be indexed to find the indices which correspond to a given filename and cell number.
+`parse` is called to determine the filenames and cell numbers.
+
+```matlab
+index = r.index(dataTable);
+```
+
 ## License Information
 `RatCatcher` is written by Alec Hoyland and is released under the GNU General Public License 3.0. The `natsort` functions were written by Stephen Cobeldick (c) 2018.
