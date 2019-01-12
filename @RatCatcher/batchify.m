@@ -59,8 +59,8 @@ function arg = batchify(self)
 
   % add a qsub file
   fileID = fopen('batchFile.sh', 'w');
-  log = '/projectnb/hasselmogrp/hoyland/MLE-time-course/cluster/log/';
-  err = '/projectnb/hasselmogrp/hoyland/MLE-time-course/cluster/err/';
+  log = [self.location /log/'];
+  err = [self.location '/err/'];
   for ii = 1:length(filename)
     fprintf(fileID, ['qsub -pe omp 16 -o ' log ' -e ' err ' -P ' 'hasselmogrp ' './batch-' num2str(ii) '\n']);
   end
