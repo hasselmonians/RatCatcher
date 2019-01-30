@@ -2,7 +2,7 @@
 A general utility for parsing data and passing to analysis scripts.
 
 ## How do I install it?
-The best way is to clone the repository, or to download and unzip. Then, just add it to your MATLAB path.
+The best way is to clone the repository, or to download and unzip. Then, just add it to your MATLAB path. It is dependent on [`mtools`](https://github.com/sg-s/srinivas.gs_mtools).
 
 ## How do I use it?
 In its simplest form, `RatCatcher` is a simple class that contains all the relevant information to find data on the cluster and produce batch files.
