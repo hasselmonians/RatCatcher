@@ -19,9 +19,6 @@ function arg = batchify(self)
   location      = self.location;
   namespec      = self.namespec;
 
-  % Good fortune on your adventure
-  returnToCWD = pwd;
-
   % find the path to the analysis batch function
   pathname = which([analysis '.batchFunction']);
   if numel(pathname) == 0
@@ -29,44 +26,38 @@ function arg = batchify(self)
     return
   end
 
+  % remove all old files
+  delete([location filesep 'batchscript-' experimenter '-' alpha '-' analysis]);
+  delete([location filesep 'filenames.txt']);
+  delete([location filesep 'cellnums.csv']);
+
   % writes the batch scripts based on a data file known only to god (and the experimenter)
   [filename, cellnum] = self.parse();
 
-  % remove all old files
-  delete([location filesep 'batch*']);
+  % save file names and cell numbers in a text file to be read out by the script
+  lineWrite([location filesep 'filenames.txt'], filename);
+  csvwrite([location filesep 'cellnums.csv'], cellnum);
+
   % copy over the new function
   copyfile(pathname, location);
 
-  % move to where the batch files should be saved
-  if ~isempty(location)
-    cd(location)
-  end
+  % copy over the generic script and rename
+  dummyScriptName = which('RatCatcher-generic-script.sh');
+  finalScriptName = [location filesep 'batchscript-' experimenter '-' alpha '-' analysis];
+  copyfile(dummyScriptName, location);
+  movefile(dummyScriptName, finalScriptName);
 
-  % write the batch files
-  arg = cell(length(filename), 1);
-  for ii = 1:length(filename)
-    outfile = [namespec '-' num2str(ii) '.csv'];
-    csvwrite(outfile, []);
-    infile = ['batch-' num2str(ii)];
-    fileID  = fopen(infile, 'w');
-    fprintf(fileID, '#!/bin/csh\n');
-    fprintf(fileID, 'module load matlab/2017a\n');
-    fprintf(fileID, '#$ -l h_rt=72:00:00\n');
-    arg{ii} = ['batchFunction(''' filename{ii} ''', [' num2str(cellnum(ii, 1)) ' ' num2str(cellnum(ii, 2)) '], ''' location '/' outfile ''', false);'];
-    fprintf(fileID, ['matlab -nodisplay -r "' arg{ii} ' exit;"']);
-    fclose(fileID);
-  end
+  % edit the copied script
+  script          = lineRead(finalScriptName);
+  outfile         = [location '/' namespec '-' '$SGE_TASK_ID' '.csv'];
 
-  % add a qsub file
-  fileID = fopen('batchFile.sh', 'w');
-  log = [self.location /log/'];
-  err = [self.location '/err/'];
-  for ii = 1:length(filename)
-    fprintf(fileID, ['qsub -pe omp 16 -o ' log ' -e ' err ' -P ' 'hasselmogrp ' './batch-' num2str(ii) '\n']);
-  end
-  fclose(fileID);
+  % determine the name of the job array
+  strrep(script, 'BATCH_NAME', [experimenter '-' alpha '-' analysis]);
 
-  % Brave traveler, you may rest now, once more before the hearth of your home
-  cd(returnToCWD);
+  % determine the number of jobs
+  strrep(script, 'NUM_FILES', num2str(length(filename)));
+
+  % determine the argument to MATLAB
+  strrep(script, 'ARGUMENT', ['$SGE_TASK_ID' ',' location ',' outfile ',' 'false']);
 
 end % function
