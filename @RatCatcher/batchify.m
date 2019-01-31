@@ -1,4 +1,4 @@
-function arg = batchify(self)
+function finalScriptPath = batchify(self, verbose)
 
   % automatically generates batch files for mouse or rat data
   % Arguments:
@@ -13,6 +13,10 @@ function arg = batchify(self)
   % Outputs:
     % arg: n x 1 cell of character vectors, contains the matlab command to run the batchFunction
 
+  if nargin < 2
+    verbose = true;
+  end
+
   experimenter  = self.experimenter;
   alpha         = self.alpha;
   analysis      = self.analysis;
@@ -26,10 +30,20 @@ function arg = batchify(self)
     return
   end
 
+  if verbose == true
+    disp('[INFO] analysis batch function found')
+  end
+
   % remove all old files
+  warning off all
   delete([location filesep 'batchscript-' experimenter '-' alpha '-' analysis]);
   delete([location filesep 'filenames.txt']);
   delete([location filesep 'cellnums.csv']);
+  warning on all
+
+  if verbose == true
+    disp('[INFO] all old files removed')
+  end
 
   % writes the batch scripts based on a data file known only to god (and the experimenter)
   [filename, cellnum] = self.parse();
@@ -38,26 +52,55 @@ function arg = batchify(self)
   lineWrite([location filesep 'filenames.txt'], filename);
   csvwrite([location filesep 'cellnums.csv'], cellnum);
 
+  if verbose == true
+    disp('[INFO] filenames and cell numbers parsed')
+  end
+
   % copy over the new function
   copyfile(pathname, location);
 
+  if verbose == true
+    disp('[INFO] batch function copied to location')
+  end
+
   % copy over the generic script and rename
-  dummyScriptName = which('RatCatcher-generic-script.sh');
-  finalScriptName = [location filesep 'batchscript-' experimenter '-' alpha '-' analysis];
-  copyfile(dummyScriptName, location);
-  movefile(dummyScriptName, finalScriptName);
+  dummyScriptName = 'RatCatcher-generic-script.sh';
+  dummyScriptPath = [location filesep dummyScriptName];
+  finalScriptPath = [location filesep 'batchscript-' experimenter '-' alpha '-' analysis];
+  copyfile(which(dummyScriptName), location);
+  movefile(dummyScriptPath, finalScriptPath);
+
+  if verbose == true
+    disp('[INFO] batch script copied to location')
+  end
 
   % edit the copied script
-  script          = lineRead(finalScriptName);
+  script          = lineRead(finalScriptPath);
   outfile         = [location '/' namespec '-' '$SGE_TASK_ID' '.csv'];
 
   % determine the name of the job array
-  strrep(script, 'BATCH_NAME', [experimenter '-' alpha '-' analysis]);
+  script = strrep(script, 'BATCH_NAME', ['''' experimenter '-' alpha '-' analysis '''']);
 
   % determine the number of jobs
-  strrep(script, 'NUM_FILES', num2str(length(filename)));
+  script = strrep(script, 'NUM_FILES', num2str(length(filename)));
 
   % determine the argument to MATLAB
-  strrep(script, 'ARGUMENT', ['$SGE_TASK_ID' ',' location ',' outfile ',' 'false']);
+  script = strrep(script, 'ARGUMENT', ['$SGE_TASK_ID' ', ' '''' location '''' ', ' '''' outfile '''' ', ' 'false']);
+
+  % write to file
+  lineWrite(finalScriptPath, script);
+
+  if verbose == true
+    disp('[INFO] batch script edited')
+  end
+
+  if verbose == true
+    disp('[INFO] DONE!')
+  end
+
+  if nargout == 0
+    disp('[INFO] pass this script to qsub as an argument:')
+    disp(finalScriptPath)
+  end
 
 end % function
