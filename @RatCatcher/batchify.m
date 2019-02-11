@@ -18,15 +18,15 @@ function finalScriptPath = batchify(self, verbose)
   end
 
   experimenter  = self.experimenter;
-  alphanumeric         = self.alphanumeric;
+  alphanumeric  = self.alphanumeric;
   analysis      = self.analysis;
   localPath     = self.localPath;
   remotePath    = self.remotePath;
   namespec      = self.namespec;
 
   % for multiple alphanumerics stored in a cell array, operate recursively
-  if iscell(r.alphanumeric)
-    for ii = 1:length(r.alphanumeric)
+  if iscell(self.alphanumeric)
+    for ii = 1:length(self.alphanumeric)
       self.alphanumeric = alphanumeric{ii};
       self.batchify(verbose);
     end
@@ -61,15 +61,15 @@ function finalScriptPath = batchify(self, verbose)
   [filename, cellnum] = self.parse();
 
   % save file names and cell numbers in a text file to be read out by the script
-  lineWrite([remotePath filesep 'filenames.txt'], filename);
-  csvwrite([remotePath filesep 'cellnums.csv'], cellnum);
+  lineWrite([localPath filesep 'filenames.txt'], filename);
+  csvwrite([localPath filesep 'cellnums.csv'], cellnum);
 
   if verbose == true
     disp('[INFO] filenames and cell numbers parsed')
   end
 
   % copy over the new function
-  copyfile(pathname, remotePath);
+  copyfile(pathname, localPath);
 
   if verbose == true
     disp('[INFO] batch function copied to remotePath')
@@ -77,9 +77,9 @@ function finalScriptPath = batchify(self, verbose)
 
   % copy over the generic script and rename
   dummyScriptName = 'RatCatcher-generic-script.sh';
-  dummyScriptPath = [remotePath filesep dummyScriptName];
-  finalScriptPath = [remotePath filesep 'batchscript-' experimenter '-' alphanumeric '-' analysis];
-  copyfile(which(dummyScriptName), remotePath);
+  dummyScriptPath = [localPath filesep dummyScriptName];
+  finalScriptPath = [localPath filesep 'batchscript-' experimenter '-' alphanumeric '-' analysis];
+  copyfile(which(dummyScriptName), localPath);
   movefile(dummyScriptPath, finalScriptPath);
 
   if verbose == true
