@@ -26,14 +26,14 @@ end % properties
 methods
 
   function self = RatCatcher()
-    if exist(strrep(fileparts(which('RatCatcher')), '@RatCatcher', 'pref.m'), 'file')
-      pref;
-      self.experimenter = experimenter;
-      self.alphanumeric = alphanumeric;
-      self.analysis = analysis;
-      self.localPath = localPath;
-      self.remotePath = remotePath;
-      self.namespec = namespec;
+    if exist(which('RatCatcher.pref'), 'file')
+      p = RatCatcher.pref();
+      self.experimenter = p.experimenter;
+      self.alphanumeric = p.alphanumeric;
+      self.analysis = p.analysis;
+      self.localPath = p.localPath;
+      self.remotePath = p.remotePath;
+      self.namespec = p.namespec;
     end
   end % function
 
@@ -45,6 +45,7 @@ methods (Static)
   [X,ndx,dbg] = natsort(X,xpr,varargin)
   [X,ndx,dbg] = natsortfiles(X,varargin)
   [analysisObject, dataObject] = extract(dataTable, index, analysis, verbose)
+  [p]         = pref()
 
 end % static methods
 
