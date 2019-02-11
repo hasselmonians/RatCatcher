@@ -7,7 +7,7 @@ function finalScriptPath = batchify(self, verbose)
     % for experimenter = 'Caitlin', this should be an ID from cluster_info.mat
     % e.g. 'A' or 'B', etc.
     % analysis: character vector, determines which batch function is found and where the data goes
-    % location: character vector, the relative or absolute path to where the batch files should go
+    % remotePath: character vector, the relative or absolute path to where the batch files should go
     % namespec: character vector, determines what the output files should be called
     % they take the form "namespec-#.csv"
   % Outputs:
@@ -20,7 +20,8 @@ function finalScriptPath = batchify(self, verbose)
   experimenter  = self.experimenter;
   alpha         = self.alpha;
   analysis      = self.analysis;
-  location      = self.location;
+  localPath     = self.localPath;
+  remotePath    = self.remotePath;
   namespec      = self.namespec;
 
   % find the path to the analysis batch function
@@ -36,9 +37,9 @@ function finalScriptPath = batchify(self, verbose)
 
   % remove all old files
   warning off all
-  delete([location filesep 'batchscript-' experimenter '-' alpha '-' analysis]);
-  delete([location filesep 'filenames.txt']);
-  delete([location filesep 'cellnums.csv']);
+  delete([remotePath filesep 'batchscript-' experimenter '-' alpha '-' analysis]);
+  delete([remotePath filesep 'filenames.txt']);
+  delete([remotePath filesep 'cellnums.csv']);
   warning on all
 
   if verbose == true
@@ -49,34 +50,34 @@ function finalScriptPath = batchify(self, verbose)
   [filename, cellnum] = self.parse();
 
   % save file names and cell numbers in a text file to be read out by the script
-  lineWrite([location filesep 'filenames.txt'], filename);
-  csvwrite([location filesep 'cellnums.csv'], cellnum);
+  lineWrite([remotePath filesep 'filenames.txt'], filename);
+  csvwrite([remotePath filesep 'cellnums.csv'], cellnum);
 
   if verbose == true
     disp('[INFO] filenames and cell numbers parsed')
   end
 
   % copy over the new function
-  copyfile(pathname, location);
+  copyfile(pathname, remotePath);
 
   if verbose == true
-    disp('[INFO] batch function copied to location')
+    disp('[INFO] batch function copied to remotePath')
   end
 
   % copy over the generic script and rename
   dummyScriptName = 'RatCatcher-generic-script.sh';
-  dummyScriptPath = [location filesep dummyScriptName];
-  finalScriptPath = [location filesep 'batchscript-' experimenter '-' alpha '-' analysis];
-  copyfile(which(dummyScriptName), location);
+  dummyScriptPath = [remotePath filesep dummyScriptName];
+  finalScriptPath = [remotePath filesep 'batchscript-' experimenter '-' alpha '-' analysis];
+  copyfile(which(dummyScriptName), remotePath);
   movefile(dummyScriptPath, finalScriptPath);
 
   if verbose == true
-    disp('[INFO] batch script copied to location')
+    disp('[INFO] batch script copied to remotePath')
   end
 
   % edit the copied script
   script          = lineRead(finalScriptPath);
-  outfile         = [location '/' namespec '-' '$SGE_TASK_ID' '.csv'];
+  outfile         = [remotePath '/' namespec '-' experimenter '-' alpha '-' analysis '-' '$SGE_TASK_ID' '.csv'];
 
   % determine the name of the job array
   script = strrep(script, 'BATCH_NAME', ['''' experimenter '-' alpha '-' analysis '''']);
@@ -85,7 +86,7 @@ function finalScriptPath = batchify(self, verbose)
   script = strrep(script, 'NUM_FILES', num2str(length(filename)));
 
   % determine the argument to MATLAB
-  script = strrep(script, 'ARGUMENT', ['$SGE_TASK_ID' ', ' '''' location '''' ', ' '''' outfile '''' ', ' 'false']);
+  script = strrep(script, 'ARGUMENT', ['$SGE_TASK_ID' ', ' '''' remotePath '''' ', ' '''' outfile '''' ', ' 'false']);
 
   % write to file
   lineWrite(finalScriptPath, script);

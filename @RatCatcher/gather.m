@@ -1,18 +1,19 @@
-function dataTable = gather(self)
+function dataTable = gather(self, dataTable0)
 
   % gathers up data from a series of output files
 
   % Arguments:
-    % location: character vector, the path to the output files
+    % localPath: character vector, the path to the output files
     % analysis: character vector, describes the type of gathering performed
       % expects 'BandwidthEstimator' or ???
     % namespec: character vector, is the non-unique identifier for output files
     % for example if your files are named output-1 output-2 etc.
     % then the namespec is 'output-'
+    % if there is already a data table (second argument), then results are appended
   % Outputs:
     % dataTable: m x n table, a MATLAB data table, specific to the analysis
 
-    location = self.location;
+    localPath = self.localPath;
     analysis = self.analysis;
     namespec = self.namespec;
 
@@ -26,8 +27,8 @@ function dataTable = gather(self)
   returnToCWD = pwd;
 
   % move to where the output files are stored
-  if ~isempty(location)
-    cd(location)
+  if ~isempty(localPath)
+    cd(localPath)
   end
 
   % gather together all of the data points into a single matrix
@@ -63,5 +64,10 @@ function dataTable = gather(self)
 
   % return from whence you came
   cd(returnToCWD)
+
+  % append to extant data table, if there is one
+  if exist('dataTable0') && ~isempty(dataTable0)
+    dataTable = [dataTable0; dataTable];
+  end
 
 end % function
