@@ -32,6 +32,7 @@ function dataTable = gather(self, filekey, dataTable0)
   if iscell(filekey)
 
     if exist('dataTable0', 'var')
+      dataTable = dataTable0;
       for ii = 1:length(filekey)
         fk = filekey{ii};
         dataTable = self.gather(fk, dataTable);
