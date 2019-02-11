@@ -1,4 +1,4 @@
-function dataTable = gather(self, dataTable0)
+function dataTable = gather(self, filekey, dataTable0)
 
   % gathers up data from a series of output files
 
@@ -13,14 +13,43 @@ function dataTable = gather(self, dataTable0)
   % Outputs:
     % dataTable: m x n table, a MATLAB data table, specific to the analysis
 
-    localPath = self.localPath;
-    analysis = self.analysis;
-    namespec = self.namespec;
+  localPath = self.localPath;
+  analysis  = self.analysis;
+  namespec  = self.namespec;
 
   % assume that the output files are stored sensibly
   if isempty(namespec)
     namespec = 'output-';
-    disp('[INFO] Assuming namespec is ''output-''')
+    disp('[INFO] Assuming namespec is: output-')
+  end
+
+  if ~exist('filekey', 'var')
+    filekey = [namespec '*'];
+    disp(['[INFO] Assuming filekey is: ' filekey])
+  end
+
+  % filekey is a cell, operate recursively over filekeys
+  if iscell(filekey)
+
+    if exist('dataTable0', 'var')
+      for ii = 1:length(filekey)
+        fk = filekey{ii};
+        dataTable = self.gather(fk, dataTable);
+      end
+      return
+
+    else
+      for ii = 1:length(filekey)
+        fk = filekey{ii};
+        if ii == 1
+          dataTable = self.gather(fk);
+        else
+          dataTable = self.gather(fk, dataTable);
+        end
+      end
+      return
+
+    end
   end
 
   % set out for an epic journey, but always remember your home
@@ -33,7 +62,7 @@ function dataTable = gather(self, dataTable0)
 
   % gather together all of the data points into a single matrix
   % find all of the files matching the namespec pattern
-  files     = dir([namespec '*']);
+  files     = dir(filekey);
   % acquire the outfiles
   outfiles  = cell(size(files));
   for ii = 1:length(files)
