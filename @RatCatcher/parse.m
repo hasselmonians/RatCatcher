@@ -8,36 +8,36 @@ function [filename, cellnum] = parse(self)
     % filename: n x 1 cell, the parsed filenames for where the data are stored
     % cellnum: n x 2 double, the recording/cell indices corresponding to the filenames
 
-  % if self.alpha is a character vector, run this function once
-  % if self.alpha is a cell array, run this function iteratively
+  % if self.alphanumeric is a character vector, run this function once
+  % if self.alphanumeric is a cell array, run this function iteratively
   % and append the results to the output
 
     experimenter  = self.experimenter;
-    alpha         = self.alpha;
+    alphanumeric         = self.alphanumeric;
 
-    if iscell(alpha)
-      if ~isscalar(alpha)
-        % if alpha is a cell array
-        [filename, cellnum] = parse_core(experimenter, alpha{1});
-        for ii = 2:length(alpha)
+    if iscell(alphanumeric)
+      if ~isscalar(alphanumeric)
+        % if alphanumeric is a cell array
+        [filename, cellnum] = parse_core(experimenter, alphanumeric{1});
+        for ii = 2:length(alphanumeric)
           % iterate through the parsing and append the results
-          [filename0, cellnum0] = parse_core(experimenter, alpha{ii});
+          [filename0, cellnum0] = parse_core(experimenter, alphanumeric{ii});
           filename  = [filename; filename0];
           cellnum   = [cellnum; cellnum0];
         end
       else
-        % if alpha is a scalar cell
-        [filename, cellnum] = parse_core(experimenter, alpha{1});
+        % if alphanumeric is a scalar cell
+        [filename, cellnum] = parse_core(experimenter, alphanumeric{1});
       end
     else
-      % alpha should be a character vector
-      [filename, cellnum] = parse_core(experimenter, alpha);
+      % alphanumeric should be a character vector
+      [filename, cellnum] = parse_core(experimenter, alphanumeric);
     end
 
 end % function
 
-function [filename, cellnum] = parse_core(experimenter, alpha)
-  % accepts an experimenter and alpha just like parse; performs the core function
+function [filename, cellnum] = parse_core(experimenter, alphanumeric)
+  % accepts an experimenter and alphanumeric just like parse; performs the core function
   % parse calls this function a number of times depending on its inputs
   switch experimenter
   case 'Caitlin'
@@ -57,7 +57,7 @@ function [filename, cellnum] = parse_core(experimenter, alpha)
     end
 
     % get the cluster name
-    cluster         = eval(['Cluster_' alpha]);
+    cluster         = eval(['Cluster_' alphanumeric]);
     stringParts     = cell(1, 2);
     filename        = cell(length(cluster.RowNodeNames), 1);
     cellcell        = cell(length(cluster.RowNodeNames), 1);

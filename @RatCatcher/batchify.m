@@ -3,7 +3,7 @@ function finalScriptPath = batchify(self, verbose)
   % automatically generates batch files for mouse or rat data
   % Arguments:
     % experimenter: expects either 'Holger' or 'Caitlin'
-    % alpha: the alphanumeric identifier for the experimentalist's data
+    % alphanumeric: the alphanumericnumeric identifier for the experimentalist's data
     % for experimenter = 'Caitlin', this should be an ID from cluster_info.mat
     % e.g. 'A' or 'B', etc.
     % analysis: character vector, determines which batch function is found and where the data goes
@@ -18,11 +18,22 @@ function finalScriptPath = batchify(self, verbose)
   end
 
   experimenter  = self.experimenter;
-  alpha         = self.alpha;
+  alphanumeric         = self.alphanumeric;
   analysis      = self.analysis;
   localPath     = self.localPath;
   remotePath    = self.remotePath;
   namespec      = self.namespec;
+
+  % for multiple alphanumerics stored in a cell array, operate recursively
+  if iscell(r.alphanumeric)
+    for ii = 1:length(r.alphanumeric)
+      self.alphanumeric = alphanumeric{ii};
+      self.batchify(verbose);
+    end
+    self.alphanumeric = alphanumeric;
+    return
+  end
+
 
   % find the path to the analysis batch function
   pathname = which([analysis '.batchFunction']);
@@ -37,7 +48,7 @@ function finalScriptPath = batchify(self, verbose)
 
   % remove all old files
   warning off all
-  delete([remotePath filesep 'batchscript-' experimenter '-' alpha '-' analysis]);
+  delete([remotePath filesep 'batchscript-' experimenter '-' alphanumeric '-' analysis]);
   delete([remotePath filesep 'filenames.txt']);
   delete([remotePath filesep 'cellnums.csv']);
   warning on all
@@ -67,7 +78,7 @@ function finalScriptPath = batchify(self, verbose)
   % copy over the generic script and rename
   dummyScriptName = 'RatCatcher-generic-script.sh';
   dummyScriptPath = [remotePath filesep dummyScriptName];
-  finalScriptPath = [remotePath filesep 'batchscript-' experimenter '-' alpha '-' analysis];
+  finalScriptPath = [remotePath filesep 'batchscript-' experimenter '-' alphanumeric '-' analysis];
   copyfile(which(dummyScriptName), remotePath);
   movefile(dummyScriptPath, finalScriptPath);
 
@@ -77,10 +88,10 @@ function finalScriptPath = batchify(self, verbose)
 
   % edit the copied script
   script          = lineRead(finalScriptPath);
-  outfile         = [remotePath '/' namespec '-' experimenter '-' alpha '-' analysis '-' '$SGE_TASK_ID' '.csv'];
+  outfile         = [remotePath '/' namespec '-' experimenter '-' alphanumeric '-' analysis '-' '$SGE_TASK_ID' '.csv'];
 
   % determine the name of the job array
-  script = strrep(script, 'BATCH_NAME', ['''' experimenter '-' alpha '-' analysis '''']);
+  script = strrep(script, 'BATCH_NAME', ['''' experimenter '-' alphanumeric '-' analysis '''']);
 
   % determine the number of jobs
   script = strrep(script, 'NUM_FILES', num2str(length(filename)));
