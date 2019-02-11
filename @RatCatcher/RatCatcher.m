@@ -6,10 +6,10 @@ properties
   % and how to parse the data files to extract relevant information
   % for example, 'Caitlin'
   experimenter
-  % alpha: a character vector or cell array that identifies in greater specificity where the data are stored and how to parse the data files. For example, Caitlin's data has been stored in .mat files with filenames 'Cluster_A.mat', 'Cluster_B.mat', ... so alpha is either 'A' ... or {'A', 'B', ...}.
-  % in general, if alpha is a cell array, function will loop over each value of alpha and return
+  % alphanumeric: a character vector or cell array that identifies in greater specificity where the data are stored and how to parse the data files. For example, Caitlin's data has been stored in .mat files with filenames 'Cluster_A.mat', 'Cluster_B.mat', ... so alphanumeric is either 'A' ... or {'A', 'B', ...}.
+  % in general, if alphanumeric is a cell array, function will loop over each value of alphanumeric and return
   % appended outputs
-  alpha
+  alphanumeric
   % analysis: a character vector specifying the type of analysis this RatCatcher object will expect
   % generally, this is important for setting up the proper batch files
   % so far, only 'BandwidthEstimator' works
@@ -24,6 +24,18 @@ properties
 end % properties
 
 methods
+
+  function self = RatCatcher()
+    if exist(strrep(fileparts(which('RatCatcher')), '@RatCatcher', 'pref.m'), 'file')
+      pref;
+      self.experimenter = experimenter;
+      self.alphanumeric = alphanumeric;
+      self.analysis = analysis;
+      self.localPath = localPath;
+      self.remotePath = remotePath;
+      self.namespec = namespec;
+    end
+  end % function
 
 end % methods
 
