@@ -1,6 +1,5 @@
 #!/bin/bash -l
 
-#$ -pe omp 8
 #$ -o log
 #$ -e err
 #$ -P hasselmogrp
