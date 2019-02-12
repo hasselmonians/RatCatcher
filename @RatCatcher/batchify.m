@@ -77,7 +77,7 @@ function finalScriptPath = batchify(self, verbose)
 
   % copy over the generic script and rename
   dummyScriptName = 'RatCatcher-generic-script.sh';
-  dummyScriptPath = [localPath filesep dummyScriptName];
+  dummyScriptPath = which(dummyScriptName);
   finalScriptPath = [localPath filesep 'batchscript-' experimenter '-' alphanumeric '-' analysis];
   copyfile(which(dummyScriptName), localPath);
   movefile(dummyScriptPath, finalScriptPath);
