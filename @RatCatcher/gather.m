@@ -19,7 +19,7 @@ function dataTable = gather(self, filekey, dataTable0)
 
   % assume that the output files are stored sensibly
   if isempty(namespec)
-    namespec = 'output-';
+    namespec = 'output';
     disp('[INFO] Assuming namespec is: output-')
   end
 
