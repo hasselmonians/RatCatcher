@@ -14,7 +14,9 @@ properties
   % generally, this is important for setting up the proper batch files
   % so far, only 'BandwidthEstimator' works
   analysis
-  % location: where the output files should be stored after running a batch
+  % localPath: the path to where the data are stored from your local computer
+  % if your computer has a storage cluster mounted, it's the path to the data on the cluster
+  % remotePath: the path to where the data is on the cluster, if you were starting on the cluster
   localPath
   remotePath
   % namespec: what these output files should be named
