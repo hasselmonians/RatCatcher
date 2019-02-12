@@ -1,17 +1,14 @@
 function finalScriptPath = batchify(self, verbose)
 
-  % automatically generates batch files for mouse or rat data
-  % Arguments:
-    % experimenter: expects either 'Holger' or 'Caitlin'
-    % alphanumeric: the alphanumericnumeric identifier for the experimentalist's data
-    % for experimenter = 'Caitlin', this should be an ID from cluster_info.mat
-    % e.g. 'A' or 'B', etc.
-    % analysis: character vector, determines which batch function is found and where the data goes
-    % remotePath: character vector, the relative or absolute path to where the batch files should go
-    % namespec: character vector, determines what the output files should be called
-    % they take the form "namespec-#.csv"
-  % Outputs:
-    % arg: n x 1 cell of character vectors, contains the matlab command to run the batchFunction
+  % BATCHIFY generates batch scripts indicated by a RatCatcher object
+  %   finalScriptPath = r.BATCHIFY batches the files specified by the ratcatcher object
+  %
+  %   finalScriptPath = r.BATCHIFY(false) does not display verbose display text
+  %
+  % The files go into r.localPath and reference data saved in r.remotePath
+  % The files are named ['batchscript-' r.namespec '-' r.experimenter '-' r.alphanumeric '-' r.analysis '.sh']
+  % 
+  % See also RATCATCHER, RATCATCHER.PARSE
 
   if nargin < 2
     verbose = true;
@@ -78,9 +75,8 @@ function finalScriptPath = batchify(self, verbose)
   % copy over the generic script and rename
   dummyScriptName = 'RatCatcher-generic-script.sh';
   dummyScriptPath = which(dummyScriptName);
-  finalScriptPath = [localPath filesep 'batchscript-' experimenter '-' alphanumeric '-' analysis];
-  copyfile(which(dummyScriptName), localPath);
-  movefile(dummyScriptPath, finalScriptPath);
+  finalScriptPath = [localPath filesep 'batchscript-' experimenter '-' alphanumeric '-' analysis '.sh'];
+  copyfile(dummyScriptPath, finalScriptPath);
 
   if verbose == true
     disp('[INFO] batch script copied to remotePath')
