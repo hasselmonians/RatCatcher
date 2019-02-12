@@ -12,27 +12,27 @@ function [filename, cellnum] = parse(self)
   % if self.alphanumeric is a cell array, run this function iteratively
   % and append the results to the output
 
-    experimenter  = self.experimenter;
-    alphanumeric         = self.alphanumeric;
+  experimenter  = self.experimenter;
+  alphanumeric         = self.alphanumeric;
 
-    if iscell(alphanumeric)
-      if ~isscalar(alphanumeric)
-        % if alphanumeric is a cell array
-        [filename, cellnum] = parse_core(experimenter, alphanumeric{1});
-        for ii = 2:length(alphanumeric)
-          % iterate through the parsing and append the results
-          [filename0, cellnum0] = parse_core(experimenter, alphanumeric{ii});
-          filename  = [filename; filename0];
-          cellnum   = [cellnum; cellnum0];
-        end
-      else
-        % if alphanumeric is a scalar cell
-        [filename, cellnum] = parse_core(experimenter, alphanumeric{1});
+  if iscell(alphanumeric)
+    if ~isscalar(alphanumeric)
+      % if alphanumeric is a cell array
+      [filename, cellnum] = parse_core(experimenter, alphanumeric{1});
+      for ii = 2:length(alphanumeric)
+        % iterate through the parsing and append the results
+        [filename0, cellnum0] = parse_core(experimenter, alphanumeric{ii});
+        filename  = [filename; filename0];
+        cellnum   = [cellnum; cellnum0];
       end
     else
-      % alphanumeric should be a character vector
-      [filename, cellnum] = parse_core(experimenter, alphanumeric);
+      % if alphanumeric is a scalar cell
+      [filename, cellnum] = parse_core(experimenter, alphanumeric{1});
     end
+  else
+    % alphanumeric should be a character vector
+    [filename, cellnum] = parse_core(experimenter, alphanumeric);
+  end
 
 end % function
 
