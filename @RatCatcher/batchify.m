@@ -7,7 +7,7 @@ function finalScriptPath = batchify(self, verbose)
   %
   % The files go into r.localPath and reference data saved in r.remotePath
   % The files are named ['batchscript-' r.namespec '-' r.experimenter '-' r.alphanumeric '-' r.analysis '.sh']
-  % 
+  %
   % See also RATCATCHER, RATCATCHER.PARSE
 
   if nargin < 2
@@ -45,9 +45,9 @@ function finalScriptPath = batchify(self, verbose)
 
   % remove all old files
   warning off all
-  delete([remotePath filesep 'batchscript-' experimenter '-' alphanumeric '-' analysis]);
-  delete([remotePath filesep 'filenames.txt']);
-  delete([remotePath filesep 'cellnums.csv']);
+  delete([localPath filesep 'batchscript-' experimenter '-' alphanumeric '-' analysis '.sh']);
+  delete([localPath filesep 'filenames-' experimenter '-' alphanumeric '-' analysis '.txt']);
+  delete([localPath filesep 'cellnums-' experimenter '-' alphanumeric '-' analysis '.csv']);
   warning on all
 
   if verbose == true
@@ -58,8 +58,8 @@ function finalScriptPath = batchify(self, verbose)
   [filename, cellnum] = self.parse();
 
   % save file names and cell numbers in a text file to be read out by the script
-  lineWrite([localPath filesep 'filenames.txt'], filename);
-  csvwrite([localPath filesep 'cellnums.csv'], cellnum);
+  lineWrite([localPath filesep 'filenames-' experimenter '-' alphanumeric '-' analysis '.txt'], filename);
+  csvwrite([localPath filesep 'cellnums-' experimenter '-' alphanumeric '-' analysis '.csv'], cellnum);
 
   if verbose == true
     disp('[INFO] filenames and cell numbers parsed')
@@ -69,7 +69,7 @@ function finalScriptPath = batchify(self, verbose)
   copyfile(pathname, localPath);
 
   if verbose == true
-    disp('[INFO] batch function copied to remotePath')
+    disp('[INFO] batch function copied to localPath')
   end
 
   % copy over the generic script and rename
@@ -79,7 +79,7 @@ function finalScriptPath = batchify(self, verbose)
   copyfile(dummyScriptPath, finalScriptPath);
 
   if verbose == true
-    disp('[INFO] batch script copied to remotePath')
+    disp('[INFO] batch script copied to localPath')
   end
 
   % edit the copied script
