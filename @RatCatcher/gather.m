@@ -17,6 +17,8 @@ function dataTable = gather(self, filekey, dataTable0)
   % Otherwise, a new table is instead generated.
   %
   % If filekey is a cell array, this function operates recursively to build the data table.
+  %
+  % See also RATCATCHER, RATCATCHER.BATCHIFY, RATCATCHER.STITCH, DIR
 
   localPath = self.localPath;
   analysis  = self.analysis;
