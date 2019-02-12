@@ -18,7 +18,7 @@ properties
   localPath
   remotePath
   % namespec: what these output files should be named
-  % for example, 'output-' is a great generic namespec
+  % for example, 'output' is a great generic namespec
   namespec
 
 end % properties
