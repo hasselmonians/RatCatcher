@@ -1,17 +1,22 @@
 function dataTable = gather(self, filekey, dataTable0)
 
-  % gathers up data from a series of output files
-
-  % Arguments:
-    % localPath: character vector, the path to the output files
-    % analysis: character vector, describes the type of gathering performed
-      % expects 'BandwidthEstimator' or ???
-    % namespec: character vector, is the non-unique identifier for output files
-    % for example if your files are named output-1 output-2 etc.
-    % then the namespec is 'output-'
-    % if there is already a data table (second argument), then results are appended
-  % Outputs:
-    % dataTable: m x n table, a MATLAB data table, specific to the analysis
+  % GATHER collects data from RATCATCHER output files and forms a data table
+  %
+  %   dataTable = r.GATHER()
+  %
+  %   dataTable = r.GATHER(filekey)
+  %
+  %   dataTable = r.GATHER(filekey, dataTable0)
+  %
+  % If gather is called with no arguments except the RatCatcher object
+  % filekey defaults to [r.namespec '*']
+  % filekey is passed to the DIR function which searches in r.localPath
+  % and therefore uses normal wildcard searching syntax
+  %
+  % If the third argument is a table, new data is appended, building the table.
+  % Otherwise, a new table is instead generated.
+  %
+  % If filekey is a cell array, this function operates recursively to build the data table.
 
   localPath = self.localPath;
   analysis  = self.analysis;
