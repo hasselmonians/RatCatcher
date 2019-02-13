@@ -13,7 +13,7 @@ function [filename, cellnum] = parse(self)
   % and append the results to the output
 
   experimenter  = self.experimenter;
-  alphanumeric         = self.alphanumeric;
+  alphanumeric  = self.alphanumeric;
 
   if iscell(alphanumeric)
     if ~isscalar(alphanumeric)
