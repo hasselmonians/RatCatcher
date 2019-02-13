@@ -48,6 +48,7 @@ methods (Static)
   [X,ndx,dbg] = natsortfiles(X,varargin)
   [analysisObject, dataObject] = extract(dataTable, index, analysis, verbose)
   [p]         = pref()
+  [filename, cellnum] = read(location, batchName)
 
 end % static methods
 
