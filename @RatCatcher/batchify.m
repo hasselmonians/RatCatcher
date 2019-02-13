@@ -6,7 +6,7 @@ function batchify(self, verbose)
   %   r.BATCHIFY(false) does not display verbose display text
   %
   % The files go into r.localPath and reference data saved in r.remotePath
-  % The files are named ['batchscript-' r.namespec '-' r.experimenter '-' r.alphanumeric '-' r.analysis '.sh']
+  % The files are named ['batchscript-' r.experimenter '-' r.alphanumeric '-' r.analysis '.sh']
   %
   % See also RATCATCHER, RATCATCHER.PARSE
 
