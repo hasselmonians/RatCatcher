@@ -96,8 +96,8 @@ function batchify(self, verbose)
 
   % useful variables
   script          = lineRead(finalScriptPath);
-  outfile         = [remotePath '/' namespec '-' experimenter '-' alphanumeric '-' analysis '-' '$SGE_TASK_ID' '.csv'];
   batchname       = [experimenter '-' alphanumeric '-' analysis];
+  outfile         = [remotePath '/' namespec '-' batchname '-' '$SGE_TASK_ID' '.csv'];
 
   % determine the name of the job array
   script          = strrep(script, 'BATCH_NAME', batchname);
