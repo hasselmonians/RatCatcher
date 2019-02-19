@@ -77,7 +77,7 @@ index = r.index(dataTable);
 Behind-the-scenes, this is how `RatCatcher` works:
 
 1. It finds the data specified by the object's properties using the `parse` function.
-2. Then, it stores the filenames to the data in `filenames.txt`, and the cell numbers in `cellnums.csv`.
+2. Then, it stores the filenames to the data in `filenames.txt`, and the cell numbers in `cellnums.csv`. The actual names of the file is a bit longer, incorporating the experimenter, alphanumeric code, and the analysis method, but each file will begin with `filenames` or `cellnums` respectively.
 3. In addition, a batch script is created.
 
 The batch script is a shell script that specifies options to the job scheduler (SGE) on the cluster.
@@ -86,7 +86,7 @@ job of the batch script is to tell the cluster to run MATLAB and a function call
 This is a MATLAB function with the following form:
 
 ```matlab
-function batchFunction(index, location, outfile, test)
+function batchFunction(index, batchname, location, outfile, test)
   ...
 end
 ```
@@ -101,11 +101,11 @@ Each analysis method has to have a batch function as a class method. When you sp
 5. Save the data.
 
 The `index` is set by the job scheduler. If you have 10 jobs, it goes from 1-10, and is stored in the
-environment variable `$SGE_TASK_ID`. The `batchify` function sets up the call to the MATLAB batch function
-from inside the batch script, and so sets the `index` argument to the task ID.
+environment variable `$SGE_TASK_ID`. The `batchify` function sets up the call to the MATLAB batch function from inside the batch script, and so sets the `index` argument to the task ID.
 
-The `location` is the full path to where on the cluster the batch function needs to look to find the `filenames.txt`
-and `cellnums.csv` that tell it how to access the data.
+The `batchname` is the `experimenter-alphanumeric-analysis` character vector that specifies which `filenames.txt` and `cellnums.csv` files to read.
+
+The `location` is the full path to where on the cluster the batch function needs to look to find the `filenames.txt` and `cellnums.csv` that tell it how to access the data.
 
 The `outfile` is the full path to where the data should be stored. Usually, this is the same as the location plus something extra, like `..output-1.csv` etc. Files are automatically named by `batchify` to correspond to the identity in the `filename.txt`
 file _and_ the `$SGE_TASK_ID` variable.
