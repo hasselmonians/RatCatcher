@@ -80,7 +80,7 @@ Behind-the-scenes, this is how `RatCatcher` works:
 2. Then, it stores the filenames to the data in `filenames.txt`, and the cell numbers in `cellnums.csv`. The actual names of the file is a bit longer, incorporating the experimenter, alphanumeric code, and the analysis method, but each file will begin with `filenames` or `cellnums` respectively.
 3. In addition, a batch script is created.
 
-The batch script is a shell script that specifies options to the job scheduler (SGE) on the cluster.
+The batch script is a shell script that specifies options to the job scheduler ([SGE](https://www.bu.edu/tech/support/research/system-usage/running-jobs/submitting-jobs/)) on the cluster.
 The `batchify` function also fills out several details, such as the name of the job. The most important
 job of the batch script is to tell the cluster to run MATLAB and a function called the batch function.
 This is a MATLAB function with the following form:
