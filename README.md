@@ -7,11 +7,15 @@ The best way is to clone the repository, or to download and unzip. Then, just ad
 ## How do I use it?
 In its simplest form, `RatCatcher` is a simple class that contains all the relevant information to find data on the cluster and produce batch files.
 
-* The `experimenter` field identifies where the data is stored. It is accessed when the `parse` function is called, which implements a different procedure based on how the experimenter saved their data.
-* The `alpha` field provides further description. For example, if Caitlin stored her data in files named `Cluster_A`, `Cluster_B`, etc., then `experimenter` would be `'Caitlin'` and `alpha` would be `'A'`.
-* The `analysis` field determines which analysis should be performed. `RatCatcher` doesn't actually do any real calculations, but sets up the batch files needed to run the computations on a high-performance computing cluster. It looks for somewhere on your path where a function named `[analysis '.batchFunction']` is.
-* The `location` field contains the absolute path to where the batch and output files should be placed.
-* `namespec` determines what the output files should be named.
+The `experimenter` field identifies where the data is stored. It is accessed when the `parse` function is called, which implements a different procedure based on how the experimenter saved their data.
+
+The `alphanumeric` field provides further description. For example, if Caitlin stored her data in files named `Cluster_A`, `Cluster_B`, etc., then `experimenter` would be `'Caitlin'` and `alphanumeric` would be `'A'`.
+
+The `analysis` field determines which analysis should be performed. `RatCatcher` doesn't actually do any real calculations, but sets up the batch files needed to run the computations on a high-performance computing cluster. It looks for somewhere on your path where a function named `[analysis '.batchFunction']` is.
+
+The `localPath` field contains the absolute path to where the batch files should be placed (when on your local computer) and the `remotePath` field contains the absolute path from the perspective of the high-performance computing cluster. For instance
+
+`namespec` determines what the output files should be named.
 
 ### Pre-Processing
 
@@ -22,7 +26,7 @@ Set up your `RatCatcher` object.
 ```matlab
 r = RatCatcher;
 r.experimenter  = 'Caitlin';
-r.alpha         = 'A';
+r.alphanumeric  = 'A';
 r.analysis      = 'BandwidthEstimator';
 r.location      = '/home/ahoyland/code/MLE-time-course/cluster';
 r.namespec      = 'output-Caitlin-A';
