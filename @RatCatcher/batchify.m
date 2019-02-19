@@ -22,6 +22,7 @@ function batchify(self, verbose)
   localPath     = self.localPath;
   remotePath    = self.remotePath;
   namespec      = self.namespec;
+  project       = self.project;
 
   tt = '''';
 
@@ -101,6 +102,9 @@ function batchify(self, verbose)
 
   % determine the name of the job array
   script          = strrep(script, 'BATCH_NAME', batchname);
+
+  % determine the project name on the cluster
+  script          = strrep(script, 'PROJECT_NAME', project);
 
   % determine the number of jobs
   script          = strrep(script, 'NUM_FILES', num2str(length(filename)));
