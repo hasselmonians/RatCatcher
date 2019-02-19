@@ -19,7 +19,7 @@ r = RatCatcher
 
 The `experimenter` field identifies where the data is stored. It is accessed when the `parse` function is called, which implements a different procedure based on how the experimenter saved their data.
 
-The `alphanumeric` field provides further description. 
+The `alphanumeric` field provides further description.
 
 > For example, if Caitlin stored her data in files named `Cluster_A`, `Cluster_B`, etc., then `experimenter` would be `'Caitlin'` and `alphanumeric` would be `'A'`.
 
@@ -27,9 +27,11 @@ The `analysis` field determines which analysis should be performed. `RatCatcher`
 
 The `localPath` field contains the absolute path to where the batch files should be placed (when on your local computer) and the `remotePath` field contains the absolute path from the perspective of the high-performance computing cluster.
 
-> For instance, if you mounted your cluster on your local machine at `/mnt/myproject/cluster/` then that is your `localPath`. If from the cluster's perspective (when accessing via `ssh`), your files are at `/projectnb/myproject/cluster` then that is your `remotePath`. If your local computer does not have the cluster mounted, you will have to copy the files `RatCatcher` produces over to the `remotePath` before running the script on the cluster.
+> For instance, if you mounted your cluster on your local machine at `/mnt/myproject/cluster/` then that is your `localPath`. If from the cluster's perspective (when accessing via `ssh`), your files are at `/projectnb/myproject/cluster` then that is your `remotePath`. If your local computer does not have the cluster mounted, `localPath` will be some path in your local file system and you will have to copy the files `RatCatcher` produces over to the `remotePath` before running the script on the cluster.
 
 `namespec` determines what the output files should be named. Files will be named starting with `namespec-experimenter-alphanumeric-analysis-`. It's best to set it to something like `'output'` if you're feeling uncreative.
+
+`project` is the name of the project on the cluster (who has to pay for the computer usage).
 
 ### Pre-Processing
 
@@ -44,6 +46,7 @@ r.alphanumeric  = 'A';
 r.analysis      = 'BandwidthEstimator';
 r.location      = '/home/ahoyland/code/MLE-time-course/cluster';
 r.namespec      = 'output';
+r.project       = 'hasselmogrp';
 ```
 
 Then, batch your files. They will end up in `r.localPath`.
@@ -72,6 +75,10 @@ If `alphanumeric` is a cell array of character vectors, multiple scripts will be
 # on the cluster
 qsub scriptName.sh
 ```
+
+#### What is the generic script?
+
+This script is a template that `batchify` fills in with the correct values. It requires 16 cores on the cluster, creates a log file and error file, sets the name of the project, limits to a 24-hour run, and then runs MATLAB from the command line.
 
 ### Customizing your analysis
 
@@ -167,6 +174,7 @@ function p = pref()
     p.localPath       = 'myPath2ClusterFromLocalComputer';
     p.remotePath      = 'myPath2ClusterFromRemoteComputer';
     p.namespec        = 'output';
+    p.project         = 'hasselmogrp';
 end
 ```
 If this function exists, all future instantiated `RatCatcher` objects will have these properties set. If you don't want to set a property, set it to `[]` instead.
