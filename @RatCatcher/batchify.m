@@ -1,4 +1,4 @@
-function batchify(self, verbose)
+function batchify(self, filename0, cellnum0, pathname0, verbose)
 
   % BATCHIFY generates batch scripts indicated by a RatCatcher object
   %   r.BATCHIFY batches the files specified by the ratcatcher object
@@ -13,6 +13,18 @@ function batchify(self, verbose)
   %% Preamble
 
   if nargin < 2
+    filename0 = [];
+  end
+
+  if nargin < 3
+    cellnum0 = [];
+  end
+
+  if nargin < 4
+    pathname0 = [];
+  end
+
+  if nargin < 5
     verbose = true;
   end
 
