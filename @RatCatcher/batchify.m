@@ -106,7 +106,7 @@ function batchify(self, verbose)
   script          = strrep(script, 'NUM_FILES', num2str(length(filename)));
 
   % determine the argument to MATLAB
-  script          = strrep(script, 'ARGUMENT', ['$SGE_TASK_ID' ', ' tt batchname tt ', ' tt remotePath tt ', ' tt outfile tt ', ' 'false']);
+  script          = strrep(script, 'ARGUMENT', ['$SGE_TASK_ID' ', ' tt remotePath tt ', ' tt batchname tt ', ' tt outfile tt ', ' 'false']);
 
   % write to file
   lineWrite(finalScriptPath, script);
