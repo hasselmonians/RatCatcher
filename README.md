@@ -1,21 +1,35 @@
 # RatCatcher
 A general utility for parsing data and passing to analysis scripts.
 
+In its simplest form, `RatCatcher` is an uncomplicated class that contains all the relevant information to find data on the cluster and produce batch files. You can use it to create a batch script that can be run on a high-performance computing cluster from your raw data and a custom analysis function, and then gather your data into a table afterwards.
+
+
 ## How do I install it?
 The best way is to clone the repository, or to download and unzip. Then, just add it to your MATLAB path. It is dependent on [`mtools`](https://github.com/sg-s/srinivas.gs_mtools).
 
 ## How do I use it?
-In its simplest form, `RatCatcher` is a simple class that contains all the relevant information to find data on the cluster and produce batch files.
+
+In order for `RatCatcher` to work, the following fields must be set. They are all character vectors.
+
+First, set up an empty `RatCatcher` object.
+
+```matlab
+r = RatCatcher
+```
 
 The `experimenter` field identifies where the data is stored. It is accessed when the `parse` function is called, which implements a different procedure based on how the experimenter saved their data.
 
-The `alphanumeric` field provides further description. For example, if Caitlin stored her data in files named `Cluster_A`, `Cluster_B`, etc., then `experimenter` would be `'Caitlin'` and `alphanumeric` would be `'A'`.
+The `alphanumeric` field provides further description. 
+
+> For example, if Caitlin stored her data in files named `Cluster_A`, `Cluster_B`, etc., then `experimenter` would be `'Caitlin'` and `alphanumeric` would be `'A'`.
 
 The `analysis` field determines which analysis should be performed. `RatCatcher` doesn't actually do any real calculations, but sets up the batch files needed to run the computations on a high-performance computing cluster. It looks for somewhere on your path where a function named `[analysis '.batchFunction']` is.
 
-The `localPath` field contains the absolute path to where the batch files should be placed (when on your local computer) and the `remotePath` field contains the absolute path from the perspective of the high-performance computing cluster. For instance
+The `localPath` field contains the absolute path to where the batch files should be placed (when on your local computer) and the `remotePath` field contains the absolute path from the perspective of the high-performance computing cluster.
 
-`namespec` determines what the output files should be named.
+> For instance, if you mounted your cluster on your local machine at `/mnt/myproject/cluster/` then that is your `localPath`. If from the cluster's perspective (when accessing via `ssh`), your files are at `/projectnb/myproject/cluster` then that is your `remotePath`. If your local computer does not have the cluster mounted, you will have to copy the files `RatCatcher` produces over to the `remotePath` before running the script on the cluster.
+
+`namespec` determines what the output files should be named. Files will be named starting with `namespec-experimenter-alphanumeric-analysis-`. It's best to set it to something like `'output'` if you're feeling uncreative.
 
 ### Pre-Processing
 
@@ -29,21 +43,46 @@ r.experimenter  = 'Caitlin';
 r.alphanumeric  = 'A';
 r.analysis      = 'BandwidthEstimator';
 r.location      = '/home/ahoyland/code/MLE-time-course/cluster';
-r.namespec      = 'output-Caitlin-A';
+r.namespec      = 'output';
 ```
 
-Then, batch your files. They will end up in `r.location`.
+Then, batch your files. They will end up in `r.localPath`.
 
 ```matlab
 r.batchify();
 ```
 
-This creates a batch script that will run (using `qsub`) all the jobs on the cluster, and put the output files where the data should be stored.
+#### Customizing parsing the raw data
+
+The function `parse` performs a different operation based on who the experimenter (and alphanumeric code) is. If you are not built into the `RatCatcher` ecosystem yet, it is important to tell `parse` what to do with you. You can do this one of three ways:
+
+1. If you are a part of the Hasselmo, Howard, or Eichenbaum labs, send me an email. You know who I am.
+2. Generate a cell array of filenames and a list of cell numbers/indices by yourself and pass them to `batchify` as second and third arguments.
+3. Add a new experimenter name to the `parse_core` function (inside `parse`) switch/case statement that expresses what to do to find the correct data, given an experimenter name.
+
+#### Generating multiple scripts
+
+If `alphanumeric` is a cell array of character vectors, multiple scripts will be generated, with their accompanying filename and cellnums files. They will all be created in `r.localPath`. This is useful when you want to run the same analysis on multiple subsets of data and keep track of them separately.
+
+### Running your scripts
+
+`batchify` creates a batch script that will run (using `qsub`) all the jobs on the cluster, and put the output files where the data should be stored.
 
 ```bash
 # on the cluster
 qsub scriptName.sh
 ```
+
+### Customizing your analysis
+
+An "analysis" is some process that operates on your data to get useful results. If this is computationally expensive and needs to happen on a lot of data, it's best to run it on a high-performance computing cluster. So far, the only complete `RatCatcher`-compatible analysis is called [BandwidthEstimator](https://github.com/hasselmonians/BandwidthEstimator).
+
+The only requirement is that your analysis have a _batch function_ defined for it. It finds it by looking at:
+
+```matlab
+path2BatchFunction = which([r.analysis '.batchFunction']);
+```
+so it's best if the batch function is a static method of a class, or part of a package. See below for more details.
 
 ### Post-Processing
 
@@ -91,8 +130,9 @@ function batchFunction(index, batchname, location, outfile, test)
 end
 ```
 
-Each analysis method has to have a batch function as a class method. When you specify the analysis method
-(in `r.analysis`), `RatCatcher` will find the right batch function. The function has to:
+## What is a batch function?
+
+Each analysis method has to have a batch function as a static class method or package function. When you specify the analysis method (in `r.analysis`), `RatCatcher` will find the right batch function. The function has to:
 
 1. Set up the MATLAB path on the cluster.
 2. Acquire the filenames and cell numbers from the .txt and .csv file generated by `batchify`.
@@ -114,5 +154,22 @@ file _and_ the `$SGE_TASK_ID` variable.
 
 A good example of a batch function can be found [here](https://github.com/hasselmonians/BandwidthEstimator/blob/master/%40BandwidthEstimator/batchFunction.m).
 
+## Setting a preference file
+
+You can create a function called `pref.m` inside of `../RatCatcher/@RatCatcher/` to automatically set up a custom `RatCatcher` object every time you instantiate one. This file is ignored by git. It should look something like this:
+
+```matlab
+function p = pref()
+    p = struct;
+    p.experimenter    = 'ExperimenterName';
+    p.alphanumeric    = 'A'
+    p.analysis        = 'BandwidthEstimator';
+    p.localPath       = 'myPath2ClusterFromLocalComputer';
+    p.remotePath      = 'myPath2ClusterFromRemoteComputer';
+    p.namespec        = 'output';
+end
+```
+If this function exists, all future instantiated `RatCatcher` objects will have these properties set. If you don't want to set a property, set it to `[]` instead.
+
 ## License Information
-`RatCatcher` is written by Alec Hoyland and is released under the GNU General Public License 3.0. The `natsort` functions were written by Stephen Cobeldick (c) 2018. `mtools` are written and/or archived by [sg-s](https://github.com/sg-s).
+`RatCatcher` is written by Alec Hoyland and is released under the GNU General Public License 3.0. The `natsort` functions were written by Stephen Cobeldick (c) 2018. `mtools` were written and/or archived by [sg-s](https://github.com/sg-s).
