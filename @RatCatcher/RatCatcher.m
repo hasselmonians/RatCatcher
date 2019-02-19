@@ -22,6 +22,8 @@ properties
   % namespec: what these output files should be named
   % for example, 'output' is a great generic namespec
   namespec
+  % project: the name of the project on the cluster
+  project
 
 end % properties
 
@@ -36,6 +38,7 @@ methods
       self.localPath = p.localPath;
       self.remotePath = p.remotePath;
       self.namespec = p.namespec;
+      self.project = p.project;
     end
   end % function
 
