@@ -112,5 +112,7 @@ file _and_ the `$SGE_TASK_ID` variable.
 
 `test` is a flag. It should be `true` when running on a local machine and `false` when running on the cluster. The reason is because it tells the cluster to set up a new full path. Running the batch function with `test=false` will mess up your MATLAB path, which gets tedious to fix each time.
 
+A good example of a batch function can be found [here](https://github.com/hasselmonians/BandwidthEstimator/blob/master/%40BandwidthEstimator/batchFunction.m).
+
 ## License Information
 `RatCatcher` is written by Alec Hoyland and is released under the GNU General Public License 3.0. The `natsort` functions were written by Stephen Cobeldick (c) 2018. `mtools` are written and/or archived by [sg-s](https://github.com/sg-s).
