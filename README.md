@@ -63,6 +63,37 @@ The function `parse` performs a different operation based on who the experimente
 2. Generate a cell array of filenames and a list of cell numbers/indices by yourself and pass them to `batchify` as second and third arguments.
 3. Add a new experimenter name to the `parse_core` function (inside `parse`) switch/case statement that expresses what to do to find the correct data, given an experimenter name.
 
+You can also force `batchify` to use custom data or locations.
+`filename` is a cell array of file names.
+`cellnum` is an n x 2 matrix of cell numbers.
+
+```matlab
+% optional uses
+r.batchify(filename, cellnum);
+r.batchify(filename, cellnum, []);
+```
+
+#### Customizing your analysis
+
+An "analysis" is some process that operates on your data to get useful results. If this is computationally expensive and needs to happen on a lot of data, it's best to run it on a high-performance computing cluster. So far, the only complete `RatCatcher`-compatible analysis is called [BandwidthEstimator](https://github.com/hasselmonians/BandwidthEstimator).
+
+The only requirement is that your analysis have a _batch function_ defined for it. It finds it by looking at:
+
+```matlab
+path2BatchFunction = which([r.analysis '.batchFunction']);
+```
+so it's best if the batch function is a static method of a class, or part of a package. See below for more details.
+
+You can also provide the path to a custom batch script as the fourth argument to `batchify`.
+`pathname` is the full path to your custom batch function.
+You can replace any of them with `[]` to omit overriding that change.
+
+```matlab
+% optional uses
+r.batchify(filename, cellnum, pathname);
+r.batchify([], [], pathname);
+```
+
 #### Generating multiple scripts
 
 If `alphanumeric` is a cell array of character vectors, multiple scripts will be generated, with their accompanying filename and cellnums files. They will all be created in `r.localPath`. This is useful when you want to run the same analysis on multiple subsets of data and keep track of them separately.
@@ -79,17 +110,6 @@ qsub scriptName.sh
 #### What is the generic script?
 
 This script is a template that `batchify` fills in with the correct values. It requires 16 cores on the cluster, creates a log file and error file, sets the name of the project, limits to a 24-hour run, and then runs MATLAB from the command line.
-
-### Customizing your analysis
-
-An "analysis" is some process that operates on your data to get useful results. If this is computationally expensive and needs to happen on a lot of data, it's best to run it on a high-performance computing cluster. So far, the only complete `RatCatcher`-compatible analysis is called [BandwidthEstimator](https://github.com/hasselmonians/BandwidthEstimator).
-
-The only requirement is that your analysis have a _batch function_ defined for it. It finds it by looking at:
-
-```matlab
-path2BatchFunction = which([r.analysis '.batchFunction']);
-```
-so it's best if the batch function is a static method of a class, or part of a package. See below for more details.
 
 ### Post-Processing
 
