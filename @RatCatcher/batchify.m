@@ -3,8 +3,15 @@ function batchify(self, filename0, cellnum0, pathname0, verbose)
   % BATCHIFY generates batch scripts indicated by a RatCatcher object
   %   r.BATCHIFY batches the files specified by the ratcatcher object
   %
-  %   r.BATCHIFY(false) does not display verbose display text
+  %   r.BATCHIFY(filename, cellnum) overrides using parse to find the filenames and cellnums
+  %     filenames should be a cell array, cellnums should be an n x 2 matrix
   %
+  %   r.BATCHIFY(filename, cellnum, pathname) overrides using parse and provides a custom batch function
+  %     pathname should be a character vector (path to the function)
+  %
+  %   r.BATCHIFY(filename, cellnum, pathname, false) does not display verbose display text
+  %
+  % If filename, cellnum, or pathname are empty [], they are skipped and the default is used
   % The files go into r.localPath and reference data saved in r.remotePath
   % The files are named ['batchscript-' r.experimenter '-' r.alphanumeric '-' r.analysis '.sh']
   %
@@ -12,22 +19,56 @@ function batchify(self, filename0, cellnum0, pathname0, verbose)
 
   %% Preamble
 
-  if nargin < 2
-    filename0 = [];
-  end
-
-  if nargin < 3
-    cellnum0 = [];
-  end
-
-  if nargin < 4
-    pathname0 = [];
-  end
-
   if nargin < 5
     verbose = true;
   end
 
+  % if the filename and cellnumber have been given by the user, override
+  % otherwise, find the filenames and cell numbers using the parse function
+  if exist('filename0', 'var') && exist('cellnum0', 'var') && ~isempty(filename0) && ~isempty(cellnum0)
+    filename    = filename0;
+    cellnum     = cellnum0;
+
+    if verbose == true
+      disp[('[INFO] filenames and cell numbers determined by user')]
+    end
+
+  else
+    filename0   = [];
+    cellnum0    = [];
+    [filename, cellnum] = self.parse();
+
+    if verbose == true
+      disp[('[INFO] parsed filenames and cell numbers')]
+    end
+
+  end % filename & cellnum
+
+  % if the path to the batch function has been given by the user, override
+  % otherwise, find the batch function by searching
+
+  if exist('pathname0', 'var') && ~isempty(pathname0)
+    pathname = pathname0;
+
+    if verbose == true
+      disp[('[INFO] batch function determined by user')]
+    end
+
+  else
+    pathname0   = [];
+    pathname = which([self.analysis '.batchFunction']);
+
+    if numel(pathname) == 0
+      disp(['[ERROR] batch function not found at: ' pathname])
+    end
+
+    if verbose == true
+      disp[('[INFO] batch function found')]
+    end
+
+  end % pathname
+
+  % define shorthand variables
   experimenter  = self.experimenter;
   alphanumeric  = self.alphanumeric;
   analysis      = self.analysis;
@@ -39,27 +80,20 @@ function batchify(self, filename0, cellnum0, pathname0, verbose)
   tt = '''';
 
   %% For multiple values in alphanumeric (it is a cell), operate recursively
+
+  % if *0 variables aren't defined, they are set to [] above
+  % allowing the function to proceed
+
   if iscell(self.alphanumeric)
     for ii = 1:length(self.alphanumeric)
       self.alphanumeric = alphanumeric{ii};
-      self.batchify(verbose);
+      self.batchify(filename0, cellnum0, pathname0, verbose);
     end
     self.alphanumeric = alphanumeric;
     return
   end
 
   %% Clean out the directory
-
-  % find the path to the analysis batch function
-  pathname = which([analysis '.batchFunction']);
-  if numel(pathname) == 0
-    disp('[ERROR] I don''t know which analysis you mean.')
-    return
-  end
-
-  if verbose == true
-    disp('[INFO] analysis batch function found')
-  end
 
   % remove all old files
   warning off all
@@ -73,9 +107,6 @@ function batchify(self, filename0, cellnum0, pathname0, verbose)
   end
 
   %% Add to the directory
-
-  % writes the batch scripts based on a data file known only to god (and the experimenter)
-  [filename, cellnum] = self.parse();
 
   % save file names and cell numbers in a text file to be read out by the script
   % this format is a standard -- it will be referenced in the batch function as well
