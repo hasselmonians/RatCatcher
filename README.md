@@ -9,13 +9,13 @@ The best way is to clone the repository, or to download and unzip. Then, just ad
 
 ## How do I use it?
 
-In order for `RatCatcher` to work, the following fields must be set. They are all character vectors.
-
 First, set up an empty `RatCatcher` object.
 
 ```matlab
 r = RatCatcher
 ```
+
+In order for `RatCatcher` to work, the following fields must be set. They are all character vectors.
 
 The `experimenter` field identifies where the data is stored. It is accessed when the `parse` function is called, which implements a different procedure based on how the experimenter saved their data.
 
