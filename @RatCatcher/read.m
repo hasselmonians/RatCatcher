@@ -10,7 +10,7 @@ function [filename, cellnum] = read(index, location, batchname)
 
     % load the entire filename file
     % this is slow, but MATLAB has clunky textread options
-    filename    = lineRead([location filesep 'filenames-' batchname '.txt']);
+    filename    = filelib.read([location filesep 'filenames-' batchname '.txt']);
     % acquire only the character vector corresponding to the indexed filename
     filename    = filename{index};
     % acquire the cell number using similarly clunky indexing

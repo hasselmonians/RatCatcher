@@ -156,7 +156,7 @@ function batchify(self, filename0, cellnum0, pathname0, verbose)
   script          = strrep(script, 'ARGUMENT', ['$SGE_TASK_ID' ', ' tt remotePath tt ', ' tt batchname tt ', ' tt outfile tt ', ' 'false']);
 
   % write to file
-  lineWrite(finalScriptPath, script);
+  figlib.write(finalScriptPath, script);
 
   if verbose == true
     disp('[INFO] batch script edited')
