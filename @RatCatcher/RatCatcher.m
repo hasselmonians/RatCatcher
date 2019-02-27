@@ -30,7 +30,7 @@ end % properties
 methods
 
   function self = RatCatcher()
-    if exist('RatCatcher/@RatCatcher/pref.m', 'file')
+    if exist(['RatCatcher' filesep '@RatCatcher' filesep 'pref.m'], 'file')
       p = RatCatcher.pref();
       self.experimenter = p.experimenter;
       self.alphanumeric = p.alphanumeric;
