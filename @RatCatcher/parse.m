@@ -49,9 +49,13 @@ function [filename, cellnum] = parse_core(experimenter, alphanumeric)
         load('/mnt/hasselmogrp/hoyland/cluster_info.mat');
       catch
         try
-          load(which('cluster_info.mat'));
+          load([self.localPath filesep 'cluster_info.mat']);
         catch
-          error('[ERROR] Cluster info could not be found.');
+          try
+            load(which('cluster_info.mat'));
+          catch
+            error('[ERROR] Cluster info could not be found.');
+          end
         end
       end
     end
