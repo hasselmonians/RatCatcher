@@ -94,6 +94,8 @@ function [filename, cellnum] = parse_core(experimenter, alphanumeric)
 
   case 'Holger'
     error('[ERROR] I don''t know what to do yet.')
+  case 'Winny'
+    error('[ERROR] I don''t know what to do yet.')
   otherwise
     error('[ERROR] I don''t know which experimenter you mean.')
   end % end switch
