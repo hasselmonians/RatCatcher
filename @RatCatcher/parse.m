@@ -96,6 +96,10 @@ function [filename, cellnum] = parse_core(experimenter, alphanumeric)
     error('[ERROR] I don''t know what to do yet.')
   case 'Winny'
     error('[ERROR] I don''t know what to do yet.')
+
+    pathname  = ['/projectnb/hasselmogroup/winnyning/data/' alphanumeric];
+    % TODO: figure out how to access data on cluster to build filenames
+    % or accept a passed filename registry
   otherwise
     error('[ERROR] I don''t know which experimenter you mean.')
   end % end switch
