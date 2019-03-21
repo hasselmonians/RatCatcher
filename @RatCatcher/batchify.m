@@ -23,11 +23,11 @@ function batchify(self, filenames0, filecodes0, pathname0, verbose)
     verbose = true;
   end
 
-  % if the filename and filecodesber have been given by the user, override
-  % otherwise, find the filenames and cell numbers using the parse function
+  % if the filename and filecodes have been given by the user, override
+  % otherwise, find the filenames and filecodes using the parse function
   if exist('filenames0', 'var') && exist('filecodes0', 'var') && ~isempty(filenames0) && ~isempty(filecodes0)
     filenames    = filename0;
-    filecodes     = filecodes0;
+    filecodes    = filecodes0;
 
     if verbose == true
       disp[('[INFO] filenames and cell numbers determined by user')]
@@ -35,7 +35,7 @@ function batchify(self, filenames0, filecodes0, pathname0, verbose)
 
   else
     filenames0   = [];
-    filecodes0    = [];
+    filecodes0   = [];
     [filenames, filecodes] = self.parse();
 
     if verbose == true
