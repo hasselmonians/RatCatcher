@@ -1,13 +1,13 @@
-function [analysisObject, dataObject] = extract(dataTable, index, analysis, verbose)
-  % extracts the raw data and builds an analysis object
+function [protocolObject, dataObject] = extract(dataTable, index, protocol, verbose)
+  % extracts the raw data and builds an protocol object
   % Arguments:
     % dataTable: the table built by RatCatcher.gather where the data information are stored
       % should be indexed already (e.g. be a 1 x n table)
       % if not, the index argument indexes for you
-    % analysis: a character vector that describes which analysis object to build
+    % protocol: a character vector that describes which protocol object to build
     % index: a scalar index that tells you how to index the datafile
   % Outputs:
-    % analysisObject: the struct produced by the analysis method
+    % protocolObject: the struct produced by the protocol method
     % dataObject: the root (Session) object specified by the dataTable and index
 
   if size(dataTable, 1) == 1
@@ -19,10 +19,10 @@ function [analysisObject, dataObject] = extract(dataTable, index, analysis, verb
   end
 
   if nargin < 3
-      analysis = 'BandwidthEstimator';
+      protocol = 'BandwidthEstimator';
       verbose  = false;
-  elseif isempty(analysis)
-      analysis = 'BandwidthEstimator';
+  elseif isempty(protocol)
+      protocol = 'BandwidthEstimator';
   end
 
   % load the data file
@@ -32,15 +32,15 @@ function [analysisObject, dataObject] = extract(dataTable, index, analysis, verb
   root            = root.FixTime;
   dataObject      = root;
   % process the data file
-  dataObject.cel  = dataTable.cellnums(index, :);
+  dataObject.cel  = dataTable.filecodes(index, :);
 
-  % determine next step based on analysis method
-  if verbose, disp('[INFO] set up analysis object'); end
-  switch analysis
+  % determine next step based on protocol method
+  if verbose, disp('[INFO] set up protocol object'); end
+  switch protocol
   case 'BandwidthEstimator'
-    analysisObject = BandwidthEstimator(dataObject);
+    protocolObject = BandwidthEstimator(dataObject);
   otherwise
-    disp('[ERROR] I don''t know which analysis method you mean')
+    disp('[ERROR] I don''t know which protocol method you mean')
   end % switch
 
 end % function

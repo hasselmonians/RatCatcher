@@ -21,7 +21,7 @@ function dataTable = gather(self, filekey, dataTable0)
   % See also RATCATCHER, RATCATCHER.BATCHIFY, RATCATCHER.STITCH, DIR
 
   localPath = self.localPath;
-  analysis  = self.analysis;
+  protocol  = self.protocol;
   namespec  = self.namespec;
 
   % assume that the output files are stored sensibly
@@ -87,7 +87,7 @@ function dataTable = gather(self, filekey, dataTable0)
     data(ii, :) = csvread(outfiles{ii});
   end
 
-  switch analysis
+  switch protocol
   case 'BandwidthEstimator'
     % gather the data from the output files
     kmax    = data(:, 1);
@@ -96,7 +96,7 @@ function dataTable = gather(self, filekey, dataTable0)
     % put the data in a MATLAB table
     dataTable = table(outfiles, kmax, CI, kcorr);
   otherwise
-    disp('[ERROR] I don''t know which analysis you mean.')
+    disp('[ERROR] I don''t know which protocol you mean.')
   end
 
   % return from whence you came
