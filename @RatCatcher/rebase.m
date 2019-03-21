@@ -26,7 +26,7 @@ function [filepaths] = rebase(identifiers, filesig, masterpath)
     masterpath = [];
   end
 
-  filepaths = cell();
+  filepaths = {};
 
   for ii = 1:numel(identifiers)
 
@@ -41,19 +41,18 @@ function [filepaths] = rebase(identifiers, filesig, masterpath)
     filepath = rel2abs(filepath);
 
     % acquire the directory objects
-    dirs = dir(filepath)
-    % eliminate
-    dirs(~[dirs.isdir]) = [];
+    dirs = dir(filepath);
 
     % add to filepaths
-    for qq = 1:length(filepaths)
-      filepaths{end} = fullfile(dirs(qq).folder, dirs(qq).name);
+    for qq = 1:length(dirs)
+      filepaths{end+1} = fullfile(dirs(qq).folder, dirs(qq).name);
     end
   end
 
 end % function
 
 function F = rel2abs(F)
-if ~java.io.File(F).isAbsolute
-    F = fullfile(pwd,F);
+  if ~java.io.File(F).isAbsolute
+      F = fullfile(pwd,F);
+  end
 end % function
