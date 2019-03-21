@@ -2,48 +2,45 @@ classdef RatCatcher
 
 properties
 
-  identifier
-  % a cell array of character vectors that identifies this project
-  % e.g. {'Holger', 'speed-modulation'}
-  % this is used to find where the data are stored
+  filenames
+  % cell array of character vectors
+  % a list of all filenames of the raw data to be processed
 
-  % experimenter: a character vector that identifies where the data are stored
-  % and how to parse the data files to extract relevant information
-  % for example, 'Caitlin'
-  experimenter
-  % alphanumeric: a character vector or cell array that identifies in greater specificity where the data are stored and how to parse the data files. For example, Caitlin's data has been stored in .mat files with filenames 'Cluster_A.mat', 'Cluster_B.mat', ... so alphanumeric is either 'A' ... or {'A', 'B', ...}.
-  % in general, if alphanumeric is a cell array, function will loop over each value of alphanumeric and return
-  % appended outputs
-  alphanumeric
-  % analysis: a character vector specifying the type of analysis this RatCatcher object will expect
-  % generally, this is important for setting up the proper batch files
-  % so far, only 'BandwidthEstimator' works
-  analysis
-  % localPath: the path to where the data are stored from your local computer
-  % if your computer has a storage cluster mounted, it's the path to the data on the cluster
-  % remotePath: the path to where the data is on the cluster, if you were starting on the cluster
-  localPath
+  expID
+  % character vector
+  % an unambiguous identifier that identifies the raw data
+  % it serves as a code to the |parse| function
+
   remotePath
-  % namespec: what these output files should be named
-  % for example, 'output' is a great generic namespec
-  namespec
-  % project: the name of the project on the cluster
+  % character vector
+  % absolute path to where the output data should be stored on a computing cluster
+
+  localPath
+  % character vector
+  % absolute path to where the output data should be stored on a local computer
+
+  protocol
+  % character vector
+  % the name of the analysis protocol to be performed on the cluster
+  % this is used to find the correct batchFunction
+
   project
+  % character vector
+  % the name of the project paying for compute nodes on the cluster
 
 end % properties
 
 methods
 
   function self = RatCatcher()
-    if exist(['RatCatcher' filesep '@RatCatcher' filesep 'pref.m'], 'file')
+    if exist(fullfile('RatCatcher', '@RatCatcher', 'pref.m'), 'file')
       p = RatCatcher.pref();
-      self.experimenter = p.experimenter;
-      self.alphanumeric = p.alphanumeric;
-      self.analysis = p.analysis;
-      self.localPath = p.localPath;
-      self.remotePath = p.remotePath;
-      self.namespec = p.namespec;
-      self.project = p.project;
+      filenames = p.filenames;
+      expID = p.expID;
+      remotePath = p.remotePath;
+      localPath = p.localPath;
+      protocol = p.protocol;
+      project = p.project;
     end
   end % function
 
