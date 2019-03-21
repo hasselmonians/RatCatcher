@@ -1,4 +1,4 @@
-function batchify(self, filename0, cellnums0, pathname0, verbose)
+function batchify(self, filenames0, cellnums0, pathname0, verbose)
 
   % BATCHIFY generates batch scripts indicated by a RatCatcher object
   %   r.BATCHIFY batches the files specified by the ratcatcher object
@@ -11,9 +11,9 @@ function batchify(self, filename0, cellnums0, pathname0, verbose)
   %
   %   r.BATCHIFY(filenames, cellnums, pathname, false) does not display verbose display text
   %
-  % If filename, cellnums, or pathname are empty [], they are skipped and the default is used
+  % If filenames0, cellnums0, or pathname0 are empty [], they are skipped and the default is used
   % The files go into r.localPath and reference data saved in r.remotePath
-  % The files are named ['batchscript-' r.experimenter '-' r.alphanumeric '-' r.analysis '.sh']
+  % The files are named beginning with batchscript, then by the expID and protocol
   %
   % See also RATCATCHER, RATCATCHER.PARSE
 
@@ -25,8 +25,8 @@ function batchify(self, filename0, cellnums0, pathname0, verbose)
 
   % if the filename and cellnumsber have been given by the user, override
   % otherwise, find the filenames and cell numbers using the parse function
-  if exist('filename0', 'var') && exist('cellnums0', 'var') && ~isempty(filename0) && ~isempty(cellnums0)
-    filename    = filename0;
+  if exist('filenames0', 'var') && exist('cellnums0', 'var') && ~isempty(filenames0) && ~isempty(cellnums0)
+    filenames    = filename0;
     cellnums     = cellnums0;
 
     if verbose == true
@@ -34,15 +34,15 @@ function batchify(self, filename0, cellnums0, pathname0, verbose)
     end
 
   else
-    filename0   = [];
+    filenames0   = [];
     cellnums0    = [];
-    [filename, cellnums] = self.parse();
+    [filenames, cellnums] = self.parse();
 
     if verbose == true
       disp[('[INFO] parsed filenames and cell numbers')]
     end
 
-  end % filename & cellnums
+  end % filenames & cellnums
 
   % if the path to the batch function has been given by the user, override
   % otherwise, find the batch function by searching
@@ -56,10 +56,10 @@ function batchify(self, filename0, cellnums0, pathname0, verbose)
 
   else
     pathname0   = [];
-    pathname = which([self.analysis '.batchFunction']);
+    pathname    = which([self.protocol '.batchFunction']);
 
     if numel(pathname) == 0
-      disp(['[ERROR] batch function not found at: ' pathname])
+      disp(['[ERROR] batch function not found at: ' fullfile(self.protocol '.batchFunction']))
     end
 
     if verbose == true
