@@ -7,9 +7,11 @@ properties
   % a list of all filenames of the raw data to be processed
 
   expID
-  % character vector
+  % character vector or cell array of character vectors
   % an unambiguous identifier that identifies the raw data
   % it serves as a code to the |parse| function
+  % the columns are increasingly specific IDs to the parse function
+  % the rows are new IDS (results are appended)
 
   remotePath
   % character vector
