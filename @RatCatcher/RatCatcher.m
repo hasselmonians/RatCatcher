@@ -2,6 +2,11 @@ classdef RatCatcher
 
 properties
 
+  identifier
+  % a cell array of character vectors that identifies this project
+  % e.g. {'Holger', 'speed-modulation'}
+  % this is used to find where the data are stored
+
   % experimenter: a character vector that identifies where the data are stored
   % and how to parse the data files to extract relevant information
   % for example, 'Caitlin'
@@ -50,8 +55,9 @@ methods (Static)
   [X,ndx,dbg] = natsort(X,xpr,varargin)
   [X,ndx,dbg] = natsortfiles(X,varargin)
   [analysisObject, dataObject] = extract(dataTable, index, analysis, verbose)
-  [p]         = pref()
+  [p] = pref()
   [filename, cellnum] = read(location, batchName, index)
+  [filenames] = rebase(identifiers, filesig, masterpath)
 
 end % static methods
 
