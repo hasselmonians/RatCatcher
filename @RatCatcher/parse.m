@@ -1,4 +1,4 @@
-function [filenames, cellnums] = parse(self)
+function [filenames, filecodes] = parse(self)
   % parses the name of a datafile listed within cluster_info.mat
   % extracts the main section of the filenames and the cell index
 
@@ -6,8 +6,7 @@ function [filenames, cellnums] = parse(self)
     % expects a RatCatcher object with the expID field
   % Outputs:
     % filenames: n x 1 cell, the parsed filenames for where the data are stored
-    % cellnums: n x 2 double, the recording/cell indices corresponding to the filenames
-
+    % filecodes: n x m double, numerical identifiers to specify recordings within the filenames
   % if self.expID is a character vector, run this function once
   % if self.expID is a cell array, run this function iteratively
   % and append the results to the output
@@ -17,25 +16,25 @@ function [filenames, cellnums] = parse(self)
   if iscell(expID)
     if size(expID, 2) ~= 1
       % if expID is a cell array (e.g. contains multiple sets)
-      [filenames, cellnums] = parse_core(expID(1,:));
+      [filenames, filecodes] = parse_core(expID(1,:));
       for ii = 2:length(expID)
         % iterate through the parsing and append the results
-        [filenames0, cellnums0] = parse_core(experimenter, expID(ii,:));
+        [filenames0, filecodes0] = parse_core(experimenter, expID(ii,:));
         filenames  = [filenames; filenames0];
-        cellnums   = [cellnums; cellnums0];
+        filecodes   = [filecodes; filecodes0];
       end
     else
       % if expID is a row vector cell array or a scalar cell array
-      [filenames, cellnums] = parse_core(expID(1,:));
+      [filenames, filecodes] = parse_core(expID(1,:));
     end
   else
     % if expID is a character vector
-    [filenames, cellnums] = parse_core({expID});
+    [filenames, filecodes] = parse_core({expID});
   end
 
 end % function
 
-function [filenames, cellnums] = parse_core(expID)
+function [filenames, filecodes] = parse_core(expID)
   % accepts an expID just like parse; performs the core function
   % parse calls this function a number of times depending on its inputs
 
@@ -85,12 +84,12 @@ function [filenames, cellnums] = parse_core(expID)
       filenames{ii}  = ['/projectnb/hasselmogrp/hoyland/data/caitlin/raw/' filenames{ii} '.mat'];
     end
 
-    % parse the cellnums
-    cellnums = NaN(length(cellcell), 2);
+    % parse the filecodes
+    filecodes = NaN(length(cellcell), 2);
     for ii = 1:length(cellcell)
       splt = strsplit(cellcell{ii}, '-');
-      for qq = 1:size(cellnums, 2)
-        cellnums(ii, qq) = str2num(splt{qq});
+      for qq = 1:size(filecodes, 2)
+        filecodes(ii, qq) = str2num(splt{qq});
       end
     end
 
