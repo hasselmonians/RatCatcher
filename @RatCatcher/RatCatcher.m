@@ -63,7 +63,7 @@ methods (Static)
   [analysisObject, dataObject] = extract(dataTable, index, analysis, verbose)
   [p] = pref()
   [filename, cellnum] = read(location, batchName, index)
-  [filenames] = rebase(identifiers, filesig, masterpath)
+  [filenames] = build(identifiers, filesig, masterpath)
 
 end % static methods
 
