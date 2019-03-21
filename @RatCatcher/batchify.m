@@ -1,4 +1,4 @@
-function batchify(self, filenames0, filecodes0, pathname0, verbose)
+function batchify(self, batchname, filenames0, filecodes0, pathname0, verbose)
 
   % BATCHIFY generates batch scripts indicated by a RatCatcher object
   %   r.BATCHIFY batches the files specified by the ratcatcher object
@@ -19,35 +19,74 @@ function batchify(self, filenames0, filecodes0, pathname0, verbose)
 
   %% Preamble
 
+  if nargin < 2
+    batchname = [];
+  end
+
+  if nargin < 3
+    filename0 = [];
+  end
+
+  if nargin < 4
+    filecodes0 = [];
+  end
+
   if nargin < 5
+    pathname0 = [];
+  end
+
+  if nargin < 6
     verbose = true;
   end
 
+
   % if the filename and filecodes have been given by the user, override
   % otherwise, find the filenames and filecodes using the parse function
-  if exist('filenames0', 'var') && exist('filecodes0', 'var') && ~isempty(filenames0) && ~isempty(filecodes0)
-    filenames    = filename0;
-    filecodes    = filecodes0;
+
+  if ~isempty(filenames0)
+    filenames = filename0;
 
     if verbose == true
-      disp[('[INFO] filenames and cell numbers determined by user')]
+      disp[('[INFO] filenames determined by user')]
+    end
+
+  end
+
+  if ~isempty(filecodes)
+    filecodes = filecodes0;
+
+    if verbose == true
+      disp[('[INFO] filecodes determined by user')]
+    end
+
+  end
+
+  if isempty(filenames0) & isempty(filecodes0) & isempty(self.filenames)
+    % unpackage variables
+    filenames = self.filenames;
+    filecodes = self.filecodes;
+
+    if verbose == true
+      disp('[INFO] filenames and filecodes determined from RatCatcher object')
     end
 
   else
-    filenames0   = [];
-    filecodes0   = [];
+    % use parse to determine filenames and filecodes
     [filenames, filecodes] = self.parse();
+  end
 
-    if verbose == true
-      disp[('[INFO] parsed filenames and cell numbers')]
-    end
+  % save configuration in RatCatcher object
+  self.filenames = filenames;
+  self.filecodes = filecodes;
 
-  end % filenames & filecodes
+  if verbose == true
+    disp[('[INFO] parsed filenames and filecodes')]
+  end
 
   % if the path to the batch function has been given by the user, override
   % otherwise, find the batch function by searching
 
-  if exist('pathname0', 'var') && ~isempty(pathname0)
+  if ~isempty(pathname0)
     pathname = pathname0;
 
     if verbose == true
@@ -55,11 +94,11 @@ function batchify(self, filenames0, filecodes0, pathname0, verbose)
     end
 
   else
-    pathname0   = [];
-    pathname    = which([self.protocol '.batchFunction']);
+    pathname = which([self.protocol '.batchFunction']);
 
     if numel(pathname) == 0
-      disp(['[ERROR] batch function not found at: ' fullfile(self.protocol '.batchFunction']))
+      disp(['[ERROR] batch function not found at: ' fullfile(self.protocol '.batchFunction')])
+      return
     end
 
     if verbose == true
@@ -77,26 +116,19 @@ function batchify(self, filenames0, filecodes0, pathname0, verbose)
   project     = self.project;
   tt          = '''';
 
-  %% Get the filenames
+  % define the batchname
+  if ~isempty(batchname)
+    batchname   = getBatchName(expID, protocol);
+  end
 
-  if isempty(self.filenames) || isempty(self.)
-
-  if iscell(self.alphanumeric)
-    for ii = 1:length(self.alphanumeric)
-      self.alphanumeric = alphanumeric{ii};
-      self.batchify(filename0, filecodes0, pathname0, verbose);
-    end
-    self.alphanumeric = alphanumeric;
-    return
+  if verbose == true
+    disp(['[INFO] batch name is: ' batchname])
   end
 
   %% Clean out the directory
 
-  % remove all old files
   warning off all
-  delete([localPath filesep 'batchscript-' experimenter '-' alphanumeric '-' analysis '.sh']);
-  delete([localPath filesep 'filenames-' experimenter '-' alphanumeric '-' analysis '.txt']);
-  delete([localPath filesep 'filecodes-' experimenter '-' alphanumeric '-' analysis '.csv']);
+  delete(fullfile(localPath, ['*', batchname, '*']))
   warning on all
 
   if verbose == true
@@ -107,18 +139,21 @@ function batchify(self, filenames0, filecodes0, pathname0, verbose)
 
   % save file names and cell numbers in a text file to be read out by the script
   % this format is a standard -- it will be referenced in the batch function as well
-  lineWrite([localPath filesep 'filenames-' experimenter '-' alphanumeric '-' analysis '.txt'], filename);
-  csvwrite([localPath filesep 'filecodes-' experimenter '-' alphanumeric '-' analysis '.csv'], filecodes);
+
+  % write filenames.txt
+  filelib.write(fullfile(localPath, ['filenames-' batchname '.txt']), filenames);
+  % write filecodes.csv
+  csvwrite(fullfile(localPath, ['filecodes-' batchname, '.csv']), filecodes);
 
   if verbose == true
-    disp('[INFO] filenames and cell numbers parsed')
+    disp('[INFO] filenames and filecodes parsed')
   end
 
   % copy over the new batch function
   copyfile(pathname, localPath);
 
   if verbose == true
-    disp('[INFO] batch function copied to localPath')
+    disp(['[INFO] batch function copied to: ' localPath])
   end
 
   % copy over the generic script and rename
@@ -126,31 +161,30 @@ function batchify(self, filenames0, filecodes0, pathname0, verbose)
   % find the dummy script by using a lazy hack
   dummyScriptPath = which(dummyScriptName);
   % name the batch script using the same format as the filenames and filecodes
-  finalScriptPath = [localPath filesep 'batchscript-' experimenter '-' alphanumeric '-' analysis '.sh'];
+  finalScriptPath = fullfile(localPath, [batchname, '.sh']);
   copyfile(dummyScriptPath, finalScriptPath);
 
   if verbose == true
-    disp('[INFO] batch script copied to localPath')
+    disp(['[INFO] batch script copied to: ' finalscriptpath])
   end
 
   %% Edit the copied batch file
 
   % useful variables
-  script          = lineRead(finalScriptPath);
-  batchname       = [experimenter '-' alphanumeric '-' analysis];
-  outfile         = [remotePath '/' namespec '-' batchname '-' '$SGE_TASK_ID' '.csv'];
+  script    = filelib.read(finalScriptPath);
+  outfile   = fullfile(remotePath, [batchname, '-', 'SGE_TASK_ID', '.csv']);
 
   % determine the name of the job array
-  script          = strrep(script, 'BATCH_NAME', batchname);
+  script    = strrep(script, 'BATCH_NAME', batchname);
 
   % determine the project name on the cluster
-  script          = strrep(script, 'PROJECT_NAME', project);
+  script    = strrep(script, 'PROJECT_NAME', project);
 
   % determine the number of jobs
-  script          = strrep(script, 'NUM_FILES', num2str(length(filename)));
+  script    = strrep(script, 'NUM_FILES', num2str(length(filenames)));
 
   % determine the argument to MATLAB
-  script          = strrep(script, 'ARGUMENT', ['$SGE_TASK_ID' ', ' tt remotePath tt ', ' tt batchname tt ', ' tt outfile tt ', ' 'false']);
+  script    = strrep(script, 'ARGUMENT', ['$SGE_TASK_ID' ', ' tt remotePath tt ', ' tt batchname tt ', ' tt outfile tt ', ' 'false']);
 
   % write to file
   figlib.write(finalScriptPath, script);
@@ -165,5 +199,19 @@ function batchify(self, filenames0, filecodes0, pathname0, verbose)
 
   disp('[INFO] pass this script to qsub as an argument:')
 
+
+end % function
+
+function output = getBatchName(expID, protocol)
+  % comes up with a verbose name that unambiguously identifies any output file
+
+  expID  = expID';
+  output = expID{1};
+
+  for ii = 2:numel(expID)
+    output = [output '-' expID{ii}];
+  end
+
+  output = [output '-' protocol]
 
 end % function
