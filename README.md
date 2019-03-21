@@ -19,7 +19,9 @@ r = RatCatcher
 
 The `filenames` field is a cell array of character vectors that holds the filenames of the raw data to be processed. This variable does _not_ have to hold only filenames. They could specify folder names instead, since some experiments produce multiple data files (e.g. a video and a time series).
 
-`filenames` will be set automatically when you run `batchify`, though
+`filenames` will be set automatically when you run `batchify`, though you can also generate your own with the static `build` function.
+
+`filecodes` is a field useful for storing numerical information that allows you to specify further within a data file. For example, if you had 100 recordings and kept track of cell and tetrode number, you might have a `100 x 2` matrix for your `filecodes`. These properties are intended to be available to the `batchify` function so that they can be written into the batch script that contains the function call to the batch function specified in `protocol` that performs the actual analysis.
 
 The `expID` field contains an character vector or cell array of character vectors that serves as an unambiguous identifier to the raw data to be analyzed.
 
@@ -67,6 +69,30 @@ Then, batch your files. They will end up in `r.localPath`.
 ```matlab
 r.batchify();
 ```
+
+You can also specify lots of options:
+
+```matlab
+r.batchify(batchname, filenames, filecodes, path2BatchFunction)
+```
+
+such as a custom `batchname` rather than the very verbose (but unambiguous) one generated automatically. The `filenames` and `filecodes` fields are for if you want to ignore the properties set in your `RatCatcher` object and insert your own `filenames` and `filecodes` and path to a batch function. 
+
+This will automatically generate the batch files and put them in the directory specified in `localPath`. The `filenames` property is generated from the `expID` property, so as long as your file organization is accurately represented in `expID`, you are good to go.
+
+You can build the `filenames` list by using the `build` function. Though, in general, `batchify` will automatically `parse` for you.
+
+```matlab
+[filepaths] = RatCatcher.build(identifiers, filesig, masterpath)
+```
+
+The `identifiers` is very much like `expID` except that it contains only the discrete filenames. The `filesig` is the pattern to search for within the files specified by `identifiers`. Use `**` to indicate searching in all subfolders and `*` to indicate searching for anything that matches the pattern. For example,
+
+```matlab
+filesig = fullpath('**', '*.plx')
+```
+
+would find all files in `identifiers` and subfolders that are Plexon (`.plx`) files.
 
 #### Customizing parsing the raw data
 
