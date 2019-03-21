@@ -1,17 +1,17 @@
-function batchify(self, filename0, cellnum0, pathname0, verbose)
+function batchify(self, filename0, cellnums0, pathname0, verbose)
 
   % BATCHIFY generates batch scripts indicated by a RatCatcher object
   %   r.BATCHIFY batches the files specified by the ratcatcher object
   %
-  %   r.BATCHIFY(filename, cellnum) overrides using parse to find the filenames and cellnums
+  %   r.BATCHIFY(filenames, cellnums) overrides using parse to find the filenames and cellnums
   %     filenames should be a cell array, cellnums should be an n x 2 matrix
   %
-  %   r.BATCHIFY(filename, cellnum, pathname) overrides using parse and provides a custom batch function
+  %   r.BATCHIFY(filenames, cellnums, pathname) overrides using parse and provides a custom batch function
   %     pathname should be a character vector (path to the function)
   %
-  %   r.BATCHIFY(filename, cellnum, pathname, false) does not display verbose display text
+  %   r.BATCHIFY(filenames, cellnums, pathname, false) does not display verbose display text
   %
-  % If filename, cellnum, or pathname are empty [], they are skipped and the default is used
+  % If filename, cellnums, or pathname are empty [], they are skipped and the default is used
   % The files go into r.localPath and reference data saved in r.remotePath
   % The files are named ['batchscript-' r.experimenter '-' r.alphanumeric '-' r.analysis '.sh']
   %
@@ -23,11 +23,11 @@ function batchify(self, filename0, cellnum0, pathname0, verbose)
     verbose = true;
   end
 
-  % if the filename and cellnumber have been given by the user, override
+  % if the filename and cellnumsber have been given by the user, override
   % otherwise, find the filenames and cell numbers using the parse function
-  if exist('filename0', 'var') && exist('cellnum0', 'var') && ~isempty(filename0) && ~isempty(cellnum0)
+  if exist('filename0', 'var') && exist('cellnums0', 'var') && ~isempty(filename0) && ~isempty(cellnums0)
     filename    = filename0;
-    cellnum     = cellnum0;
+    cellnums     = cellnums0;
 
     if verbose == true
       disp[('[INFO] filenames and cell numbers determined by user')]
@@ -35,14 +35,14 @@ function batchify(self, filename0, cellnum0, pathname0, verbose)
 
   else
     filename0   = [];
-    cellnum0    = [];
-    [filename, cellnum] = self.parse();
+    cellnums0    = [];
+    [filename, cellnums] = self.parse();
 
     if verbose == true
       disp[('[INFO] parsed filenames and cell numbers')]
     end
 
-  end % filename & cellnum
+  end % filename & cellnums
 
   % if the path to the batch function has been given by the user, override
   % otherwise, find the batch function by searching
@@ -87,7 +87,7 @@ function batchify(self, filename0, cellnum0, pathname0, verbose)
   if iscell(self.alphanumeric)
     for ii = 1:length(self.alphanumeric)
       self.alphanumeric = alphanumeric{ii};
-      self.batchify(filename0, cellnum0, pathname0, verbose);
+      self.batchify(filename0, cellnums0, pathname0, verbose);
     end
     self.alphanumeric = alphanumeric;
     return
@@ -111,7 +111,7 @@ function batchify(self, filename0, cellnum0, pathname0, verbose)
   % save file names and cell numbers in a text file to be read out by the script
   % this format is a standard -- it will be referenced in the batch function as well
   lineWrite([localPath filesep 'filenames-' experimenter '-' alphanumeric '-' analysis '.txt'], filename);
-  csvwrite([localPath filesep 'cellnums-' experimenter '-' alphanumeric '-' analysis '.csv'], cellnum);
+  csvwrite([localPath filesep 'cellnums-' experimenter '-' alphanumeric '-' analysis '.csv'], cellnums);
 
   if verbose == true
     disp('[INFO] filenames and cell numbers parsed')
