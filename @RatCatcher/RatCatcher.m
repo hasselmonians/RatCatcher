@@ -18,7 +18,7 @@ properties
   % an unambiguous identifier that identifies the raw data
   % it serves as a code to the |parse| function
   % the columns are increasingly specific IDs to the parse function
-  % the rows are new IDS (results are appended)
+  % the rows are new IDs (results are appended)
 
   remotePath
   % character vector
