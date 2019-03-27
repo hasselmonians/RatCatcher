@@ -3,19 +3,25 @@ function batchify(self, batchname, filenames0, filecodes0, pathname0, verbose)
   % BATCHIFY generates batch scripts indicated by a RatCatcher object
   %   r.BATCHIFY batches the files specified by the ratcatcher object
   %
-  %   r.BATCHIFY(filenames, filecodes) overrides using parse to find the filenames and filecodes
+  %   r.BATCHIFY(batchname)
+  %     uses a custom batchname rather than one generated from RATCATCHER.GETBATCHNAME
+  %
+  %   r.BATCHIFY(batchname, filenames, filecodes)
+  %     overrides using RATCATCHER.PARSE to find the filenames and filecodes
   %     filenames should be a cell array, filecodes should be an n x 2 matrix
   %
-  %   r.BATCHIFY(filenames, filecodes, pathname) overrides using parse and provides a custom batch function
+  %   r.BATCHIFY(batchname, filenames, filecodes, pathname)
+  %     overrides using RATCATCHER.PARSE and provides a custom batch function
   %     pathname should be a character vector (path to the function)
   %
-  %   r.BATCHIFY(filenames, filecodes, pathname, false) does not display verbose display text
+  %   r.BATCHIFY(batchname, filenames, filecodes, pathname, false)
+  %     does not display verbose display text
   %
-  % If filenames0, filecodes0, or pathname0 are empty [], they are skipped and the default is used
+  % If batchname, filenames0, filecodes0, or pathname0 are empty [], they are skipped and the defaults are used
   % The files go into r.localPath and reference data saved in r.remotePath
   % The files are named beginning with batchscript, then by the expID and protocol
   %
-  % See also RATCATCHER, RATCATCHER.PARSE
+  % See also RATCATCHER, RATCATCHER.PARSE, RATCATCHER.GETBATCHNAME, RATCATCHER.LISTFILES, RATCATCHER.GATHER
 
   %% Preamble
 

@@ -40,6 +40,8 @@ expID =
     {'Caitlin'}    {'C'}
 ```
 
+This would indicate that this is Caitlin's data from clusters `A`, `B`, and `C`. The power of the `expID` is that as long as it is specified in the `batchify` function what to do with a certain `expID` pattern, it works. You can also bypass the `expID` process by delivering a list of filenames directly to the `RatCatcher` functions. You can get a list of filenames with the `RatCatcher.listfiles()` function.
+
 The `protocol` field determines which analysis should be performed. `RatCatcher` doesn't actually do any real calculations, but sets up the batch files needed to run the computations on a high-performance computing cluster. It looks for somewhere on your path where a function named `[protocol '.batchFunction']` is.
 
 The `localPath` field contains the absolute path to where the batch files should be placed (when on your local computer) and the `remotePath` field contains the absolute path from the perspective of the high-performance computing cluster.
@@ -57,6 +59,7 @@ Set up your `RatCatcher` object.
 ```matlab
 r = RatCatcher;
 r.filenames     = [];
+r.filecodes     = [];
 r.expID         = {};
 r.protocol      = 'BandwidthEstimator';
 r.remotePath    = '/projectnb/hasselmogrp/hoyland/MLE-time-course/cluster';
@@ -76,14 +79,14 @@ You can also specify lots of options:
 r.batchify(batchname, filenames, filecodes, path2BatchFunction)
 ```
 
-such as a custom `batchname` rather than the very verbose (but unambiguous) one generated automatically. The `filenames` and `filecodes` fields are for if you want to ignore the properties set in your `RatCatcher` object and insert your own `filenames` and `filecodes` and path to a batch function. 
+such as a custom `batchname` rather than the very verbose (but unambiguous) one generated automatically. The `filenames` and `filecodes` fields are for if you want to ignore the properties set in your `RatCatcher` object and insert your own `filenames` and `filecodes` and path to a batch function.
 
 This will automatically generate the batch files and put them in the directory specified in `localPath`. The `filenames` property is generated from the `expID` property, so as long as your file organization is accurately represented in `expID`, you are good to go.
 
-You can build the `filenames` list by using the `build` function. Though, in general, `batchify` will automatically `parse` for you.
+You can build the `filenames` list by using the `listfiles` function. Though, in general, `batchify` will automatically `parse` for you.
 
 ```matlab
-[filepaths] = RatCatcher.build(identifiers, filesig, masterpath)
+[filepaths] = RatCatcher.listfiles(identifiers, filesig, masterpath)
 ```
 
 The `identifiers` is very much like `expID` except that it contains only the discrete filenames. The `filesig` is the pattern to search for within the files specified by `identifiers`. Use `**` to indicate searching in all subfolders and `*` to indicate searching for anything that matches the pattern. For example,
@@ -92,24 +95,36 @@ The `identifiers` is very much like `expID` except that it contains only the dis
 filesig = fullpath('**', '*.plx')
 ```
 
-would find all files in `identifiers` and subfolders that are Plexon (`.plx`) files.
+would find all files in the directory `identifiers` and subdirectories that are Plexon (`.plx`) files.
 
 #### Customizing parsing the raw data
 
 The function `parse` performs a different operation based on who the experimenter (and alphanumeric code) is. If you are not built into the `RatCatcher` ecosystem yet, it is important to tell `parse` what to do with you. You can do this one of three ways:
 
 1. If you are a part of the Hasselmo, Howard, or Eichenbaum labs, send me an email. You know who I am.
-2. Generate a cell array of filenames and a list of cell numbers/indices by yourself and pass them to `batchify` as second and third arguments.
+2. Generate a cell array of `filenames` and a list of `filecodes` by yourself and pass them to `batchify` as arguments.
 3. Add a new experimenter name to the `parse_core` function (inside `parse`) switch/case statement that expresses what to do to find the correct data, given an experimenter name.
 
 You can also force `batchify` to use custom data or locations.
-`filename` is a cell array of file names.
-`cellnum` is an n x 2 matrix of cell numbers.
+`filenames` is a cell array of file names.
+`filecodes` is an n x 2 matrix of cell numbers.
 
 ```matlab
-% optional uses
-r.batchify(filename, cellnum);
-r.batchify(filename, cellnum, []);
+% r.batchify batches the files specified by the ratcatcher object
+
+% uses a custom batchname rather than one generated from RATCATCHER.GETBATCHNAME
+r.batchify(batchname)
+
+% overrides using RATCATCHER.PARSE to find the filenames and filecodes
+% filenames should be a cell array, filecodes should be an n x 2 matrix
+r.batchify(batchname, filenames, filecodes)
+
+% overrides using RATCATCHER.PARSE and provides a custom batch function
+% pathname should be a character vector (path to the function)
+r.batchify(batchname, filenames, filecodes, pathname)
+
+% does not display verbose display text
+r.batchify(batchname, filenames, filecodes, pathname, false)
 ```
 
 #### Customizing your analysis
@@ -123,7 +138,7 @@ path2BatchFunction = which([r.analysis '.batchFunction']);
 ```
 so it's best if the batch function is a static method of a class, or part of a package. See below for more details.
 
-You can also provide the path to a custom batch script as the fourth argument to `batchify`.
+You can also provide the path to a custom batch script as the fourth argument to `batchify` (excluding the object).
 `pathname` is the full path to your custom batch function.
 You can replace any of them with `[]` to omit overriding that change.
 
@@ -135,7 +150,7 @@ r.batchify([], [], pathname);
 
 #### Generating multiple scripts
 
-If `alphanumeric` is a cell array of character vectors, multiple scripts will be generated, with their accompanying filename and cellnums files. They will all be created in `r.localPath`. This is useful when you want to run the same analysis on multiple subsets of data and keep track of them separately.
+A new script is generated for 
 
 ### Running your scripts
 
