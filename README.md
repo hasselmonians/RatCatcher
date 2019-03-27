@@ -15,21 +15,36 @@ First, set up an empty `RatCatcher` object.
 r = RatCatcher
 ```
 
-In order for `RatCatcher` to work, the following fields must be set. They are all character vectors.
+## Class properties
 
-The `experimenter` field identifies where the data is stored. It is accessed when the `parse` function is called, which implements a different procedure based on how the experimenter saved their data.
+The `filenames` field is a cell array of character vectors that holds the filenames of the raw data to be processed. This variable does _not_ have to hold only filenames. They could specify folder names instead, since some experiments produce multiple data files (e.g. a video and a time series).
 
-The `alphanumeric` field provides further description.
+`filenames` will be set automatically when you run `batchify`, though you can also generate your own with the static `build` function.
 
-> For example, if Caitlin stored her data in files named `Cluster_A`, `Cluster_B`, etc., then `experimenter` would be `'Caitlin'` and `alphanumeric` would be `'A'`.
+`filecodes` is a field useful for storing numerical information that allows you to specify further within a data file. For example, if you had 100 recordings and kept track of cell and tetrode number, you might have a `100 x 2` matrix for your `filecodes`. These properties are intended to be available to the `batchify` function so that they can be written into the batch script that contains the function call to the batch function specified in `protocol` that performs the actual analysis.
 
-The `analysis` field determines which analysis should be performed. `RatCatcher` doesn't actually do any real calculations, but sets up the batch files needed to run the computations on a high-performance computing cluster. It looks for somewhere on your path where a function named `[analysis '.batchFunction']` is.
+The `expID` field contains an character vector or cell array of character vectors that serves as an unambiguous identifier to the raw data to be analyzed.
+
+Say you have data saved in some filesystem, where each subfolder indicates different conditions of an experiment (dosage, animal, setup, etc.). Perhaps within each of those folders, you have yet more subfolders. That is, your experiment can be classified by two or more identifiers (e.g. animal and date of experiment).
+
+The `expID` field reads rows as increasing specificity and columns as more data.
+For example, if you were working with Caitlin's dataset from [this paper](http://www.jneurosci.org/content/early/2019/02/25/JNEUROSCI.1450-18.2019), your `expID` would look something like this:
+
+```matlab
+expID =
+
+  3×2 cell array
+
+    {'Caitlin'}    {'A'}
+    {'Caitlin'}    {'B'}
+    {'Caitlin'}    {'C'}
+```
+
+The `protocol` field determines which analysis should be performed. `RatCatcher` doesn't actually do any real calculations, but sets up the batch files needed to run the computations on a high-performance computing cluster. It looks for somewhere on your path where a function named `[protocol '.batchFunction']` is.
 
 The `localPath` field contains the absolute path to where the batch files should be placed (when on your local computer) and the `remotePath` field contains the absolute path from the perspective of the high-performance computing cluster.
 
 > For instance, if you mounted your cluster on your local machine at `/mnt/myproject/cluster/` then that is your `localPath`. If from the cluster's perspective (when accessing via `ssh`), your files are at `/projectnb/myproject/cluster` then that is your `remotePath`. If your local computer does not have the cluster mounted, `localPath` will be some path in your local file system and you will have to copy the files `RatCatcher` produces over to the `remotePath` before running the script on the cluster.
-
-`namespec` determines what the output files should be named. Files will be named starting with `namespec-experimenter-alphanumeric-analysis-`. It's best to set it to something like `'output'` if you're feeling uncreative.
 
 `project` is the name of the project on the cluster (who has to pay for the computer usage).
 
@@ -41,11 +56,11 @@ Set up your `RatCatcher` object.
 
 ```matlab
 r = RatCatcher;
-r.experimenter  = 'Caitlin';
-r.alphanumeric  = 'A';
-r.analysis      = 'BandwidthEstimator';
-r.location      = '/home/ahoyland/code/MLE-time-course/cluster';
-r.namespec      = 'output';
+r.filenames     = [];
+r.expID         = {};
+r.protocol      = 'BandwidthEstimator';
+r.remotePath    = '/projectnb/hasselmogrp/hoyland/MLE-time-course/cluster';
+r.localPath     = '/mnt/hasselmogrp/hoyland/MLE-time-course/cluster';
 r.project       = 'hasselmogrp';
 ```
 
@@ -54,6 +69,30 @@ Then, batch your files. They will end up in `r.localPath`.
 ```matlab
 r.batchify();
 ```
+
+You can also specify lots of options:
+
+```matlab
+r.batchify(batchname, filenames, filecodes, path2BatchFunction)
+```
+
+such as a custom `batchname` rather than the very verbose (but unambiguous) one generated automatically. The `filenames` and `filecodes` fields are for if you want to ignore the properties set in your `RatCatcher` object and insert your own `filenames` and `filecodes` and path to a batch function. 
+
+This will automatically generate the batch files and put them in the directory specified in `localPath`. The `filenames` property is generated from the `expID` property, so as long as your file organization is accurately represented in `expID`, you are good to go.
+
+You can build the `filenames` list by using the `build` function. Though, in general, `batchify` will automatically `parse` for you.
+
+```matlab
+[filepaths] = RatCatcher.build(identifiers, filesig, masterpath)
+```
+
+The `identifiers` is very much like `expID` except that it contains only the discrete filenames. The `filesig` is the pattern to search for within the files specified by `identifiers`. Use `**` to indicate searching in all subfolders and `*` to indicate searching for anything that matches the pattern. For example,
+
+```matlab
+filesig = fullpath('**', '*.plx')
+```
+
+would find all files in `identifiers` and subfolders that are Plexon (`.plx`) files.
 
 #### Customizing parsing the raw data
 

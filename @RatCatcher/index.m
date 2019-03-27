@@ -1,4 +1,4 @@
-function output = index(self, dataTable, cellnums)
+function output = index(self, dataTable, filecodes)
 
   % reads from a cell array or table and determines the indices that match
   % filenames from a parsed data description file
@@ -7,12 +7,12 @@ function output = index(self, dataTable, cellnums)
     % self : the RatCatcher object
       % requires the 'experimenter' and 'alpha' fields to be filled (calls 'parse')
     % dataTable : either a table or a cell array
-      % if dataTable is a table, then it must have 'filenames' and 'cellnums' as fields
+      % if dataTable is a table, then it must have 'filenames' and 'filecodes' as fields
       % if datatable is a cell array, it can be n x 1 or n x 2, where the second column
-      % should be the cellnums, otherwise, the cellnums argument is needed
-    % cellnums : if dataTable is a scalar or vector cell array, then cellnums contains the cell-experiment identifier
+      % should be the filecodes, otherwise, the filecodes argument is needed
+    % filecodes: if dataTable is a scalar or vector cell array, then filecodes contains the cell-experiment identifier
       % this is a 1x2 vector for each filename to be indexed
-      % so for 10 names, cellnums should be 10x2
+      % so for 10 names, filecodes should be 10x2
   % Outputs:
     % output : the indices of dataTable corresponding to the filenames specified by r.parse
 
@@ -22,7 +22,7 @@ function output = index(self, dataTable, cellnums)
   case 'table'
     try
       filenames   = dataTable.filenames;
-      cellnums    = dataTable.cellnums;
+      filecodes    = dataTable.filecodes;
     catch
       disp('[ERROR] I don''t know what to do with this dataTable');
       output = [];
@@ -36,14 +36,14 @@ function output = index(self, dataTable, cellnums)
     if size(dataTable, 1) < size(dataTable, 2)
       dataTable = dataTable';
     end
-    % if dataTable is an n x 2 cell array, build the n x 2 matrix of cellnums
+    % if dataTable is an n x 2 cell array, build the n x 2 matrix of filecodes
     if nargin < 3 && size(dataTable, 2) == 2
-      cellnums = zeros(length(dataTable), 2);
+      filecodes = zeros(length(dataTable), 2);
       for ii = 1:length(dataTable)
-        cellnums(ii, :) = dataTable{ii, 2};
+        filecodes(ii, :) = dataTable{ii, 2};
       end
     else
-      disp('[ERROR] Cell array contains insufficient information, "cellnums" required')
+      disp('[ERROR] Cell array contains insufficient information, "filecodes" required')
       output = [];
       return
     end
@@ -55,7 +55,7 @@ function output = index(self, dataTable, cellnums)
   % index one-by-one
   output  = NaN(length(names), 1);
   for ii = 1:length(names)
-    output(ii) = find(strcmp(filenames, names{ii}) & all((cellnums == nums(ii, :))')');
+    output(ii) = find(strcmp(filenames, names{ii}) & all((filecodes == nums(ii, :))')');
   end
 
 end % function
