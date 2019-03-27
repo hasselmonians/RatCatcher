@@ -20,19 +20,15 @@ function dataTable = gather(self, filekey, dataTable0)
   %
   % See also RATCATCHER, RATCATCHER.BATCHIFY, RATCATCHER.STITCH, DIR
 
+  expID     = self.expID;
   localPath = self.localPath;
   protocol  = self.protocol;
-  namespec  = self.namespec;
 
-  % assume that the output files are stored sensibly
-  if isempty(namespec)
-    namespec = 'output';
-    disp('[INFO] Assuming namespec is: output-')
-  end
-
-  if ~exist('filekey', 'var')
-    filekey = [namespec '*'];
+  if ~exist('filekey', 'var') && isempty(filekey)
+    filekey = [RatCatcher.getBatchName(expID, protocol) '*'];
     disp(['[INFO] Assuming filekey is: ' filekey])
+  else
+    disp('[INFO] Filekey set by user')
   end
 
   % filekey is a cell, operate recursively over filekeys
@@ -66,6 +62,8 @@ function dataTable = gather(self, filekey, dataTable0)
   % move to where the output files are stored
   if ~isempty(localPath)
     cd(localPath)
+  else
+    disp(['[INFO] No local path set, not changing directories'])
   end
 
   % gather together all of the data points into a single matrix
