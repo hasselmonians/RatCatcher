@@ -64,7 +64,8 @@ methods (Static)
   [p] = pref()
   [filename, cellnum] = read(location, batchName, index)
   [filenames] = listfiles(identifiers, filesig, masterpath)
-
+  [output] = getBatchName(expID, protocol)
+  
 end % static methods
 
 end % classdef

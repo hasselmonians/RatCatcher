@@ -118,7 +118,7 @@ function batchify(self, batchname, filenames0, filecodes0, pathname0, verbose)
 
   % define the batchname
   if ~isempty(batchname)
-    batchname   = getBatchName(expID, protocol);
+    batchname   = RatCatcher.getBatchName(expID, protocol);
   end
 
   if verbose == true
@@ -203,19 +203,5 @@ function batchify(self, batchname, filenames0, filecodes0, pathname0, verbose)
 
   disp('[INFO] pass this script to qsub as an argument:')
 
-
-end % function
-
-function output = getBatchName(expID, protocol)
-  % comes up with a verbose name that unambiguously identifies any output file
-
-  expID  = expID';
-  output = expID{1};
-
-  for ii = 2:numel(expID)
-    output = [output '-' expID{ii}];
-  end
-
-  output = [output '-' protocol]
 
 end % function
