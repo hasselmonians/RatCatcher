@@ -54,6 +54,17 @@ function batchify(self, batchname, filenames, filecodes, pathname, verbose)
   project     = self.project;
   tt          = '''';
 
+  %% Parse all of the inputs
+
+  % define the batchname
+  if ~isempty(batchname)
+    batchname   = RatCatcher.getBatchName(expID, protocol);
+  end
+
+  if verbose == true
+    disp(['[INFO] batch name is: ' batchname])
+  end
+
   % if the filename and filecodes have been given by the user, override
   % otherwise, find the filenames and filecodes using the parse function
 
@@ -98,15 +109,6 @@ function batchify(self, batchname, filenames, filecodes, pathname, verbose)
 
   if verbose == true
     disp[('[INFO] batch function found')]
-  end
-
-  % define the batchname
-  if ~isempty(batchname)
-    batchname   = RatCatcher.getBatchName(expID, protocol);
-  end
-
-  if verbose == true
-    disp(['[INFO] batch name is: ' batchname])
   end
 
   %% Clean out the directory
