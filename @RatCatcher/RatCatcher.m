@@ -2,13 +2,13 @@ classdef RatCatcher
 
 properties
 
-  filenames
+  % filenames
   % cell array of character vectors
   % a list of all filenames of the raw data to be processed
   % note that these could be folders which unambiguously specify an experiment
   % since some experiments produce multiple data files (e.g. a video and time series data)
 
-  filecodes
+  % filecodes
   % numerical matrix of size n x 2 where n = length(filenames)
   % stores any additional parameters required to unambiguously specific data
   % from one of the filenames
