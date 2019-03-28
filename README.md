@@ -17,15 +17,13 @@ r = RatCatcher
 
 ## Class properties
 
-The `filenames` field is a cell array of character vectors that holds the filenames of the raw data to be processed. This variable does _not_ have to hold only filenames. They could specify folder names instead, since some experiments produce multiple data files (e.g. a video and a time series).
+<!-- `filenames` will be set automatically when you run `batchify`, though you can also generate your own with the static `build` function.
 
-`filenames` will be set automatically when you run `batchify`, though you can also generate your own with the static `build` function.
-
-`filecodes` is a field useful for storing numerical information that allows you to specify further within a data file. For example, if you had 100 recordings and kept track of cell and tetrode number, you might have a `100 x 2` matrix for your `filecodes`. These properties are intended to be available to the `batchify` function so that they can be written into the batch script that contains the function call to the batch function specified in `protocol` that performs the actual analysis.
+`filecodes` is a field useful for storing numerical information that allows you to specify further within a data file. For example, if you had 100 recordings and kept track of cell and tetrode number, you might have a `100 x 2` matrix for your `filecodes`. These properties are intended to be available to the `batchify` function so that they can be written into the batch script that contains the function call to the batch function specified in `protocol` that performs the actual analysis. -->
 
 The `expID` field contains an character vector or cell array of character vectors that serves as an unambiguous identifier to the raw data to be analyzed.
 
-Say you have data saved in some filesystem, where each subfolder indicates different conditions of an experiment (dosage, animal, setup, etc.). Perhaps within each of those folders, you have yet more subfolders. That is, your experiment can be classified by two or more identifiers (e.g. animal and date of experiment).
+> Say you have data saved in some filesystem, where each subfolder indicates different conditions of an experiment (dosage, animal, setup, etc.). Perhaps within each of those folders, you have yet more subfolders. That is, your experiment can be classified by two or more identifiers (e.g. animal and date of experiment).
 
 The `expID` field reads rows as increasing specificity and columns as more data.
 For example, if you were working with Caitlin's dataset from [this paper](http://www.jneurosci.org/content/early/2019/02/25/JNEUROSCI.1450-18.2019), your `expID` would look something like this:
