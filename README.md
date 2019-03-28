@@ -123,8 +123,12 @@ r.batchify(batchname, filenames, filecodes)
 % pathname should be a character vector (path to the function)
 r.batchify(batchname, filenames, filecodes, pathname)
 
+
+% uses a custom batch script
+r.batchify(batchname, filenames, filecodes, pathname, scriptname)
+
 % does not display verbose display text
-r.batchify(batchname, filenames, filecodes, pathname, false)
+r.batchify(batchname, filenames, filecodes, pathname, scriptname, false)
 ```
 
 #### Customizing your analysis
@@ -150,7 +154,7 @@ r.batchify([], [], pathname);
 
 #### Generating multiple scripts
 
-A new script is generated for 
+A new script is generated for
 
 ### Running your scripts
 

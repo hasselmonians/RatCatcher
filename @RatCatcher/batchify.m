@@ -1,4 +1,4 @@
-function batchify(self, batchname, filenames, filecodes, pathname, verbose)
+function batchify(self, batchname, filenames, filecodes, pathname, scriptname, verbose)
 
   % BATCHIFY generates batch scripts indicated by a RatCatcher object
   %   r.BATCHIFY batches the files specified by the ratcatcher object
@@ -42,6 +42,10 @@ function batchify(self, batchname, filenames, filecodes, pathname, verbose)
   end
 
   if nargin < 6
+    scriptname = [];
+  end
+
+  if nargin < 7
     verbose = true;
   end
 
@@ -111,6 +115,19 @@ function batchify(self, batchname, filenames, filecodes, pathname, verbose)
     disp[('[INFO] batch function found')]
   end
 
+  % determine the script name
+  if ~isempty(scriptname)
+    scriptname = 'RatCatcher-generic-script.sh';
+
+    if verbose == true
+      disp(['[INFO] batch script determined by user'])
+    end
+  else
+    if verbose == true
+      disp('[INFO] batch script determined automatically')
+    end
+  end
+
   %% Clean out the directory
 
   warning off all
@@ -142,10 +159,10 @@ function batchify(self, batchname, filenames, filecodes, pathname, verbose)
     disp(['[INFO] batch function copied to: ' localPath])
   end
 
-  % copy over the generic script and rename
-  dummyScriptName = 'RatCatcher-generic-script.sh';
+  %% Copy over the generic script and rename
+
   % find the dummy script by using a lazy hack
-  dummyScriptPath = which(dummyScriptName);
+  dummyScriptPath = which(scriptname);
   % name the batch script using the same format as the filenames and filecodes
   finalScriptPath = fullfile(localPath, [batchname, '.sh']);
   copyfile(dummyScriptPath, finalScriptPath);
