@@ -7,12 +7,71 @@ In its simplest form, `RatCatcher` is an uncomplicated class that contains all t
 ## How do I install it?
 The best way is to clone the repository, or to download and unzip. Then, just add it to your MATLAB path. It is dependent on [`mtools`](https://github.com/sg-s/srinivas.gs_mtools).
 
-## How do I use it?
+## Usage example
 
-First, set up an empty `RatCatcher` object.
+Create the `RatCatcher` object.
 
 ```matlab
-r = RatCatcher
+r = RatCatcher;
+r.expID = {'Caitlin', 'A'; 'Caitlin', 'B'; 'Caitlin', 'C'};
+r.remotePath = '/projectnb/hasselmogrp/hoyland/MLE-time-course/cluster';
+r.localPath = '/mnt/hasselmogrp/hoyland/MLE-time-course/cluster';
+r.protocol = 'BandwidthEstimator';
+```
+
+Create the batch scripts.
+
+```matlab
+r.batchify();
+```
+
+Go onto the cluster and submit the script.
+
+```bash
+ssh username@foo.bar
+cd /projectnb/hasselmogrp/hoyland/MLE-time-course/cluster
+qsub Caitlin-A-Caitlin-B-BandwidthEstimator.sh
+```
+
+Wait until the run has completed, then
+
+```matlab
+dataTable = r.gather;
+dataTable = r.stitch(dataTable);
+```
+
+## What does RatCatcher actually do?
+
+Behind-the-scenes, this is how `RatCatcher` works:
+
+1. It finds the data specified by the object's properties using the `parse` function.
+2. Then, it stores the filenames to the data in `filenames.txt`, and the file codes in `filecodes.csv`. The actual names of the file is a bit longer, incorporating the experimental ID, and the protocol, but each file will begin with `filenames` or `filecodes` respectively.
+3. In addition, a batch script is created.
+
+The batch script is a shell script that specifies options to the job scheduler ([SGE](https://www.bu.edu/tech/support/research/system-usage/running-jobs/submitting-jobs/)) on the cluster.
+
+The `batchify` function also fills out several details, such as the name of the job. The most important
+job of the batch script is to tell the cluster to run MATLAB and a function called the batch function.
+This is a MATLAB function with the following form:
+
+```matlab
+function batchFunction(index, batchname, location, outfile, test)
+  ...
+end
+```
+
+Then, you can run the script on the cluster by submitting it using `qsub`.
+
+```bash
+# on the cluster
+qsub scriptname.sh
+```
+
+Once the script finishes running, output files are produced in the directory specified by `RatCatcher`'s `remotePath`.
+You can gather the data into a `table` in MATLAB with
+
+```matlab
+dataTable = r.gather();
 ```
 
 ## Class properties
@@ -48,7 +107,7 @@ The `localPath` field contains the absolute path to where the batch files should
 
 `project` is the name of the project on the cluster (who has to pay for the computer usage).
 
-### Pre-Processing
+## Pre-Processing
 
 A general use of `RatCatcher` looks something like this:
 
@@ -95,7 +154,7 @@ filesig = fullpath('**', '*.plx')
 
 would find all files in the directory `identifiers` and subdirectories that are Plexon (`.plx`) files.
 
-#### Customizing parsing the raw data
+### Customizing parsing the raw data
 
 The function `parse` performs a different operation based on who the experimenter (and alphanumeric code) is. If you are not built into the `RatCatcher` ecosystem yet, it is important to tell `parse` what to do with you. You can do this one of three ways:
 
@@ -103,7 +162,7 @@ The function `parse` performs a different operation based on who the experimente
 2. Generate a cell array of `filenames` and a list of `filecodes` by yourself and pass them to `batchify` as arguments.
 3. Add a new experimenter name to the `parse_core` function (inside `parse`) switch/case statement that expresses what to do to find the correct data, given an experimenter name.
 
-#### Customizing your batching
+### Customizing your batching
 
 You can also force `batchify` to use custom data, locations, or scripts.
 
@@ -116,38 +175,6 @@ a default batch script, `RatCatcher-generic-script.sh`.
 This script requests a 16-core node and outputs an error and log file.
 It also limits the run to 24 hours before terminating.
 Then, it loads MATLAB 2018a and runs the batch function from the command line.
-
-Any custom batch script must be a `.sh` file on your `MATLAB` path.
-The best way to check is with `which(batchscriptname)` because that's how `batchify` actually does it.
-`batchify` using string parsing to fill out the correct fields in the batch script.
-
-* `PROJECT_NAME`: the name of the project on the cluster
-* `BATCH_NAME`: the `batchname`
-* `NUM_FILES`: the total number of datafiles upon which the protocol will be run
-* `ARGUMENT`: the actual argument passed to the batch function
-
-In order for `batchify` to work correctly, these tags should exist in the generic batch script.
-They will be replaced with actual parameters during the batching process.
-
-* `PROJECT_NAME` is set by the `RatCatcher` property
-* `BATCH_NAME` is automatically generated or set by the user by an argument to `batchify`
-* `NUM_FILES` is automatically determined
-* `ARGUMENT` is more of a special case
-
-The prototypical batch function has the following functional call:
-
-```matlab
-batchFunction(index, location, batchname, outfile, test)
-```
-
-* `index` is automatically set to correspond to the `SGE_TASK_ID` which iterates up to `NUM_FILES`
-* `location` is automatically set to the `remotePath` property of `RatCatcher`
-* `batchname` is, unsurprisingly, the `batchname` determined as above
-* `outfile` is the name of the output file, also automatically determined
-* `test` is a logical flag
-
-The batch function can be _any_ function that has these arguments in this order.
-It does not necessarily even have to be a MATLAB function either, if a custom batch script is used.
 
 ```matlab
 % r.batchify batches the files specified by the ratcatcher object
@@ -170,7 +197,59 @@ r.batchify(batchname, filenames, filecodes, pathname, scriptname)
 r.batchify(batchname, filenames, filecodes, pathname, scriptname, false)
 ```
 
-#### Customizing your protocol
+### Customizing your batch script
+
+Each protocol has to have a batch function as a static class method or package function.
+When you specify the analysis method (in `r.protocol`), `RatCatcher` will find the right batch function.
+
+The function has to:
+
+1. Set up the MATLAB path on the cluster (if you are using MATLAB).
+2. Acquire the filenames and file codes from the .txt and .csv file generated by `batchify`.
+3. Read the data from a file using the filenames as a guide.
+4. Perform the analysis.
+5. Save the data.
+
+The `index` is set by the job scheduler. If you have 10 jobs, it goes from 1-10, and is stored in the
+environment variable `$SGE_TASK_ID`. The `batchify` function sets up the call to the MATLAB batch function from inside the batch script, and so sets the `index` argument to the task ID.
+
+A good example of a batch function can be found [here](https://github.com/hasselmonians/BandwidthEstimator/blob/master/%40BandwidthEstimator/batchFunction.m).
+
+Any custom batch script must be a `.sh` file on your `MATLAB` path.
+The best way to check is with `which(batchscriptname)` because that's how `batchify` actually does it.
+`batchify` using string parsing to fill out the correct fields in the batch script.
+
+* `PROJECT_NAME`: the name of the project on the cluster
+* `BATCH_NAME`: the `batchname`
+* `NUM_FILES`: the total number of datafiles upon which the protocol will be run
+* `ARGUMENT`: the actual argument passed to the batch function
+
+In order for `batchify` to work correctly, these tags should exist in the generic batch script.
+They will be replaced with actual parameters during the batching process.
+
+* `PROJECT_NAME` is set by the `RatCatcher` property
+* `BATCH_NAME` is automatically generated or set by the user by an argument to `batchify`
+* `NUM_FILES` is automatically determined
+* `ARGUMENT` is more of a special case
+
+### Customizing your batch function
+
+The prototypical batch function has the following functional call:
+
+```matlab
+batchFunction(index, location, batchname, outfile, test)
+```
+
+* `index` is automatically set to correspond to the `SGE_TASK_ID` which iterates up to `NUM_FILES`
+* `location` is automatically set to the `remotePath` property of `RatCatcher`
+* `batchname` is, unsurprisingly, the `batchname` determined as above
+* `outfile` is the name of the output file, also automatically determined
+* `test` is a logical flag
+
+The batch function can be _any_ function that has these arguments in this order.
+It does not necessarily even have to be a MATLAB function either, if a custom batch script is used.
+
+### Customizing your protocol
 
 A "protocol" is some process that operates on your data to get useful results. If this is computationally expensive and needs to happen on a lot of data, it's best to run it on a high-performance computing cluster. So far, the only complete `RatCatcher`-compatible analysis is called [BandwidthEstimator](https://github.com/hasselmonians/BandwidthEstimator).
 
@@ -184,24 +263,8 @@ See below for more details.
 
 You can also provide the path to a custom batch script as an argument to `batchify`.
 `pathname` is the full path to your custom batch function.
-You can replace any of them with `[]` to omit overriding that change.
 
-```matlab
-% optional uses
-r.batchify(filename, cellnum, pathname);
-r.batchify([], [], pathname);
-```
-
-#### Generating multiple scripts
-
-A new script is generated for each different `expID`.
-A single call to the `qsub` command on the cluster will run the script on each data file,
-producing an output file or files for each (if directed in the batch function).
-
-If you want to run multiple analyses, you will need multiple calls to `batchify`
-with the correctly specified `RatCatcher` object.
-
-### Running your scripts
+## Running your scripts
 
 `batchify` creates a batch script that will run (using `qsub`) all the jobs on the cluster, and put the output files where the data should be stored.
 
@@ -210,14 +273,23 @@ with the correctly specified `RatCatcher` object.
 qsub scriptName.sh
 ```
 
-#### What is the generic script?
+### What is the generic batch script?
 
 This script is a template that `batchify` fills in with the correct values.
 It requires 16 cores on the cluster, creates a log file and error file,
 sets the name of the project, limits to a 24-hour run,
 and then runs MATLAB from the command line.
 
-### Post-Processing
+### Generating multiple scripts
+
+A new script is generated for each different `expID`.
+A single call to the `qsub` command on the cluster will run the script on each data file,
+producing an output file or files for each (if directed in the batch function).
+
+If you want to run multiple analyses, you will need multiple calls to `batchify`
+with the correctly specified `RatCatcher` object.
+
+## Post-Processing
 
 Once the jobs have been run, the data can be gathered.
 
@@ -231,39 +303,7 @@ The paths to the raw data can be stitched onto the data table, for easy referenc
 dataTable = r.stitch(dataTable);
 ```
 
-### Usage example
-
-Create the `RatCatcher` object.
-
-```matlab
-r = RatCatcher;
-r.expID = {'Caitlin', 'A'; 'Caitlin', 'B'; 'Caitlin', 'C'};
-r.remotePath = '/projectnb/hasselmogrp/hoyland/MLE-time-course/cluster';
-r.localPath = '/mnt/hasselmogrp/hoyland/MLE-time-course/cluster';
-r.protocol = 'BandwidthEstimator';
-```
-
-Create the batch scripts.
-
-```matlab
-r.batchify();
-```
-
-Go onto the cluster.
-
-```bash
-ssh username@foo.bar
-qsub /projectnb/hasselmogrp/hoyland/MLE-time-course/cluster/Caitlin-A-Caitlin-B-BandwidthEstimator.sh
-```
-
-Wait until the run has completed, then
-
-```matlab
-dataTable = r.gather;
-dataTable = r.stitch(dataTable);
-```
-
-#### Extra features
+## Extra features
 
 You can go from a saved `dataTable` to an analysis object and the `Session` object
 (from [`CMBHOME`](https://github.com/hasselmonians/CMBHOME))
@@ -279,40 +319,6 @@ Conversely, a `dataTable` can be indexed to find the indices which correspond to
 ```matlab
 index = r.index(dataTable);
 ```
-
-## What is a batch script?
-
-Behind-the-scenes, this is how `RatCatcher` works:
-
-1. It finds the data specified by the object's properties using the `parse` function.
-2. Then, it stores the filenames to the data in `filenames.txt`, and the file codes in `filecodes.csv`. The actual names of the file is a bit longer, incorporating the experimenter, alphanumeric code, and the analysis method, but each file will begin with `filenames` or `filecodes` respectively.
-3. In addition, a batch script is created.
-
-The batch script is a shell script that specifies options to the job scheduler ([SGE](https://www.bu.edu/tech/support/research/system-usage/running-jobs/submitting-jobs/)) on the cluster.
-The `batchify` function also fills out several details, such as the name of the job. The most important
-job of the batch script is to tell the cluster to run MATLAB and a function called the batch function.
-This is a MATLAB function with the following form:
-
-```matlab
-function batchFunction(index, batchname, location, outfile, test)
-  ...
-end
-```
-
-## What is a batch function?
-
-Each analysis method has to have a batch function as a static class method or package function. When you specify the analysis method (in `r.analysis`), `RatCatcher` will find the right batch function. The function has to:
-
-1. Set up the MATLAB path on the cluster.
-2. Acquire the filenames and file codes from the .txt and .csv file generated by `batchify`.
-3. Read the data from a file using the filenames as a guide.
-4. Perform the analysis.
-5. Save the data.
-
-The `index` is set by the job scheduler. If you have 10 jobs, it goes from 1-10, and is stored in the
-environment variable `$SGE_TASK_ID`. The `batchify` function sets up the call to the MATLAB batch function from inside the batch script, and so sets the `index` argument to the task ID.
-
-A good example of a batch function can be found [here](https://github.com/hasselmonians/BandwidthEstimator/blob/master/%40BandwidthEstimator/batchFunction.m).
 
 ## Setting a preference file
 
