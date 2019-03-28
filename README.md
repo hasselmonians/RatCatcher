@@ -324,10 +324,9 @@ You can create a function called `pref.m` inside of `../RatCatcher/@RatCatcher/`
 function p = pref()
     p = struct;
     p.expID           = {'experimenter', 'id1'; 'experimenter', 'id2'};
-    p.analysis        = 'BandwidthEstimator';
+    p.protocol        = 'BandwidthEstimator';
     p.localPath       = 'myPath2ClusterFromLocalComputer';
     p.remotePath      = 'myPath2ClusterFromRemoteComputer';
-    p.namespec        = 'output';
     p.project         = 'hasselmogrp';
 end
 ```
