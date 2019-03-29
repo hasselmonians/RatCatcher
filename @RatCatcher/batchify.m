@@ -181,6 +181,8 @@ function batchify(self, batchname, filenames, filecodes, pathname, scriptname, v
   script    = filelib.read(finalScriptPath);
   outfile   = fullfile(remotePath, [batchname, '-', 'SGE_TASK_ID', '.csv']);
 
+  % TODO: make outfile more robust (accept more output types)
+
   % determine the name of the job array
   script    = strrep(script, 'BATCH_NAME', batchname);
 
