@@ -237,12 +237,12 @@ They will be replaced with actual parameters during the batching process.
 The prototypical batch function has the following functional call:
 
 ```matlab
-batchFunction(index, location, batchname, outfile, test)
+batchFunction(index, batchname, location, outfile, test)
 ```
 
 * `index` is automatically set to correspond to the `SGE_TASK_ID` which iterates up to `NUM_FILES`
-* `location` is automatically set to the `remotePath` property of `RatCatcher`
 * `batchname` is, unsurprisingly, the `batchname` determined as above
+* `location` is automatically set to the `remotePath` property of `RatCatcher`
 * `outfile` is the name of the output file, also automatically determined
 * `test` is a logical flag
 
