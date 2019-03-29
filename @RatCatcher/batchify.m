@@ -128,7 +128,7 @@ function batchify(self, batchname, filenames, filecodes, pathname, scriptname, v
     end
   end
 
-  %% Clean out the directory
+  %% Cleanup and lamplighting
 
   warning off all
   delete(fullfile(localPath, ['*', batchname, '*']))
@@ -137,6 +137,10 @@ function batchify(self, batchname, filenames, filecodes, pathname, scriptname, v
   if verbose == true
     disp('[INFO] all old files removed')
   end
+
+  % perform lamplighting
+
+  self.lamplight(batchname);
 
   %% Add to the directory
 
