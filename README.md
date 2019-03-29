@@ -55,7 +55,7 @@ job of the batch script is to tell the cluster to run MATLAB and a function call
 This is a MATLAB function with the following form:
 
 ```matlab
-function batchFunction(index, batchname, location, outfile, test)
+function batchFunction(index, location, batchname, outfile, test)
   ...
 end
 ```
