@@ -31,7 +31,8 @@ function lamplight(self, varargin)
 		k.publish(self.localPath);
 
 	otherwise
-		disp('[ERROR] I don''t know what to do')
+		% do nothing
+		
 	end % switch
 
 end % function
