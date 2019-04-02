@@ -15,8 +15,9 @@ properties
 
   expID
   % character vector or cell array of character vectors
+  % cannot be a character matrix
   % an unambiguous identifier that identifies the raw data
-  % it serves as a code to the |parse| function
+  % it serves as a code to the `parse` function
   % the columns are increasingly specific IDs to the parse function
   % the rows are new IDs (results are appended)
 
