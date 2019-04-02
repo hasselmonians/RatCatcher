@@ -52,16 +52,12 @@ function [filepaths] = listFiles(identifiers, filesig, masterpath)
 % end function
 
 function filepaths = listFiles_core(identifiers, filesig, masterpath)
-  for ii = 1:numel(identifiers)
 
-
-
-
+  % builds the filepath list by
 
   filepaths = {};
 
   for ii = 1:numel(identifiers)
-
     % prepend the master path if it exists
     filepath = fullfile(masterpath, identifiers{ii}, filesig);
 
@@ -69,7 +65,7 @@ function filepaths = listFiles_core(identifiers, filesig, masterpath)
     filepath = rel2abs(filepath);
 
     % acquire the directory objects
-    dirs = dir(filepath);
+    dirs = dir(filepath, filesig);
 
     % add to filepaths
     for qq = 1:length(dirs)
