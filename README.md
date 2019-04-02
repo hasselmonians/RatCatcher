@@ -97,7 +97,7 @@ expID =
     {'Caitlin'}    {'C'}
 ```
 
-This would indicate that this is Caitlin's data from clusters `A`, `B`, and `C`. The power of the `expID` is that as long as it is specified in the `batchify` function what to do with a certain `expID` pattern, it works. You can also bypass the `expID` process by delivering a list of filenames directly to the `RatCatcher` functions. You can get a list of filenames with the `RatCatcher.listfiles()` function.
+This would indicate that this is Caitlin's data from clusters `A`, `B`, and `C`. The power of the `expID` is that as long as it is specified in the `batchify` function what to do with a certain `expID` pattern, it works. You can also bypass the `expID` process by delivering a list of filenames directly to the `RatCatcher` functions. You can get a list of filenames with the `RatCatcher.listFiles()` function.
 
 The `protocol` field determines which analysis should be performed. `RatCatcher` doesn't actually do any real calculations, but sets up the batch files needed to run the computations on a high-performance computing cluster. It looks for somewhere on your path where a function named `[protocol '.batchFunction']` is.
 
@@ -140,10 +140,10 @@ such as a custom `batchname` rather than the very verbose (but unambiguous) one 
 
 This will automatically generate the batch files and put them in the directory specified in `localPath`. The `filenames` property is generated from the `expID` property, so as long as your file organization is accurately represented in `expID`, you are good to go.
 
-You can build the `filenames` list by using the `listfiles` function. Though, in general, `batchify` will automatically `parse` for you.
+You can build the `filenames` list by using the `listFiles` function. Though, in general, `batchify` will automatically `parse` for you.
 
 ```matlab
-[filepaths] = RatCatcher.listfiles(identifiers, filesig, masterpath)
+[filepaths] = RatCatcher.listFiles(identifiers, filesig, masterpath)
 ```
 
 The `identifiers` is very much like `expID` except that it contains only the discrete filenames. The `filesig` is the pattern to search for within the files specified by `identifiers`. Use `**` to indicate searching in all subfolders and `*` to indicate searching for anything that matches the pattern. For example,

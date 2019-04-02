@@ -63,7 +63,7 @@ methods (Static)
   [protocolObject, dataObject] = extract(dataTable, index, analysis, verbose)
   [p] = pref()
   [filename, cellnum] = read(location, batchName, index)
-  [filenames] = listfiles(identifiers, filesig, masterpath)
+  [filenames] = listFiles(identifiers, filesig, masterpath)
   [output] = getBatchName(expID, protocol)
 
 end % static methods

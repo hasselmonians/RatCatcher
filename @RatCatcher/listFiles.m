@@ -1,4 +1,4 @@
-function [filepaths] = listfiles(identifiers, filesig, masterpath)
+function [filepaths] = listFiles(identifiers, filesig, masterpath)
 
   % constructs a list of filepaths that fit a certain pattern
   % if the directory paths are not absolute, rebase looks within the current working directory
