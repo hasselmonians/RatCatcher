@@ -60,7 +60,7 @@ function filepaths = listFiles_core(identifiers, filesig, masterpath)
 
   for ii = 1:numel(identifiers)
     % prepend the master path if it exists
-    filepath = fullfile(masterpath, identifiers{ii}, filesig);
+    filepath = fullfile(masterpath, identifiers{ii,:}, filesig);
 
     % convert to absolute path
     filepath = rel2abs(filepath);
