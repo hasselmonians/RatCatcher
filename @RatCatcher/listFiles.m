@@ -9,7 +9,7 @@ function [filepaths] = listFiles(identifiers, filesig, masterpath)
   %
   % Arguments:
   %   identifiers: a cell array of directory paths in which to search
-  %     for example: {'/data/rat1', 'data/rat2'}
+  %     follows the same conventions as the RatCatcher property expID
   %   filesig: a character vector which indicates which files to find
   %     for example, 'ExperimentID*.csv' finds only .csv files
   %     that begin with 'ExperimentID' in the directories indicated by identifiers
@@ -21,6 +21,7 @@ function [filepaths] = listFiles(identifiers, filesig, masterpath)
   % Outputs:
   %   filepaths: a cell array of absolute filepaths
   %
+  % See also: RatCatcher, RatCatcher.parse, RatCatcher.batchify
 
   if nargin < 3
     masterpath = [];

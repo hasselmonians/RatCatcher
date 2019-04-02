@@ -10,6 +10,8 @@ function [filenames, filecodes] = parse(self)
   % if self.expID is a character vector, run this function once
   % if self.expID is a cell array, run this function iteratively
   % and append the results to the output
+  %
+  % See also: RatCatcher, RatCatcher.batchify, RatCatcher.listFiles
 
   expID = self.expID;
 
