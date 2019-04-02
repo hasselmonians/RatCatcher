@@ -16,13 +16,12 @@ function [filenames, filecodes] = parse(self)
   expID = self.expID;
 
   if iscell(expID)
-      % if expID is a cell array (e.g. contains multiple sets)
     if size(expID, 1) ~= 1
+      % expID is a cell array with multiple sets (i.e. rows)
+      % construct the filenames and filecodes lists by reading each row
       [filenames, filecodes] = parse_core(expID(1,:));
-      for ii = 2:length(expID)
       for ii = 2:size(expID, 1)
         % iterate through the parsing and append the results
-        [filenames0, filecodes0] = parse_core(experimenter, expID(ii,:));
         [filenames0, filecodes0] = parse_core(expID(ii,:));
         filenames  = [filenames; filenames0];
         filecodes   = [filecodes; filecodes0];
