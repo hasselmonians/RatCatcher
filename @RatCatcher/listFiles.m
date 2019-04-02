@@ -53,7 +53,8 @@ function [filepaths] = listFiles(identifiers, filesig, masterpath)
 
 function filepaths = listFiles_core(identifiers, filesig, masterpath)
 
-  % builds the filepath list by
+  % builds the filepath list by finding files that match filesig]
+  % in the directory specified by identifiers and masterpath
 
   filepaths = {};
 
