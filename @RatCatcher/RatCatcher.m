@@ -43,7 +43,8 @@ end % properties
 methods
 
   function self = RatCatcher()
-    if exist(fullfile('RatCatcher', '@RatCatcher', 'pref.m'), 'file')
+    try
+      RatCatcher.pref();
       p = RatCatcher.pref();
       filenames = p.filenames;
       expID = p.expID;
