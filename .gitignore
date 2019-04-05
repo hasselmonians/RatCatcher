@@ -242,4 +242,4 @@ TSWLatexianTemp*
 *.spl
 
 # preference/config files
-pref.m
+*@RatCatcher/pref.m
