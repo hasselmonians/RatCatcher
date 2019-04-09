@@ -1,10 +1,12 @@
-function lamplight(self, batchname, varargin)
+function lamplight(self, varargin)
 
 	% performs bookkeeping routines based on the protocol
 	% the protocol is read from the RatCatcher object
 	% the batchname is used to check for files with the correct name
 	% variable input arguments are for use before batchify by the user
 	% they are specific to each protocol
+
+	batchname = self.batchname;
 
 	switch self.protocol
 

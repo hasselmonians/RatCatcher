@@ -37,7 +37,7 @@ properties
   batchname
   filenames
   filecodes
-  pathname
+  batchfuncname
   scriptname
   verbose
 
