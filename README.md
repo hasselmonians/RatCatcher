@@ -115,8 +115,6 @@ Set up your `RatCatcher` object.
 
 ```matlab
 r = RatCatcher;
-r.filenames     = [];
-r.filecodes     = [];
 r.expID         = {};
 r.protocol      = 'BandwidthEstimator';
 r.remotePath    = '/projectnb/hasselmogrp/hoyland/MLE-time-course/cluster';
