@@ -79,20 +79,22 @@ function batchify(self, batchname, filenames, filecodes, pathname, scriptname, v
       disp('[INFO] filenames determined automatically')
       disp('[INFO] filecodes determined automatically')
     end
-  elseif ~isempty(filenames)
-    % filecodes provided but not filenames
-    filenames = self.parse;
-    if verbose == true
-      disp('[INFO] filenames determined automatically')
-      disp('[INFO] filecodes determined by user')
-    end
-  else
-    % filenames specified but not filecodes
-    [~, filecodes] = self.parse;
-    if verbose == true
-      disp('[INFO] filenames determined by user')
-      disp('[INFO] filecodes determined automatically')
-    end
+  % otherwise assume that the user is correct and move on
+  % elseif isempty(filenames)
+  %   % filecodes provided but not filenames
+  %   filenames = self.parse;
+  %   if verbose == true
+  %     disp('[INFO] filenames determined automatically')
+  %     disp('[INFO] filecodes determined by user')
+  %   end
+  % else
+  %   % filenames specified but not filecodes
+  %   [~, filecodes] = self.parse;
+  %   if verbose == true
+  %     disp('[INFO] filenames determined by user')
+  %     disp('[INFO] filecodes determined automatically')
+  %   end
+  % end
   end
 
   % if the path to the batch function has been given by the user, override
@@ -107,11 +109,11 @@ function batchify(self, batchname, filenames, filecodes, pathname, scriptname, v
   end
 
   if numel(pathname) == 0
-    error(['[ERROR] batch function not found at: ' fullfile(self.protocol '.batchFunction')])
+    error(['[ERROR] batch function not found at: ' [fullfile(self.protocol) '.batchFunction']])
   end
 
   if verbose == true
-    disp[('[INFO] batch function found')]
+    disp('[INFO] batch function found')
   end
 
   % determine the script name
