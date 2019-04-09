@@ -35,7 +35,9 @@ function lamplight(self, batchname, varargin)
 				error('Inputs need to be name value pairs')
 			end
 			% save the options.mat file
-			k.publish(fullfile(self.localPath, batchname, 'options.mat'));
+			location = fullfile(self.localPath, batchname, 'options.mat');
+			k.publish(location);
+			disp(['[INFO] options file saved at: ' location])
 	else
 		disp('[INFO] options file already exists for this batch name')
 	end
