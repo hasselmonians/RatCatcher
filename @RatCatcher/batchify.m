@@ -117,7 +117,7 @@ function batchify(self, batchname, filenames, filecodes, pathname, scriptname, v
   end
 
   % determine the script name
-  if ~isempty(scriptname)
+  if isempty(scriptname)
     scriptname = 'RatCatcher-generic-script.sh';
 
     if verbose == true
