@@ -13,7 +13,8 @@ function lamplight(self, batchname, varargin)
 		% varargin allows modification of the options before saving
 
 		% check to see if options file already exists
-		if ~exist(fullfile(self.localPath, batchname, 'options.mat'), 'file')
+		filename = [batchname '-' 'options.mat'];
+		if ~exist(fullfile(self.localPath, filename), 'file')
 			% instantiate object with default properties
 			k = KiloPlex();
 			% validate arguments
@@ -35,9 +36,8 @@ function lamplight(self, batchname, varargin)
 				error('Inputs need to be name value pairs')
 			end
 			% save the options.mat file
-			location = fullfile(self.localPath, batchname);
-			k.publish(self.localPath, [batchname '-' 'options.mat']);
-			disp(['[INFO] options file saved at: ' location])
+			k.publish(self.localPath, filename);
+			disp(['[INFO] options file saved at: ' fullfile(self.localPath, filename)])
 	else
 		disp('[INFO] options file already exists for this batch name')
 	end
