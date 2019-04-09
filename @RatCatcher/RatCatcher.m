@@ -34,6 +34,13 @@ properties
   % the name of the analysis protocol to be performed on the cluster
   % this is used to find the correct batchFunction
 
+  batchname
+  filenames
+  filecodes
+  pathname
+  scriptname
+  verbose
+
   project
   % character vector
   % the name of the project paying for compute nodes on the cluster
@@ -44,9 +51,7 @@ methods
 
   function self = RatCatcher()
     try
-      RatCatcher.pref();
       p = RatCatcher.pref();
-      filenames = p.filenames;
       expID = p.expID;
       remotePath = p.remotePath;
       localPath = p.localPath;
