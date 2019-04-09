@@ -66,7 +66,7 @@ function filepaths = listFiles_core(identifiers, filesig, masterpath)
     filepath = rel2abs(filepath);
 
     % acquire the directory objects
-    dirs = dir(filepath, filesig);
+    dirs = dir(filepath);
 
     % add to filepaths
     for qq = 1:length(dirs)
