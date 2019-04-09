@@ -16,7 +16,7 @@ function output = getBatchName(expID, protocol)
 
     output = [output '-' protocol];
   else
-    output = expID;
+    output = [expID '-' protocol];
   end
 
 end % function
