@@ -200,7 +200,7 @@ function batchify(self, batchname, filenames, filecodes, pathname, scriptname, v
                     'false']);
 
   % write to file
-  figlib.write(finalScriptPath, script);
+  filelib.write(finalScriptPath, script);
 
   if verbose == true
     disp('[INFO] batch script edited')
