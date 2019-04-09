@@ -48,7 +48,7 @@ function [filepaths] = listFiles(identifiers, filesig, masterpath)
     % identifiers is a character vector
     filepaths = listFiles_core({identifiers}, filesig, masterpath);
   end
-
+end
 % end function
 
 function filepaths = listFiles_core(identifiers, filesig, masterpath)
