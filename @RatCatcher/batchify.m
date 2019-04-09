@@ -131,8 +131,9 @@ function batchify(self, batchname, filenames, filecodes, pathname, scriptname, v
 
   %% Cleanup and lamplighting
 
+  % TODO: write a better delete script
   warning off all
-  delete(fullfile(localPath, ['*', batchname, '*']))
+  % delete(fullfile(localPath, ['*', batchname, '*']))
   warning on all
 
   if verbose == true
