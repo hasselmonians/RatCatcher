@@ -50,7 +50,6 @@ function batchify(self, batchname, filenames, filecodes, pathname, scriptname, v
   end
 
   % define shorthand variables
-  filenames   = self.filenames;
   expID       = self.expID;
   remotePath  = self.remotePath;
   localPath   = self.localPath;
@@ -61,7 +60,7 @@ function batchify(self, batchname, filenames, filecodes, pathname, scriptname, v
   %% Parse all of the inputs
 
   % define the batchname
-  if ~isempty(batchname)
+  if isempty(batchname)
     batchname   = RatCatcher.getBatchName(expID, protocol);
   end
 
@@ -72,7 +71,7 @@ function batchify(self, batchname, filenames, filecodes, pathname, scriptname, v
   % if the filename and filecodes have been given by the user, override
   % otherwise, find the filenames and filecodes using the parse function
 
-  if ~isempty(filenames) & ~isempty(filecodes)
+  if isempty(filenames) & isempty(filecodes)
     % no additional information specified by user
     % finding filenames and filecodes automatically
     [filenames, filecodes] = self.parse();
