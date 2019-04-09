@@ -1,6 +1,11 @@
 function output = getBatchName(expID, protocol)
   % comes up with a verbose name that unambiguously identifies any output file
 
+  if isempty(expID)
+    output = protocol;
+    return
+  end
+
   if iscell(expID)
     expID  = expID';
     output = expID{1};
