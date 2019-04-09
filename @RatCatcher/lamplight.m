@@ -2,11 +2,9 @@ function lamplight(self, varargin)
 
 	% performs bookkeeping routines based on the protocol
 	% the protocol is read from the RatCatcher object
-	% the batchname is used to check for files with the correct name
+	% self.batchname is used to check for files with the correct name
 	% variable input arguments are for use before batchify by the user
 	% they are specific to each protocol
-
-	batchname = self.batchname;
 
 	switch self.protocol
 
@@ -15,7 +13,7 @@ function lamplight(self, varargin)
 		% varargin allows modification of the options before saving
 
 		% check to see if options file already exists
-		filename = [batchname '-' 'options.mat'];
+		filename = [self.batchname '-' 'options.mat'];
 		if ~exist(fullfile(self.localPath, filename), 'file')
 			% instantiate object with default properties
 			k = KiloPlex();
