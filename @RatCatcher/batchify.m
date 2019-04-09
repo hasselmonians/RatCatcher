@@ -121,11 +121,11 @@ function batchify(self, batchname, filenames, filecodes, pathname, scriptname, v
     scriptname = 'RatCatcher-generic-script.sh';
 
     if verbose == true
-      disp(['[INFO] batch script determined by user'])
+      disp(['[INFO] batch script determined automatically'])
     end
   else
     if verbose == true
-      disp('[INFO] batch script determined automatically')
+      disp('[INFO] batch script determined by user')
     end
   end
 
@@ -172,7 +172,7 @@ function batchify(self, batchname, filenames, filecodes, pathname, scriptname, v
   copyfile(dummyScriptPath, finalScriptPath);
 
   if verbose == true
-    disp(['[INFO] batch script copied to: ' finalscriptpath])
+    disp(['[INFO] batch script copied to: ' finalScriptPath])
   end
 
   %% Edit the copied batch file
