@@ -140,7 +140,6 @@ function batchify(self, batchname, filenames, filecodes, pathname, scriptname, v
   end
 
   % perform lamplighting
-
   self.lamplight(batchname);
 
   %% Add to the directory
