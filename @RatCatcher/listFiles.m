@@ -3,9 +3,9 @@ function [filepaths] = listFiles(identifiers, filesig, masterpath)
   % constructs a list of filepaths that fit a certain pattern
   % if the directory paths are not absolute, rebase looks within the current working directory
   %
-  % filepaths = RatCatcher.rebase(identifiers, filesig)
+  % filepaths = RatCatcher.listFiles(identifiers, filesig)
   %
-  % filepaths = RatCatcher.rebase(identifiers, filesig, masterpath)
+  % filepaths = RatCatcher.listFiles(identifiers, filesig, masterpath)
   %
   % Arguments:
   %   identifiers: a cell array of directory paths in which to search
