@@ -101,7 +101,7 @@ function batchify(self, batchname, filenames, filecodes, pathname, scriptname, v
 
   if ~isempty(pathname)
     if verbose == true
-      disp[('[INFO] batch function determined by user')]
+      disp('[INFO] batch function determined by user')
     end
   else
     pathname = which([self.protocol '.batchFunction']);
