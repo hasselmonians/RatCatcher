@@ -36,7 +36,7 @@ function lamplight(self, batchname, varargin)
 			end
 			% save the options.mat file
 			location = fullfile(self.localPath, batchname);
-			k.publish(location);
+			k.publish(self.localPath, [batchname '-' 'options.mat']);
 			disp(['[INFO] options file saved at: ' location])
 	else
 		disp('[INFO] options file already exists for this batch name')
