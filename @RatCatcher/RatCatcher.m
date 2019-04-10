@@ -38,7 +38,7 @@ properties
   filenames
   filecodes
   batchfuncname
-  scriptname
+  batchscriptname
   verbose
 
   project
@@ -71,8 +71,8 @@ methods (Static)
   [p] = pref()
   [filename, cellnum] = read(location, batchName, index)
   [filenames] = getFileNames(identifiers, filesig, masterpath)
-  [output] = getBatchName(expID, protocol)
-
+  [batchscriptname] = getBatchScriptName()
+  
 end % static methods
 
 end % classdef
