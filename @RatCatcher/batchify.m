@@ -3,7 +3,7 @@ function batchify(self)
   % BATCHIFY generates batch scripts indicated by a RatCatcher object
   %   r.BATCHIFY batches the files specified by the ratcatcher object
   %
-  % If batchname, filenames, filecodes, batchfuncname, or scriptname are empty [], they are skipped and the defaults are used
+  % If batchname, filenames, filecodes, batchfuncname, or batchscriptname are empty [], they are skipped and the defaults are used
   % The files go into r.localPath and reference data saved in r.remotePath
   % The files are named beginning with batchscript, then by the expID and protocol
   %
@@ -22,68 +22,12 @@ function batchify(self)
   filenames   = self.filenames;
   filecodes   = self.filecodes;
   batchfuncname  = self.batchfuncname;
-  scriptname  = self.scriptname;
+  batchscriptname  = self.batchscriptname;
   verbose     = self.verbose;
 
   %% Parse all of the inputs
 
-  % define the batchname
-  if isempty(batchname)
-    batchname   = RatCatcher.getBatchName(expID, protocol);
-  end
-
-  if verbose == true
-    disp(['[INFO] batch name is: ' batchname])
-  end
-
-  % if the filename and filecodes have been given by the user, override
-  % otherwise, find the filenames and filecodes using the parse function
-
-  if isempty(filenames) & isempty(filecodes)
-    % no additional information specified by user
-    % finding filenames and filecodes automatically
-    [filenames, filecodes] = self.parse();
-    if verbose == true
-      disp('[INFO] filenames and filecodes determined automatically')
-    end
-  else
-    disp('[INFO] filenames and filecodes determined by user')
-  end
-
-  % if the path to the batch function has been given by the user, override
-  % otherwise, find the batch function by searching
-
-  if isempty(batchfuncname)
-    batchfuncname = which([protocol '.batchFunction']);
-  else
-    if verbose == true
-      disp('[INFO] batch function determined by user')
-    end
-  end
-
-  if numel(batchfuncname) == 0
-    error(['[ERROR] batch function not found at: ' [fullfile(protocol) '.batchFunction']])
-  end
-
-  if verbose == true
-    disp('[INFO] batch function found')
-  end
-
-  % determine the script name
-  if isempty(scriptname)
-    scriptname = 'RatCatcher-generic-script.sh';
-    if verbose == true
-      disp(['[INFO] batch script determined automatically'])
-    end
-  else
-    if verbose == true
-      disp('[INFO] batch script determined by user')
-    end
-  end
-
-  if numel(which(scriptname)) == 0
-    error(['[ERROR] batch function not found at: ' scriptname])
-  end
+  self.validate();
 
   %% Cleanup and lamplighting
 
@@ -123,7 +67,7 @@ function batchify(self)
   %% Copy over the generic script and rename
 
   % find the dummy script by using a lazy hack
-  dummyScriptPath = which(scriptname);
+  dummyScriptPath = which(batchscriptname);
   % name the batch script using the same format as the filenames and filecodes
   finalScriptPath = fullfile(localPath, [batchname, '.sh']);
   copyfile(dummyScriptPath, finalScriptPath);
