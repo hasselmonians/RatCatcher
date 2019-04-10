@@ -1,4 +1,4 @@
-function filepath = getFileNames(self, identifiers, filesig, masterpath)
+function filepath = getFileNames(identifiers, filesig, masterpath)
 
   % constructs a list of filepaths that fit a certain pattern
   % if the directory paths are not absolute, rebase looks within the current working directory
@@ -26,7 +26,7 @@ function filepath = getFileNames(self, identifiers, filesig, masterpath)
   %% Parse inputs
 
   % set defaults
-  if nargin < 4
+  if nargin < 3
     masterpath = [];
   end
 
