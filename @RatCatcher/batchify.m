@@ -3,26 +3,25 @@ function batchify(self)
   % BATCHIFY generates batch scripts indicated by a RatCatcher object
   %   r.BATCHIFY batches the files specified by the ratcatcher object
   %
-  % If batchname, filenames, filecodes, batchfuncname, or batchscriptname are empty [], they are skipped and the defaults are used
-  % The files go into r.localPath and reference data saved in r.remotePath
+  % The files go into r.localpath and reference data saved in r.remotepath
   % The files are named beginning with batchscript, then by the expID and protocol
   %
-  % See also RATCATCHER, RATCATCHER.PARSE, RATCATCHER.GETBATCHNAME, RATCATCHER.LISTFILES, RATCATCHER.GATHER
+  % See also RATCATCHER, RATCATCHER.PARSE, RATCATCHER.VALIDATE, RATCATCHER.GATHER
 
   %% Preamble
 
   % define shorthand variables
   expID       = self.expID;
-  remotePath  = self.remotePath;
-  localPath   = self.localPath;
+  remotepath  = self.remotepath;
+  localpath   = self.localpath;
   protocol    = self.protocol;
   project     = self.project;
   tt          = '''';
   batchname   = self.batchname;
   filenames   = self.filenames;
   filecodes   = self.filecodes;
-  batchfuncname  = self.batchfuncname;
-  batchscriptname  = self.batchscriptname;
+  batchfuncpath  = self.batchfuncpath;
+  batchscriptpath  = self.batchscriptpath;
   verbose     = self.verbose;
 
   %% Parse all of the inputs
@@ -33,7 +32,7 @@ function batchify(self)
 
   % TODO: write a better delete script
   warning off all
-  % delete(fullfile(localPath, ['*', batchname, '*']))
+  % delete(fullfile(localpath, ['*', batchname, '*']))
   warning on all
 
   if verbose == true
@@ -49,27 +48,27 @@ function batchify(self)
   % this format is a standard -- it will be referenced in the batch function as well
 
   % write filenames.txt
-  filelib.write(fullfile(localPath, ['filenames-' batchname '.txt']), filenames);
+  filelib.write(fullfile(localpath, ['filenames-' batchname '.txt']), filenames);
   % write filecodes.csv
-  csvwrite(fullfile(localPath, ['filecodes-' batchname, '.csv']), filecodes);
+  csvwrite(fullfile(localpath, ['filecodes-' batchname, '.csv']), filecodes);
 
   if verbose == true
     disp('[INFO] filenames and filecodes parsed')
   end
 
   % copy over the new batch function
-  copyfile(batchfuncname, localPath);
+  copyfile(batchfuncpath, localpath);
 
   if verbose == true
-    disp(['[INFO] batch function copied to: ' localPath])
+    disp(['[INFO] batch function copied to: ' localpath])
   end
 
   %% Copy over the generic script and rename
 
   % find the dummy script by using a lazy hack
-  dummyScriptPath = which(batchscriptname);
+  dummyScriptPath = which(batchscriptpath);
   % name the batch script using the same format as the filenames and filecodes
-  finalScriptPath = fullfile(localPath, [batchname, '.sh']);
+  finalScriptPath = fullfile(localpath, [batchname, '.sh']);
   copyfile(dummyScriptPath, finalScriptPath);
 
   if verbose == true
@@ -80,7 +79,7 @@ function batchify(self)
 
   % useful variables
   script    = filelib.read(finalScriptPath);
-  outfile   = fullfile(remotePath, [batchname, '-', 'SGE_TASK_ID', '.csv']);
+  outfile   = fullfile(remotepath, [batchname, '-', 'SGE_TASK_ID', '.csv']);
 
   % TODO: make outfile more robust (accept more output types)
 
@@ -95,7 +94,7 @@ function batchify(self)
 
   % determine the argument to MATLAB
   script    = strrep(script, 'ARGUMENT', ['$SGE_TASK_ID' ', ' ...
-                    tt remotePath tt ', ' ...
+                    tt remotepath tt ', ' ...
                     tt batchname tt ', ' ...
                     tt outfile tt ', ' ...
                     'false']);

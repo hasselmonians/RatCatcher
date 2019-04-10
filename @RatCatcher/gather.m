@@ -16,7 +16,7 @@ function dataTable = gather(self, filekey, dataTable0)
   %
   % If gather is called with no arguments except the RatCatcher object
   % filekey defaults to what's recovered with r.GETBATCHNAME
-  % filekey is passed to the DIR function which searches in r.localPath
+  % filekey is passed to the DIR function which searches in r.localpath
   % and therefore uses normal wildcard searching syntax
   %
   % If dataTable0 is not empty and is a table, new data is appended, building the table.
@@ -30,7 +30,7 @@ function dataTable = gather(self, filekey, dataTable0)
   % See also RATCATCHER, RATCATCHER.BATCHIFY, RATCATCHER.STITCH, RATCATCHER.GETBATCHNAME, DIR
 
   expID     = self.expID;
-  localPath = self.localPath;
+  localpath = self.localpath;
   protocol  = self.protocol;
 
   if ~exist('filekey', 'var') && isempty(filekey)
@@ -69,8 +69,8 @@ function dataTable = gather(self, filekey, dataTable0)
   returnToCWD = pwd;
 
   % move to where the output files are stored
-  if ~isempty(localPath)
-    cd(localPath)
+  if ~isempty(localpath)
+    cd(localpath)
   else
     disp(['[INFO] No local path set, not changing directories'])
   end

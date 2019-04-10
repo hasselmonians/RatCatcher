@@ -53,7 +53,7 @@ function [filenames, filecodes] = parse_core(expID)
         load('/mnt/hasselmogrp/hoyland/cluster_info.mat');
       catch
         try
-          load(fullfile(self.localPath, cluster_info.mat'));
+          load(fullfile(self.localpath, cluster_info.mat'));
         catch
           try
             load(which('cluster_info.mat'));

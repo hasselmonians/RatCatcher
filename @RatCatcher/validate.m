@@ -44,12 +44,12 @@ function validate(self)
 
   % batch function name
 
-  if isempty(self.batchfuncname)
+  if isempty(self.batchfuncpath)
     % no additional information specified by user
     % finding the batch function name automatically
-    self.batchfuncname = self.getBatchFuncName();
+    self.batchfuncpath = self.getBatchFuncPath();
 
-    if isempty(self.batchfuncname)
+    if isempty(self.batchfuncpath)
       % couldn't find the batch function name automatically
       % error
 
@@ -78,10 +78,10 @@ function validate(self)
 
   % batch script name
 
-  if isempty(self.batchscriptname)
+  if isempty(self.batchscriptpath)
     % batch script is not provided by user
     % determine automatically
-    self.batchscriptname = self.getBatchScriptName();
+    self.batchscriptpath = self.getBatchScriptPath();
 
     if verbose == true
       disp(['[INFO] batch script determined automatically'])
@@ -94,7 +94,7 @@ function validate(self)
   end
 
   if numel(which(scriptname)) == 0
-    error(['[ERROR] batch function not found at: ' self.batchscriptname])
+    error(['[ERROR] batch function not found at: ' self.batchscriptpath])
   end
 
 end % function

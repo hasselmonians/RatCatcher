@@ -2,17 +2,6 @@ classdef RatCatcher
 
 properties
 
-  % filenames
-  % cell array of character vectors
-  % a list of all filenames of the raw data to be processed
-  % note that these could be folders which unambiguously specify an experiment
-  % since some experiments produce multiple data files (e.g. a video and time series data)
-
-  % filecodes
-  % numerical matrix of size n x 2 where n = length(filenames)
-  % stores any additional parameters required to unambiguously specific data
-  % from one of the filenames
-
   expID
   % character vector or cell array of character vectors
   % cannot be a character matrix
@@ -21,11 +10,11 @@ properties
   % the columns are increasingly specific IDs to the parse function
   % the rows are new IDs (results are appended)
 
-  remotePath
+  remotepath
   % character vector
   % absolute path to where the output data should be stored on a computing cluster
 
-  localPath
+  localpath
   % character vector
   % absolute path to where the output data should be stored on a local computer
 
@@ -35,11 +24,30 @@ properties
   % this is used to find the correct batchFunction
 
   batchname
+  % the unique identifier which is part of every file name for files created by RatCatcher
+
   filenames
+  % m x 1 cell array of character vectors
+  % the list of files names of raw data to be processed via the batch function
+
   filecodes
-  batchfuncname
-  batchscriptname
+  % a matrix of size m x n, where m is the number of filenames
+  % contains numerical information used to find specific data inside of the paired filename
+
+  batchfuncpath
+  % character vector
+  % the full path to the batch function
+  % used to select the correct batch function during batchifying
+
+  batchscriptpath
+  % character vector
+  % the full path to the batch script
+  % used to select the correct batch script during batchifying
+
   verbose
+  % logical
+  % if true, functions output more descriptive text while running
+
 
   project
   % character vector
@@ -53,8 +61,8 @@ methods
     try
       p = RatCatcher.pref();
       expID = p.expID;
-      remotePath = p.remotePath;
-      localPath = p.localPath;
+      remotepath = p.remotepath;
+      localpath = p.localpath;
       protocol = p.protocol;
       project = p.project;
     end
@@ -69,10 +77,10 @@ methods (Static)
   [X,ndx,dbg] = natsortfiles(X,varargin)
   [protocolObject, dataObject] = extract(dataTable, index, analysis, verbose)
   [p] = pref()
-  [filename, cellnum] = read(location, batchName, index)
+  [filename, cellnum] = read(location, batchname, index)
   [filenames] = getFileNames(identifiers, filesig, masterpath)
   [batchscriptname] = getBatchScriptName()
-  
+
 end % static methods
 
 end % classdef
