@@ -1,22 +1,25 @@
-function output = getBatchName(expID, protocol)
-  % comes up with a verbose name that unambiguously identifies any output file
+function getBatchName(self)
+  % comes up with a verbose name that unambiguously identifies any batchname file
+
+  expID     = self.expID;
+  protocol  = self.protocol;
 
   if isempty(expID)
-    output = protocol;
+    batchname = ['test' '-' protocol];
     return
   end
 
   if iscell(expID)
     expID  = expID';
-    output = expID{1};
+    batchname = expID{1};
 
     for ii = 2:numel(expID)
-      output = [output '-' expID{ii}];
+      batchname = [batchname '-' expID{ii}];
     end
 
-    output = [output '-' protocol];
+    batchname = [batchname '-' protocol];
   else
-    output = [expID '-' protocol];
+    batchname = [expID '-' protocol];
   end
 
 end % function

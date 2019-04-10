@@ -1,11 +1,11 @@
-function [filepaths] = listFiles(identifiers, filesig, masterpath)
+function filepath = getFileNames(self, identifiers, filesig, masterpath)
 
   % constructs a list of filepaths that fit a certain pattern
   % if the directory paths are not absolute, rebase looks within the current working directory
   %
-  % filepaths = RatCatcher.listFiles(identifiers, filesig)
+  % filepaths = RatCatcher.getFileNames(identifiers, filesig)
   %
-  % filepaths = RatCatcher.listFiles(identifiers, filesig, masterpath)
+  % filepaths = RatCatcher.getFileNames(identifiers, filesig, masterpath)
   %
   % Arguments:
   %   identifiers: a cell array of directory paths in which to search
@@ -26,7 +26,7 @@ function [filepaths] = listFiles(identifiers, filesig, masterpath)
   %% Parse inputs
 
   % set defaults
-  if nargin < 3
+  if nargin < 4
     masterpath = [];
   end
 
@@ -35,23 +35,24 @@ function [filepaths] = listFiles(identifiers, filesig, masterpath)
     if size(identifiers, 1) ~= 1
       % identifiers has multiple sets (i.e. rows)
       % construct the file list by reading each row
-      filepaths = listFiles_core(identifiers(1,:), filesig, masterpath);
+      filepaths = getFileNames_core(identifiers(1,:), filesig, masterpath);
       for ii = 2:size(expID, 1)
-        filepaths0  = listFiles_core(identifiers(ii,:), filesig, masterpath);
+        filepaths0  = getFileNames_core(identifiers(ii,:), filesig, masterpath);
         filepaths   = [filenames; filenames0];
       end
     else
       % identifiers is a row vector cell array or a scalar cell array
-      filepaths = listFiles_core(identifiers(1, :), filesig, masterpath);
+      filepaths = getFileNames_core(identifiers(1, :), filesig, masterpath);
     end
   else
     % identifiers is a character vector
-    filepaths = listFiles_core({identifiers}, filesig, masterpath);
+    filepaths = getFileNames_core({identifiers}, filesig, masterpath);
   end
+
 end
 % end function
 
-function filepaths = listFiles_core(identifiers, filesig, masterpath)
+function filepaths = getFileNames_core(identifiers, filesig, masterpath)
 
   % builds the filepath list by finding files that match filesig]
   % in the directory specified by identifiers and masterpath
