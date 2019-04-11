@@ -14,8 +14,8 @@ Create the `RatCatcher` object.
 ```matlab
 r = RatCatcher;
 r.expID = {'Caitlin', 'A'; 'Caitlin', 'B'; 'Caitlin', 'C'};
-r.remotePath = '/projectnb/hasselmogrp/hoyland/MLE-time-course/cluster';
-r.localPath = '/mnt/hasselmogrp/hoyland/MLE-time-course/cluster';
+r.remotepath = '/projectnb/hasselmogrp/hoyland/MLE-time-course/cluster';
+r.localpath = '/mnt/hasselmogrp/hoyland/MLE-time-course/cluster';
 r.protocol = 'BandwidthEstimator';
 ```
 
@@ -39,6 +39,8 @@ Wait until the run has completed, then
 dataTable = r.gather;
 dataTable = r.stitch(dataTable);
 ```
+
+This will gather the data into a `table` in MATLAB on your local computer.
 
 ## What does RatCatcher actually do?
 
@@ -67,7 +69,7 @@ Then, you can run the script on the cluster by submitting it using `qsub`.
 qsub scriptname.sh
 ```
 
-Once the script finishes running, output files are produced in the directory specified by `RatCatcher`'s `remotePath`.
+Once the script finishes running, output files are produced in the directory specified by `RatCatcher`'s `remotepath`.
 You can gather the data into a `table` in MATLAB with
 
 ```matlab
@@ -76,9 +78,9 @@ dataTable = r.gather();
 
 ## Class properties
 
-<!-- `filenames` will be set automatically when you run `batchify`, though you can also generate your own with the static `build` function.
+`filenames` will be set automatically when you run `batchify`, though you can also generate your own with the static `build` function.
 
-`filecodes` is a field useful for storing numerical information that allows you to specify further within a data file. For example, if you had 100 recordings and kept track of cell and tetrode number, you might have a `100 x 2` matrix for your `filecodes`. These properties are intended to be available to the `batchify` function so that they can be written into the batch script that contains the function call to the batch function specified in `protocol` that performs the actual analysis. -->
+`filecodes` is a field useful for storing numerical information that allows you to specify further within a data file. For example, if you had 100 recordings and kept track of cell and tetrode number, you might have a `100 x 2` matrix for your `filecodes`. These properties are intended to be available to the `batchify` function so that they can be written into the batch script that contains the function call to the batch function specified in `protocol` that performs the actual analysis.
 
 The `expID` field contains an character vector or cell array of character vectors that serves as an unambiguous identifier to the raw data to be analyzed.
 
@@ -97,15 +99,52 @@ expID =
     {'Caitlin'}    {'C'}
 ```
 
-This would indicate that this is Caitlin's data from clusters `A`, `B`, and `C`. The power of the `expID` is that as long as it is specified in the `batchify` function what to do with a certain `expID` pattern, it works. You can also bypass the `expID` process by delivering a list of filenames directly to the `RatCatcher` functions. You can get a list of filenames with the `RatCatcher.listFiles()` function.
+This would indicate that this is Caitlin's data from clusters `A`, `B`, and `C`. The power of the `expID` is that as long as it is specified in the `batchify` function what to do with a certain `expID` pattern, it works. You can also bypass the `expID` process by delivering a list of filenames directly to the `RatCatcher` functions. You can get a list of filenames with the `RatCatcher.getFileNames()` function.
 
 The `protocol` field determines which analysis should be performed. `RatCatcher` doesn't actually do any real calculations, but sets up the batch files needed to run the computations on a high-performance computing cluster. It looks for somewhere on your path where a function named `[protocol '.batchFunction']` is.
 
-The `localPath` field contains the absolute path to where the batch files should be placed (when on your local computer) and the `remotePath` field contains the absolute path from the perspective of the high-performance computing cluster.
+The `localpath` field contains the absolute path to where the batch files should be placed (when on your local computer) and the `remotepath` field contains the absolute path from the perspective of the high-performance computing cluster.
 
-> For instance, if you mounted your cluster on your local machine at `/mnt/myproject/cluster/` then that is your `localPath`. If from the cluster's perspective (when accessing via `ssh`), your files are at `/projectnb/myproject/cluster` then that is your `remotePath`. If your local computer does not have the cluster mounted, `localPath` will be some path in your local file system and you will have to copy the files `RatCatcher` produces over to the `remotePath` before running the script on the cluster.
+> For instance, if you mounted your cluster on your local machine at `/mnt/myproject/cluster/` then that is your `localpath`. If from the cluster's perspective (when accessing via `ssh`), your files are at `/projectnb/myproject/cluster` then that is your `remotepath`. If your local computer does not have the cluster mounted, `localpath` will be some path in your local file system and you will have to copy the files `RatCatcher` produces over to the `remotepath` before running the script on the cluster.
 
 `project` is the name of the project on the cluster (who has to pay for the computer usage).
+
+There are a host of other properties
+
+* batchname
+* batchfuncpath
+* batchscriptpath
+* verbose
+
+which allow you to override options automatically set during the batching process.
+By manually setting any of these class properties to be non-empty, `RatCatcher` will use your preset instead.
+
+The defaults are determined by running a series of functions
+
+* `r.getBatchName()`
+* `r.getBatchFuncPath()`
+* `r.getBatchScriptPath()`
+
+which is performed inside the `r.validate()` function.
+
+The `batchname` is the canonical kernel of text that appears in every file created by `RatCatcher`.
+By default, it is a combination of all the parts of the `expID` and the `protocol`,
+so it should be unique to each experimental dataset and analysis method.
+Files created by `RatCatcher` have names like `filenames-batchname.txt`.
+
+The batch function is a MATLAB (or function in another language) that performs the analysis protocol
+on each file containing the raw or preprocessed data.
+It is determined from the name of the `protocol`.
+`RatCatcher` will try to find a MATLAB class on your computer with the same name as the specified `protocol`
+and thence find a function named `batchFunction`.
+You can also specify your own absolute path to any function on your MATLAB path to override this.
+
+The batch script is the shell script that is run for each filename indicated.
+It sets up the run-time environment on the cluster and then invokes the batch function
+with the correct arguments.
+
+The default script is `RatCatcher-generic-script.sh`, but this can be changed
+by substituting any absolute path to a shell script on your MATLAB path.
 
 ## Pre-Processing
 
@@ -117,34 +156,24 @@ Set up your `RatCatcher` object.
 r = RatCatcher;
 r.expID         = {};
 r.protocol      = 'BandwidthEstimator';
-r.remotePath    = '/projectnb/hasselmogrp/hoyland/MLE-time-course/cluster';
-r.localPath     = '/mnt/hasselmogrp/hoyland/MLE-time-course/cluster';
+r.remotepath    = '/projectnb/hasselmogrp/hoyland/MLE-time-course/cluster';
+r.localpath     = '/mnt/hasselmogrp/hoyland/MLE-time-course/cluster';
 r.project       = 'hasselmogrp';
 ```
 
-Then, batch your files. They will end up in `r.localPath`.
+Then, batch your files. They will end up in `r.localpath`.
 
 ```matlab
 r.batchify();
 ```
 
-You can also specify lots of options:
-
 ```matlab
-r.batchify(batchname, filenames, filecodes, path2BatchFunction, scriptname, verbose)
+filenames = RatCatcher.getFileNames(identifiers, filesig, masterpath);
 ```
 
-such as a custom `batchname` rather than the very verbose (but unambiguous) one generated automatically. The `filenames` and `filecodes` fields are for if you want to ignore the properties set in your `RatCatcher` object and insert your own `filenames` and `filecodes` and path to a batch function.
-
-This will automatically generate the batch files and put them in the directory specified in `localPath`. The `filenames` property is generated from the `expID` property, so as long as your file organization is accurately represented in `expID`, you are good to go.
-
-You can build the `filenames` list by using the `listFiles` function. Though, in general, `batchify` will automatically `parse` for you.
-
-```matlab
-[filepaths] = RatCatcher.listFiles(identifiers, filesig, masterpath)
-```
-
-The `identifiers` is very much like `expID` except that it contains only the discrete filenames. The `filesig` is the pattern to search for within the files specified by `identifiers`. Use `**` to indicate searching in all subfolders and `*` to indicate searching for anything that matches the pattern. For example,
+The `identifiers` is very much like `expID` except that it contains only the discrete filenames.
+The `filesig` is the pattern to search for within the files specified by `identifiers`.
+Use `**` to indicate searching in all subfolders and `*` to indicate searching for anything that matches the pattern. For example,
 
 ```matlab
 filesig = fullpath('**', '*.plx')
@@ -157,7 +186,7 @@ would find all files in the directory `identifiers` and subdirectories that are 
 The function `parse` performs a different operation based on who the experimenter (and alphanumeric code) is. If you are not built into the `RatCatcher` ecosystem yet, it is important to tell `parse` what to do with you. You can do this one of three ways:
 
 1. If you are a part of the Hasselmo, Howard, or Eichenbaum labs, send me an email. You know who I am.
-2. Generate a cell array of `filenames` and a list of `filecodes` by yourself and pass them to `batchify` as arguments.
+2. Generate a cell array of `filenames` and a list of `filecodes` by yourself and update the default (empty) properties in your `RatCatcher` object.
 3. Add a new experimenter name to the `parse_core` function (inside `parse`) switch/case statement that expresses what to do to find the correct data, given an experimenter name.
 
 ### Customizing your batching
@@ -174,25 +203,18 @@ This script requests a 16-core node and outputs an error and log file.
 It also limits the run to 24 hours before terminating.
 Then, it loads MATLAB 2018a and runs the batch function from the command line.
 
+`batchify` reads the properties from the `RatCatcher` object,
+so to override the defaults, update the `RatCatcher` object's properties.
+
+You can get extra feedback from the function by setting
+
+```matlab
+r.verbose = true;
+```
+
 ```matlab
 % r.batchify batches the files specified by the ratcatcher object
-
-% uses a custom batchname rather than one generated from RATCATCHER.GETBATCHNAME
-r.batchify(batchname)
-
-% overrides using RATCATCHER.PARSE to find the filenames and filecodes
-% filenames should be a cell array, filecodes should be an n x 2 matrix
-r.batchify(batchname, filenames, filecodes)
-
-% overrides using RATCATCHER.PARSE and provides a custom batch function
-% pathname should be a character vector (path to the function)
-r.batchify(batchname, filenames, filecodes, pathname)
-
-% uses a custom batch script
-r.batchify(batchname, filenames, filecodes, pathname, scriptname)
-
-% does not display verbose display text
-r.batchify(batchname, filenames, filecodes, pathname, scriptname, false)
+r.batchify();
 ```
 
 ### Customizing your batch script
@@ -214,7 +236,7 @@ environment variable `$SGE_TASK_ID`. The `batchify` function sets up the call to
 A good example of a batch function can be found [here](https://github.com/hasselmonians/BandwidthEstimator/blob/master/%40BandwidthEstimator/batchFunction.m).
 
 Any custom batch script must be a `.sh` file on your `MATLAB` path.
-The best way to check is with `which(batchscriptname)` because that's how `batchify` actually does it.
+The best way to check is with `which(r.batchscriptpath)` because that's how `batchify` actually does it.
 `batchify` using string parsing to fill out the correct fields in the batch script.
 
 * `PROJECT_NAME`: the name of the project on the cluster
@@ -240,7 +262,7 @@ batchFunction(index, batchname, location, outfile, test)
 
 * `index` is automatically set to correspond to the `SGE_TASK_ID` which iterates up to `NUM_FILES`
 * `batchname` is, unsurprisingly, the `batchname` determined as above
-* `location` is automatically set to the `remotePath` property of `RatCatcher`
+* `location` is automatically set to the `remotepath` property of `RatCatcher`
 * `outfile` is the name of the output file, also automatically determined
 * `test` is a logical flag
 
@@ -264,7 +286,8 @@ You can also provide the path to a custom batch script as an argument to `batchi
 
 ## Running your scripts
 
-`batchify` creates a batch script that will run (using `qsub`) all the jobs on the cluster, and put the output files where the data should be stored.
+`batchify` creates a batch script that will run (using `qsub`) all the jobs on the cluster,
+and put the output files where the data should be stored.
 
 ```bash
 # on the cluster
@@ -327,8 +350,8 @@ function p = pref()
     p = struct;
     p.expID           = {'experimenter', 'id1'; 'experimenter', 'id2'};
     p.protocol        = 'BandwidthEstimator';
-    p.localPath       = 'myPath2ClusterFromLocalComputer';
-    p.remotePath      = 'myPath2ClusterFromRemoteComputer';
+    p.localpath       = 'myPath2ClusterFromLocalComputer';
+    p.remotepath      = 'myPath2ClusterFromRemoteComputer';
     p.project         = 'hasselmogrp';
 end
 ```
