@@ -97,4 +97,13 @@ function self = validate(self)
     error(['[ERROR] batch function not found at: ' self.batchscriptpath])
   end
 
+  % check all properties to confirm they exist
+  props = properties(self);
+
+  for prop = props
+    if isempty(self.(prop))
+      error(['[ERROR] ' prop 'property is empty'])
+    end
+  end
+
 end % function
