@@ -97,6 +97,12 @@ function self = validate(self)
     error(['[ERROR] batch function not found at: ' self.batchscriptpath])
   end
 
+  % verbosity
+
+  if isempty(self.verbose)
+    self.verbose = true;
+  end
+
   % check all properties to confirm they exist
   props = properties(self);
 
