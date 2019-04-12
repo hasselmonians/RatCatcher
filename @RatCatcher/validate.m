@@ -105,10 +105,9 @@ function self = validate(self)
 
   % check all properties to confirm they exist
   props = properties(self);
-
-  for prop = props
-    if isempty(self.(prop))
-      error(['[ERROR] ' prop 'property is empty'])
+  for ii = 1:length(props)
+    if isempty(self.(props{ii}))
+      disp(['[WARNING] ' props{ii} ' property is empty'])
     end
   end
 
