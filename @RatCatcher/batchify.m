@@ -108,7 +108,7 @@ function batchify(self)
     disp('[INFO] DONE!')
   end
 
-  disp('[INFO] pass this script to qsub as an argument:')
+  disp(['[INFO] pass this script to qsub as an argument: ' finalScriptPath])
 
 
 end % function
