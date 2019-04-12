@@ -1,4 +1,4 @@
-function batchify(self)
+function self = batchify(self)
 
   % BATCHIFY generates batch scripts indicated by a RatCatcher object
   %   r.BATCHIFY batches the files specified by the ratcatcher object
