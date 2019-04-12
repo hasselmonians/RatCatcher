@@ -8,7 +8,9 @@ function batchify(self)
   %
   % See also RATCATCHER, RATCATCHER.PARSE, RATCATCHER.VALIDATE, RATCATCHER.GATHER
 
-  %% Preamble
+  %% Parse all of the inputs
+
+  self        = self.validate();
 
   % define shorthand variables
   expID       = self.expID;
@@ -23,10 +25,6 @@ function batchify(self)
   batchfuncpath  = self.batchfuncpath;
   batchscriptpath  = self.batchscriptpath;
   verbose     = self.verbose;
-
-  %% Parse all of the inputs
-
-  self.validate();
 
   %% Cleanup and lamplighting
 

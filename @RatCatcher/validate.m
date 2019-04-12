@@ -1,4 +1,4 @@
-function validate(self)
+function self = validate(self)
 
   % validates secondary properties of RatCatcher prior to batchifying
 
