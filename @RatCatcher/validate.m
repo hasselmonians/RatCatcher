@@ -83,12 +83,12 @@ function validate(self)
     % determine automatically
     self.batchscriptpath = self.getBatchScriptPath();
 
-    if verbose == true
+    if self.verbose == true
       disp(['[INFO] batch script determined automatically'])
     end
 
   else
-    if verbose == true
+    if self.verbose == true
       disp('[INFO] batch script determined by user')
     end
   end
