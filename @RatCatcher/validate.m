@@ -93,7 +93,7 @@ function validate(self)
     end
   end
 
-  if numel(which(scriptname)) == 0
+  if numel(which(self.batchscriptpath)) == 0
     error(['[ERROR] batch function not found at: ' self.batchscriptpath])
   end
 
