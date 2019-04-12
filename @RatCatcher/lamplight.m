@@ -13,7 +13,7 @@ function lamplight(self, varargin)
 		% varargin allows modification of the options before saving
 
 		% check to see if options file already exists
-		filename = [self.batchname '-' 'options.mat'];
+		filename = ['options-' self.batchname '.mat'];
 		if ~exist(fullfile(self.localpath, filename), 'file')
 			% instantiate object with default properties
 			k = KiloPlex();
