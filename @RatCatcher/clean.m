@@ -10,7 +10,7 @@ function clean(self, keepthis)
   warning off all
 
   % make a list of all files in the localpath directory containing the batchname in the filename
-  dd = dir(fullfile(localpath, ['*', batchname, '*']));
+  dd = dir(fullfile(self.localpath, ['*', batchname, '*']));
   files2delete = {dd.name};
 
   % remove the files not flagged for keeping
