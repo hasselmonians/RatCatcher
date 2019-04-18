@@ -16,7 +16,7 @@ function clean(self, keepthis)
   % remove the files not flagged for keeping
   count = 0;
   for ii = 1:length(files2delete)
-    if ~any(keepthis, files2delete{ii})
+    if ~any(strcmp(keepthis, files2delete{ii}))
       delete(files2delete{ii})
       count = count + 1;
     end
