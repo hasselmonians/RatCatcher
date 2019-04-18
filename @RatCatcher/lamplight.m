@@ -1,10 +1,15 @@
-function lamplight(self, varargin)
+function filepaths = lamplight(self, varargin)
 
 	% performs bookkeeping routines based on the protocol
 	% the protocol is read from the RatCatcher object
 	% self.batchname is used to check for files with the correct name
 	% variable input arguments are for use before batchify by the user
 	% they are specific to each protocol
+	% Outputs:
+	% 	filepaths: a cell array of character vectors
+	% 		which contains a list of filepaths of configuration files
+	% 		generated automatically by lamplight()
+	% 		this list is useful as a set of "do not erase" files
 
 	switch self.protocol
 
@@ -14,7 +19,8 @@ function lamplight(self, varargin)
 
 		% check to see if options file already exists
 		filename = ['options-' self.batchname '.mat'];
-		if ~exist(fullfile(self.localpath, filename), 'file')
+		filepath = fullfile(self.localpath, filename);
+		if ~exist(filepath, 'file')
 			% instantiate object with default properties
 			k = KiloPlex();
 			% validate arguments
@@ -37,7 +43,8 @@ function lamplight(self, varargin)
 			end
 			% save the options.mat file
 			k.publish(self.localpath, filename);
-			disp(['[INFO] options file saved at: ' fullfile(self.localpath, filename)])
+			filepaths = {filepath};
+			disp(['[INFO] options file saved at: ' filepath])
 	else
 		disp('[INFO] options file already exists for this batch name')
 	end
