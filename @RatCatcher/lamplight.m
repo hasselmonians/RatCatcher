@@ -20,6 +20,7 @@ function filepaths = lamplight(self, varargin)
 		% check to see if options file already exists
 		filename = ['options-' self.batchname '.mat'];
 		filepath = fullfile(self.localpath, filename);
+		filepaths = {filepath};
 		if ~exist(filepath, 'file')
 			% instantiate object with default properties
 			k = KiloPlex();
@@ -43,7 +44,6 @@ function filepaths = lamplight(self, varargin)
 			end
 			% save the options.mat file
 			k.publish(self.localpath, filename);
-			filepaths = {filepath};
 			disp(['[INFO] options file saved at: ' filepath])
 	else
 		disp('[INFO] options file already exists for this batch name')
