@@ -28,17 +28,25 @@ function self = batchify(self)
 
   %% Cleanup and lamplighting
 
-  % TODO: write a better delete script
+  % perform lamplighting
+  lamplit_filepaths = self.lamplight();
+
+  % erase old files
   warning off all
-  % delete(fullfile(localpath, ['*', batchname, '*']))
+  % make a list of all files in the localpath directory containing the batchname in the filename
+  files2delete = dir(fullfile(localpath, ['*', batchname, '*']));
+  % remove the files not flagged for keeping
+  for ii = 1:length(files2delete)
+    if ~any(lamplit_filepaths, files2delete{ii})
+      delete(files2delete{ii})
+    end
+  end
   warning on all
 
   if verbose == true
     disp('[INFO] all old files removed')
   end
 
-  % perform lamplighting
-  self.lamplight();
 
   %% Add to the directory
 
