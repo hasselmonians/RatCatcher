@@ -45,6 +45,7 @@ function filepaths = lamplight(self, varargin)
 				% create channel map file
 				k.createChannelMap(channel_filepath);
 			end
+		end
 
 	otherwise
 		% do nothing
