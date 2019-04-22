@@ -32,10 +32,8 @@ function filepaths = lamplight(self, varargin)
 			k.options.chanMap = channel_filepath;
 			% set options according to key-value arguments
 			k.options = validateArgs(k.options, varargin);
-
-			if ~exist(self.localpath, 'file')
-				mkdir(self.localpath)
-			end
+			% make directory if needed
+			filelib.mkdir(self.localpath)
 
 			if ~options_exist
 				% create options file
