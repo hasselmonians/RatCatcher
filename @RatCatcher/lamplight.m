@@ -31,7 +31,7 @@ function filepaths = lamplight(self, varargin)
 			k = KiloPlex();
 			k.options.chanMap = channel_filepath;
 			% set options according to key-value arguments
-			k.options = validateArgs(k.options, varargin);
+			k.options = validateArgs(k.options, varargin{:});
 			% make directory if needed
 			filelib.mkdir(self.localpath)
 
@@ -46,6 +46,8 @@ function filepaths = lamplight(self, varargin)
 				k.createChannelMap(channel_filepath);
 			end
 		end
+
+		filepaths = {options_filepath, channel_filepath};
 
 	otherwise
 		% do nothing
