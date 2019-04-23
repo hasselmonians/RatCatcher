@@ -16,6 +16,7 @@ function filepaths = lamplight(self, varargin)
 	case 'KiloPlex'
 		% save the KiloPlex.options data structure as a .mat file in localpath
 		% varargin allows modification of the options before saving
+		corelib.verb(self.verbose, 'lamplight', ['beginning lamplighting for protocol: ' self.protocol])
 
 		% set up the filepaths
 		options_filename = ['options-' self.batchname '.mat'];
@@ -39,18 +40,23 @@ function filepaths = lamplight(self, varargin)
 				% create options file
 				options = k.options;
 				save(options_local_filepath, 'options');
+				corelib.verb(self.verbose, 'lamplight', ['creating options file at ' options_local_filepath])
 			end
 
 			if ~channel_exist
 				% create channel map file
 				k.createChannelMap(channel_local_filepath);
+				corelib.verb(self.verbose, 'lamplight', ['creating channel map file at ' channel_local_filepath])
 			end
+		else
+			corelib.verb(self.verbose, 'lamplight', ['options and channel map already exist'])
 		end
 
 		filepaths = {options_local_filepath, channel_local_filepath};
 
 	otherwise
 		% do nothing
+		corelib.verb(self.verbose, 'lamplight', ['no lamplighting indicated for protocol: ' self.protocol])
 
 	end % switch
 
