@@ -20,16 +20,16 @@ function filepaths = lamplight(self, varargin)
 		% set up the filepaths
 		options_filename = ['options-' self.batchname '.mat'];
 		channel_filename = ['channel_map-' self.batchname '.mat'];
-		options_filepath = fullfile(self.localpath, options_filename);
-		channel_filepath = fullfile(self.localpath, channel_filename);
+		options_local_filepath = fullfile(self.localpath, options_filename);
+		channel_local_filepath = fullfile(self.localpath, channel_filename);
 
-		options_exist = exist(options_filepath, 'file');
-		channel_exist = exist(channel_filepath, 'file');
+		options_exist = exist(options_local_filepath, 'file');
+		channel_exist = exist(channel_local_filepath, 'file');
 
 		if ~options_exist | ~channel_exist
 			% instantiate the KiloPlex object
 			k = KiloPlex();
-			k.options.chanMap = channel_filepath;
+			k.options.chanMap = fullfile(self.remotepath, channel_filename);
 			% set options according to key-value arguments
 			k.options = validateArgs(k.options, varargin{:});
 			% make directory if needed
@@ -38,16 +38,16 @@ function filepaths = lamplight(self, varargin)
 			if ~options_exist
 				% create options file
 				options = k.options;
-				save(options_filepath, 'options');
+				save(options_local_filepath, 'options');
 			end
 
 			if ~channel_exist
 				% create channel map file
-				k.createChannelMap(channel_filepath);
+				k.createChannelMap(channel_local_filepath);
 			end
 		end
 
-		filepaths = {options_filepath, channel_filepath};
+		filepaths = {options_local_filepath, channel_local_filepath};
 
 	otherwise
 		% do nothing
