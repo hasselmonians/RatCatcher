@@ -31,7 +31,7 @@ function filepaths = lamplight(self, varargin)
 			k = KiloPlex();
 			k.options.chanMap = fullfile(self.remotepath, channel_filename);
 			% set options according to key-value arguments
-			k.options = validateArgs(k.options, varargin{:});
+			k.options = corelib.parseNameValueArguments(k.options, varargin{:});
 			% make directory if needed
 			filelib.mkdir(self.localpath)
 
