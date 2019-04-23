@@ -44,6 +44,11 @@ function filepaths = lamplight(self, varargin)
 			end
 
 			if ~channel_exist
+				% use options from file if available
+				if options_exist
+					load(options_local_filepath)
+					k.options = options;
+				end
 				% create channel map file
 				k.createChannelMap(channel_local_filepath);
 				corelib.verb(self.verbose, 'lamplight', ['creating channel map file at ' channel_local_filepath])
