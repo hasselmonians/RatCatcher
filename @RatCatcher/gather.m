@@ -38,7 +38,7 @@ function dataTable = gather(self, filekey, dataTable0)
   end
 
   if isempty(filekey)
-    filekey = [RatCatcher.getBatchName(expID, protocol) '*'];
+    filekey = [self.getBatchName '*'];
     disp(['[INFO] Assuming filekey is: ' filekey])
   else
     disp('[INFO] Filekey set by user')
