@@ -33,7 +33,11 @@ function dataTable = gather(self, filekey, dataTable0)
   localpath = self.localpath;
   protocol  = self.protocol;
 
-  if ~exist('filekey', 'var') && isempty(filekey)
+  if nargin < 2
+    filekey = [];
+  end
+
+  if isempty(filekey)
     filekey = [RatCatcher.getBatchName(expID, protocol) '*'];
     disp(['[INFO] Assuming filekey is: ' filekey])
   else
