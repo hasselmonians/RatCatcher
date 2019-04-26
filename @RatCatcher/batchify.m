@@ -24,7 +24,7 @@ function self = batchify(self)
 
   % copy over the new batch function
   copyfile(self.batchfuncpath, self.localpath);
-  corelib.verb('INFO', ['batch function copied to: ' self.localpath])
+  corelib.verb(self.verbose, 'INFO', ['batch function copied to: ' self.localpath])
 
   % save file names and cell numbers in a text file to be read out by the script
   % this format is a standard -- it will be referenced in the batch function as well
@@ -34,7 +34,7 @@ function self = batchify(self)
   % write filecodes.csv
   csvwrite(fullfile(self.localpath, ['filecodes-' self.batchname, '.csv']), self.filecodes);
 
-  corelib.verb('INFO', 'filenames and filecodes parsed')
+  corelib.verb(self.verbose, 'INFO', 'filenames and filecodes parsed')
 
 
   %% Copy over the generic script and rename
@@ -47,7 +47,7 @@ function self = batchify(self)
     % name the batch script using the same format as the filenames and filecodes
     finalScriptPath = fullfile(self.localpath, ['batchscript-', self.batchname{ii}, '.sh']);
     copyfile(dummyScriptPath, finalScriptPath);
-    corelib.verb('INFO', ['batch script copied to: ' finalScriptPath])
+    corelib.verb(self.verbose, 'INFO', ['batch script copied to: ' finalScriptPath])
 
     %% Edit the copied batch file
 
@@ -77,7 +77,7 @@ function self = batchify(self)
     filelib.write(finalScriptPath, script);
   end
 
-  corelib.verb('INFO', 'batch script edited')
-  corelib.verb('INFO', ['run this: $ qsub ' self.remotepath filesep 'batchscript-', self.batchname, '.sh'])
+  corelib.verb(self.verbose, 'INFO', 'batch script edited')
+  corelib.verb(self.verbose, 'INFO', ['run this: $ qsub ' self.remotepath filesep 'batchscript-', self.batchname, '.sh'])
 
 end % function
