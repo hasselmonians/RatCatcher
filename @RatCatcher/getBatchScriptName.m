@@ -1,4 +1,4 @@
-function batchname = getBatchName(self)
+function batchname = getBatchScriptName(self)
   % comes up with a verbose name that unambiguously identifies any batchname file
 
   expID     = self.expID;

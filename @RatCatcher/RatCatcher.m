@@ -79,7 +79,6 @@ methods (Static)
   [p] = pref()
   [filename, cellnum] = read(location, batchname, index)
   [filenames] = getFileNames(identifiers, filesig, masterpath)
-  [batchscriptname] = getBatchScriptName()
 
 end % static methods
 
