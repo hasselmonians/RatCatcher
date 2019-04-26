@@ -3,6 +3,25 @@ function batchname = getBatchScriptName(self)
   % the basic form is self.expID + self.protocol
   % where batchname is a cell array of size n x 1
   % where n is the number of rows in self.
+  %
+  % batchname = r.getBatchScriptName()
+  %
+  % Example:
+  %
+  %   >> r.getBatchScriptName
+  %
+  % ans =
+  %
+  %   5×1 cell array
+  %
+  %     {'Caitlin-A-BandwidthEstimator'}
+  %     {'Caitlin-B-BandwidthEstimator'}
+  %     {'Caitlin-C-BandwidthEstimator'}
+  %     {'Caitlin-D-BandwidthEstimator'}
+  %     {'Caitlin-E-BandwidthEstimator'}
+  %
+  %
+  % See also RatCatcher, RatCatcher.getBatchScriptPath
 
   if isempty(self.expID)
     batchname = ['test' '-' self.protocol];
