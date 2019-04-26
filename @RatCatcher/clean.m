@@ -9,8 +9,25 @@ function clean(self, keepthis)
 
   warning off all
 
+  % if self.batchname is a cell array, run recursively for each contained character vector
+  count = 0;
+  if iscell(self.batchname)
+    for ii = 1:length(self.batchname)
+      count = count + clean_core(self, self.batchname{ii}, keepthis);
+    end
+  else
+    count = clean_core(self, self.batchname, keepthis);
+  end
+
+  corelib.verb(self.verbose, 'INFO', ['all old files removed (', num2str(count), ' files)'])
+
+  warning on all
+
+end % function
+
+function count = clean_core(self, this_batchname, keepthis)
   % make a list of all files in the localpath directory containing the batchname in the filename
-  dd = dir(fullfile(self.localpath, ['*', self.batchname, '*']));
+  dd = dir(fullfile(self.localpath, ['*', this_batchname, '*']));
   files2delete = {dd.name};
 
   % remove the files not flagged for keeping
@@ -21,9 +38,4 @@ function clean(self, keepthis)
       count = count + 1;
     end
   end
-
-  if self.verbose == true
-    disp(['[INFO] all old files removed (', num2str(count), ' files)'])
-  end
-
-  warning on all
+end % function
