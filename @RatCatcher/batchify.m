@@ -46,7 +46,7 @@ function self = batchify(self)
   % find the dummy script by using a lazy hack
   dummyScriptPath = which(self.batchscriptpath);
   % name the batch script using the same format as the filenames and filecodes
-  finalScriptPath = fullfile(self.localpath, [self.batchname, '.sh']);
+  finalScriptPath = fullfile(self.localpath, ['batchscript-', self.batchname, '.sh']);
   copyfile(dummyScriptPath, finalScriptPath);
 
   if verbose == true
@@ -57,7 +57,7 @@ function self = batchify(self)
 
   % useful variables
   script    = filelib.read(finalScriptPath);
-  outfile   = fullfile(self.remotepath, [self.batchname, '-', 'SGE_TASK_ID', '.csv']);
+  outfile   = fullfile(self.remotepath, ['output-', self.batchname, '-', 'SGE_TASK_ID', '.csv']);
 
   % TODO: make outfile more robust (accept more output types)
 
