@@ -8,7 +8,7 @@ function self = validate(self)
     % no additional information specified by user
     % finding the batch name automatically
 
-    self.batchname = self.getBatchName();
+    self.batchname = self.getBatchScriptName();
 
     if self.verbose
       disp('[INFO] batch name determined automatically')

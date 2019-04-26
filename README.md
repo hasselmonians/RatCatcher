@@ -121,9 +121,9 @@ By manually setting any of these class properties to be non-empty, `RatCatcher` 
 
 The defaults are determined by running a series of functions
 
-* `r.getBatchName()`
-* `r.getBatchFuncPath()`
+* `r.getBatchScriptName()`
 * `r.getBatchScriptPath()`
+* `r.getBatchFuncPath()`
 
 which is performed inside the `r.validate()` function.
 

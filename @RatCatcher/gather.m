@@ -3,7 +3,7 @@ function dataTable = gather(self, filekey, dataTable0)
   % GATHER collects data from RATCATCHER output files and forms a data table
   %
   %   dataTable = r.GATHER()
-  %     assumes a filekey acquired from RATCATCHER.GETBATCHNAME
+  %     assumes a filekey acquired from RATCATCHER.GETBATCHSCRIPTNAME
   %
   %   dataTable = r.GATHER(filekey)
   %     uses a custom filekey
@@ -15,7 +15,7 @@ function dataTable = gather(self, filekey, dataTable0)
   %     uses a custom filekey and adds to an extant data table
   %
   % If gather is called with no arguments except the RatCatcher object
-  % filekey defaults to what's recovered with r.GETBATCHNAME
+  % filekey defaults to what's recovered with r.GETBATCHSCRIPTNAME
   % filekey is passed to the DIR function which searches in r.localpath
   % and therefore uses normal wildcard searching syntax
   %
@@ -27,7 +27,7 @@ function dataTable = gather(self, filekey, dataTable0)
   %
   % If filekey is a cell array, this function operates recursively to build the data table.
   %
-  % See also RATCATCHER, RATCATCHER.BATCHIFY, RATCATCHER.STITCH, RATCATCHER.GETBATCHNAME, DIR
+  % See also RATCATCHER, RATCATCHER.BATCHIFY, RATCATCHER.STITCH, RATCATCHER.GETBATCHSCRIPTNAME, DIR
 
   expID     = self.expID;
   localpath = self.localpath;
@@ -38,7 +38,7 @@ function dataTable = gather(self, filekey, dataTable0)
   end
 
   if isempty(filekey)
-    filekey = ['output-' self.getBatchName '*'];
+    filekey = ['output-' self.getBatchScriptName '*'];
     disp(['[INFO] Assuming filekey is: ' filekey])
   else
     disp('[INFO] Filekey set by user')
