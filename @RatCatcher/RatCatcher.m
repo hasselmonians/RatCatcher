@@ -23,6 +23,10 @@ properties
   % the name of the analysis protocol to be performed on the cluster
   % this is used to find the correct batchFunction
 
+  project
+  % character vector
+  % the name of the project paying for compute nodes on the cluster
+
   batchname
   % the unique identifier which is part of every file name for files created by RatCatcher
 
@@ -49,9 +53,6 @@ properties
   % if true, functions output more descriptive text while running
 
 
-  project
-  % character vector
-  % the name of the project paying for compute nodes on the cluster
 
 end % properties
 
