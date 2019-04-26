@@ -14,7 +14,7 @@ function batchname = getBatchScriptName(self)
 
     for ii = 1:size(self.expID, 1)
       batchname{ii} = self.expID{ii, 1};
-      for qq = 1:size(self.expID, 2)
+      for qq = 2:size(self.expID, 2)
         batchname{ii} = [batchname{ii} '-' self.expID{ii, qq}];
       end
       batchname{ii} = [batchname{ii} '-' self.protocol];
