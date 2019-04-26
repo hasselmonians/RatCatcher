@@ -30,16 +30,12 @@ function self = batchify(self)
   % write filecodes.csv
   csvwrite(fullfile(self.localpath, ['filecodes-' self.batchname, '.csv']), self.filecodes);
 
-  if verbose == true
-    disp('[INFO] filenames and filecodes parsed')
-  end
+  corelib.verb('INFO', 'filenames and filecodes parsed')
 
   % copy over the new batch function
   copyfile(self.batchfuncpath, self.localpath);
 
-  if verbose == true
-    disp(['[INFO] batch function copied to: ' self.localpath])
-  end
+  corelib.verb('INFO', ['batch function copied to: ' self.localpath])
 
   %% Copy over the generic script and rename
 
@@ -49,9 +45,7 @@ function self = batchify(self)
   finalScriptPath = fullfile(self.localpath, ['batchscript-', self.batchname, '.sh']);
   copyfile(dummyScriptPath, finalScriptPath);
 
-  if verbose == true
-    disp(['[INFO] batch script copied to: ' finalScriptPath])
-  end
+  corelib.verb('INFO', ['batch script copied to: ' finalScriptPath])
 
   %% Edit the copied batch file
 
@@ -80,15 +74,7 @@ function self = batchify(self)
   % write to file
   filelib.write(finalScriptPath, script);
 
-  if verbose == true
-    disp('[INFO] batch script edited')
-  end
-
-  if verbose == true
-    disp('[INFO] DONE!')
-  end
-
-  disp(['[INFO] pass this script to qsub as an argument: ' finalScriptPath])
-
+  corelib.verb('INFO', 'batch script edited')
+  corelib.verb('INFO', ['run this: $ qsub ' self.remotepath filesep 'batchscript-', self.batchname, '.sh'])
 
 end % function
