@@ -62,6 +62,7 @@ function filepaths = lamplight(self, varargin)
 	otherwise
 		% do nothing
 		corelib.verb(self.verbose, 'lamplight', ['no lamplighting indicated for protocol: ' self.protocol])
+		filepaths = [];
 
 	end % switch
 
