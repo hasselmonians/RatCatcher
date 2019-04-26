@@ -19,7 +19,6 @@ function batchname = getBatchScriptName(self)
       end
       batchname{ii} = [batchname{ii} '-' self.protocol];
     end
-    batchname = [batchname '-' self.protocol];
 
   else
     batchname = [self.expID '-' self.protocol];
