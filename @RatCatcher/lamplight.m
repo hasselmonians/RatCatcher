@@ -17,6 +17,7 @@ function filepaths = lamplight(self, varargin)
 		% save the KiloPlex.options data structure as a .mat file in localpath
 		% varargin allows modification of the options before saving
 		corelib.verb(self.verbose, 'lamplight', ['beginning lamplighting for protocol: ' self.protocol])
+		corelib.verb(isempty(self.batchname), 'WARN', 'batchname is empty')
 
 		% set up the filepaths
 		options_filename = ['options-' self.batchname '.mat'];
