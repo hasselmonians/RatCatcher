@@ -67,7 +67,7 @@ function batchify_core(self, this_batchname, dummyScriptPath)
 
   % useful variables
   script    = filelib.read(finalScriptPath);
-  outfile   = fullfile(self.remotepath, ['output-', this_batchname, '-', 'SGE_TASK_ID', '.csv']);
+  outfile   = fullfile(self.remotepath, ['output-', this_batchname, '-', '$SGE_TASK_ID', '.csv']);
 
   % TODO: make outfile more robust (accept more output types)
 
