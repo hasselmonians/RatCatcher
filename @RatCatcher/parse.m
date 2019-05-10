@@ -3,10 +3,13 @@ function [filenames, filecodes] = parse(self)
   % extracts the main section of the filenames and the cell index
 
   % Arguments:
-    % expects a RatCatcher object with the expID field
+  %   expects a RatCatcher object with the expID field
   % Outputs:
-    % filenames: n x 1 cell, the parsed filenames for where the data are stored
-    % filecodes: n x m double, numerical identifiers to specify recordings within the filenames
+  %   filenames: n x 1 cell, each cell contains an m x 1 cell
+  %     the parsed filenames for where the data are stored
+  %   filecodes: n x 1 cell, each cell contains an m x 2 double
+  %     numerical identifiers to specify recordings within the filenames
+  % 
   % if self.expID is a character vector, run this function once
   % if self.expID is a cell array, run this function iteratively
   % and append the results to the output
