@@ -110,6 +110,9 @@ function dataTable = gather(self, filekey, dataTable0)
     kcorr   = data(:, 4);
     % put the data in a MATLAB table
     dataTable = table(outfiles, kmax, CI, kcorr);
+  case 'KiloPlex'
+    % the data are a bunch of .mat files, so just gather the names of the files
+    dataTable = table(outfiles);
   otherwise
     disp('[ERROR] I don''t know which protocol you mean.')
   end
