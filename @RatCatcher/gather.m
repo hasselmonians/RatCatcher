@@ -92,6 +92,7 @@ function dataTable = gather(self, filekey, dataTable0)
   if numel(files) == 0
     corelib.verb(true, 'ERROR', 'no files found with filekey')
     cd(returnToCWD)
+    dataTable = [];
     return
   end
   
