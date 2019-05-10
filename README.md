@@ -3,7 +3,6 @@ A general utility for parsing data and passing to analysis scripts.
 
 In its simplest form, `RatCatcher` is an uncomplicated class that contains all the relevant information to find data on the cluster and produce batch files. You can use it to create a batch script that can be run on a high-performance computing cluster from your raw data and a custom analysis function, and then gather your data into a table afterwards.
 
-
 ## How do I install it?
 The best way is to clone the repository, or to download and unzip. Then, just add it to your MATLAB path. It is dependent on [`mtools`](https://github.com/sg-s/srinivas.gs_mtools).
 
@@ -41,6 +40,7 @@ dataTable = r.stitch(dataTable);
 ```
 
 This will gather the data into a `table` in MATLAB on your local computer.
+`stitch`ing appends the full path of the raw data.
 
 ## What does RatCatcher actually do?
 
@@ -79,8 +79,15 @@ dataTable = r.gather();
 ## Class properties
 
 `filenames` will be set automatically when you run `batchify`, though you can also generate your own with the static `build` function.
+If `expID` is a row vector cell array, then `filenames` is a column vector cell array of full file paths to the raw data.
+If `expID` is a matrix cell array, then `filenames` is a column vector cell array of column vector cell arrays of full file paths to the raw data.
+This allows for easier separation of data and processed results into chunks.
+If there aren't a lot of special conditions or parameters in your data (i.e. you just have 100 experiments in the same condition),
+then using a simple `expID` (and thus a single cell array of filenames) is perfectly fine.
 
 `filecodes` is a field useful for storing numerical information that allows you to specify further within a data file. For example, if you had 100 recordings and kept track of cell and tetrode number, you might have a `100 x 2` matrix for your `filecodes`. These properties are intended to be available to the `batchify` function so that they can be written into the batch script that contains the function call to the batch function specified in `protocol` that performs the actual analysis.
+If `expID` is a row vector cell array, then `filenames` is a column vector cell array of file codes.
+If `expID` is a matrix cell array, then `filenames` is a column vector cell array of column vector cell arrays of file codes.
 
 The `expID` field contains an character vector or cell array of character vectors that serves as an unambiguous identifier to the raw data to be analyzed.
 
@@ -125,7 +132,7 @@ The defaults are determined by running a series of functions
 * `r.getBatchScriptPath()`
 * `r.getBatchFuncPath()`
 
-which is performed inside the `r.validate()` function.
+which is performed inside the `r.validate()` function, and is automatically performed during `batchify`ing.
 
 The `batchname` is the canonical kernel of text that appears in every file created by `RatCatcher`.
 By default, it is a combination of all the parts of the `expID` and the `protocol`,
@@ -268,6 +275,8 @@ batchFunction(index, batchname, location, outfile, test)
 
 The batch function can be _any_ function that has these arguments in this order.
 It does not necessarily even have to be a MATLAB function either, if a custom batch script is used.
+
+>> To see what a good batchfunction looks like, check [here](https://github.com/hasselmonians/BandwidthEstimator/blob/master/%40BandwidthEstimator/batchFunction.m).
 
 ### Customizing your protocol
 
