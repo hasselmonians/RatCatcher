@@ -29,17 +29,27 @@ function batchname = getBatchScriptName(self)
   end
 
   if iscell(self.expID)
-    batchname = cell(size(self.expID, 1), 1);
-
-    for ii = 1:size(self.expID, 1)
-      batchname{ii} = self.expID{ii, 1};
-      for qq = 2:size(self.expID, 2)
-        batchname{ii} = [batchname{ii} '-' self.expID{ii, qq}];
-      end
-      batchname{ii} = [batchname{ii} '-' self.protocol];
+    % expID is a cell array
+    if size(self.expID, 1) > 1
+      % expID is a cell array with multiple rows
+      % the batch name is a cell of the same length
+      batchname = cell(size(self.expID, 1), 1);
+      % iterate through expID row-wise to generate that batch name
+      for ii = 1:size(self.expID, 1)
+        batchname{ii} = self.expID{ii, 1};
+        for qq = 2:size(self.expID, 2)
+          batchname{ii} = [batchname{ii} '-' self.expID{ii, qq}];
+        end
+        batchname{ii} = [batchname{ii} '-' self.protocol];
+      end  
+    else
+      % expID is a single row cell array
+      % the batch name is a character vector
+      batchname = [strjoin(self.expID, '-') '-' self.protocol];
     end
-
   else
+    % expID is a character vector
+    % the batch name is a character vector
     batchname = [self.expID '-' self.protocol];
   end
 

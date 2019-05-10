@@ -1,15 +1,20 @@
 function [filenames, filecodes] = parse(self)
   % parses the name of a datafile listed within cluster_info.mat
   % extracts the main section of the filenames and the cell index
-
+  % 
   % Arguments:
-    % expects a RatCatcher object with the expID field
+  % 
+  % self: expects a RatCatcher object with the expID field
+  % 
   % Outputs:
-    % filenames: n x 1 cell, the parsed filenames for where the data are stored
-    % filecodes: n x m double, numerical identifiers to specify recordings within the filenames
-  % if self.expID is a character vector, run this function once
-  % if self.expID is a cell array, run this function iteratively
-  % and append the results to the output
+  % 
+  % filenames: cell array or character vector containing the filenames specified
+  %   if expID is 1 x n, the cell array contains character vectors of the full file paths
+  %   if expID is m x n, the cell array contains cell arrays of character vectors of the full file paths
+  % 
+  % filecodes: cell array or matrix containing the filecodes specified
+  %   if expID is 1 x n, the cell array contains matrix of the numerical identifiers
+  %   if expID is m x n, the cell array contains cell arrays of matrix of the numerical identifiers
   %
   % See also: RatCatcher, RatCatcher.batchify, RatCatcher.listFiles
 
@@ -19,12 +24,11 @@ function [filenames, filecodes] = parse(self)
     if size(expID, 1) ~= 1
       % expID is a cell array with multiple sets (i.e. rows)
       % construct the filenames and filecodes lists by reading each row
-      [filenames, filecodes] = parse_core(expID(1,:));
-      for ii = 2:size(expID, 1)
-        % iterate through the parsing and append the results
-        [filenames0, filecodes0] = parse_core(expID(ii,:));
-        filenames  = [filenames; filenames0];
-        filecodes   = [filecodes; filecodes0];
+      filenames = cell(size(expID, 1), 1);
+      filecodes = cell(size(expID, 1), 1);
+      for ii = 1:size(expID, 1)
+        % iterate through the parsing and add each cell array to the cell array
+        [filenames{ii}, filecodes{ii}] = parse_core(expID(ii,:));
       end
     else
       % if expID is a row vector cell array or a scalar cell array

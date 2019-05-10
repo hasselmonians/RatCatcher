@@ -32,12 +32,12 @@ function self = batchify(self)
   % if self.batchname is a cell array, make a script for each contained character vector
   if iscell(self.batchname)
     for ii = 1:length(self.batchname)
-      batchify_core(self, self.batchname{ii}, dummyScriptPath);
+      batchify_core(self, self.batchname{ii}, self.filenames{ii}, self.filecodes{ii}, dummyScriptPath);
       corelib.verb(self.verbose, 'INFO', 'batch script edited')
       corelib.verb(self.verbose, 'INFO', ['run this: $ qsub ' self.remotepath filesep 'batchscript-', self.batchname{ii}, '.sh'])
     end
   else
-    batchify_core(self, self.batchname, dummyScriptPath);
+    batchify_core(self, self.batchname, self.filenames, self.filecodes, dummyScriptPath);
     corelib.verb(self.verbose, 'INFO', 'batch script edited')
     corelib.verb(self.verbose, 'INFO', ['run this: $ qsub ' self.remotepath filesep 'batchscript-', self.batchname, '.sh'])
   end
@@ -45,21 +45,21 @@ function self = batchify(self)
 
 end % function
 
-function batchify_core(self, this_batchname, dummyScriptPath)
+function batchify_core(self, batchname, filenames, filecodes, dummyScriptPath)
   tt = '''';
 
   % save file names and cell numbers in a text file to be read out by the script
   % this format is a standard -- it will be referenced in the batch function as well
 
   % write filenames.txt
-  filelib.write(fullfile(self.localpath, ['filenames-' this_batchname '.txt']), self.filenames);
+  filelib.write(fullfile(self.localpath, ['filenames-' batchname '.txt']), filenames);
 
   % write filecodes.csv
-  csvwrite(fullfile(self.localpath, ['filecodes-' this_batchname, '.csv']), self.filecodes);
+  csvwrite(fullfile(self.localpath, ['filecodes-' batchname, '.csv']), filecodes);
   corelib.verb(self.verbose, 'INFO', 'filenames and filecodes parsed')
 
   % name the batch script using the same format as the filenames and filecodes
-  finalScriptPath = fullfile(self.localpath, ['batchscript-', this_batchname, '.sh']);
+  finalScriptPath = fullfile(self.localpath, ['batchscript-', batchname, '.sh']);
   copyfile(dummyScriptPath, finalScriptPath);
   corelib.verb(self.verbose, 'INFO', ['batch script copied to: ' finalScriptPath])
 
@@ -67,23 +67,23 @@ function batchify_core(self, this_batchname, dummyScriptPath)
 
   % useful variables
   script    = filelib.read(finalScriptPath);
-  outfile   = fullfile(self.remotepath, ['output-', this_batchname, '-', '$SGE_TASK_ID', '.csv']);
+  outfile   = fullfile(self.remotepath, ['output-', batchname, '-', '$SGE_TASK_ID', '.csv']);
 
   % TODO: make outfile more robust (accept more output types)
 
   % determine the name of the job array
-  script    = strrep(script, 'BATCH_NAME', this_batchname);
+  script    = strrep(script, 'BATCH_NAME', batchname);
 
   % determine the project name on the cluster
   script    = strrep(script, 'PROJECT_NAME', self.project);
 
   % determine the number of jobs
-  script    = strrep(script, 'NUM_FILES', num2str(length(self.filenames)));
+  script    = strrep(script, 'NUM_FILES', num2str(length(filenames)));
 
   % determine the argument to MATLAB
   script    = strrep(script, 'ARGUMENT', ['$SGE_TASK_ID' ', ' ...
                     tt self.remotepath tt ', ' ...
-                    tt this_batchname tt ', ' ...
+                    tt batchname tt ', ' ...
                     tt outfile tt ', ' ...
                     'false']);
 

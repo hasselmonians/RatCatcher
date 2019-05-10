@@ -38,14 +38,26 @@ function dataTable = gather(self, filekey, dataTable0)
   end
 
   if isempty(filekey)
-    filekey = ['output-' self.getBatchScriptName '*'];
-    disp(['[INFO] Assuming filekey is: ' filekey])
+    % check the batchname property first
+    if isempty(self.batchname)
+      filekey = self.getBatchScriptName();
+      for ii = 1:length(filekey)
+        filekey{ii} = ['output-' filekey{ii} '*'];
+      end
+      corelib.verb(self.verbose, 'INFO', ['filekey determined automatically: ' filekey])
+    else
+      filekey = self.batchname;
+      for ii = 1:length(filekey)
+        filekey{ii} = ['output-' filekey{ii} '*'];
+      end
+      corelib.verb(self.verbose, 'INFO', ['filekey set by batchname property'])
+    end      
   else
-    disp('[INFO] Filekey set by user')
+    corelib.verb(self.verbose, 'INFO', ['filekey set by user: ' filekey])
   end
 
-  % filekey is a cell, operate recursively over filekeys
   if iscell(filekey)
+    % filekey is a cell, operate recursively over filekeys
 
     if exist('dataTable0', 'var')
       dataTable = dataTable0;
@@ -56,10 +68,14 @@ function dataTable = gather(self, filekey, dataTable0)
       return
 
     else
+      qq = 1;
       for ii = 1:length(filekey)
         fk = filekey{ii};
-        if ii == 1
+        if ii == qq
           dataTable = self.gather(fk);
+          if isempty(dataTable)
+            qq = qq + 1;
+          end
         else
           dataTable = self.gather(fk, dataTable);
         end
@@ -82,32 +98,41 @@ function dataTable = gather(self, filekey, dataTable0)
   % gather together all of the data points into a single matrix
   % find all of the files matching the namespec pattern
   files     = dir(filekey);
-  % acquire the outfiles
-  outfiles  = cell(size(files));
-  for ii = 1:length(files)
-    outfiles{ii} = files(ii).name;
-  end
-  % sort the outfiles in a sensible manner
-  outfiles  = self.natsortfiles(outfiles);
-  % get the dimensions of the data
-  dim1      = length(outfiles);
-  dim2      = length(csvread(outfiles{1}));
-  % read through the files and write the data to a matrix
-  data      = NaN(dim1, dim2);
-  for ii = 1:dim1
-    data(ii, :) = csvread(outfiles{ii});
-  end
+  
+  if numel(files) == 0
+    dataTable = table();
+    corelib.verb(true, 'ERROR', 'no files found with filekey')
+  else
+    % acquire the outfiles
+    outfiles  = cell(size(files));
+    for ii = 1:length(files)
+      outfiles{ii} = files(ii).name;
+    end
+    % sort the outfiles in a sensible manner
+    outfiles  = self.natsortfiles(outfiles);
+    % get the dimensions of the data
+    dim1      = length(outfiles);
+    dim2      = length(csvread(outfiles{1}));
+    % read through the files and write the data to a matrix
+    data      = NaN(dim1, dim2);
+    for ii = 1:dim1
+      data(ii, :) = csvread(outfiles{ii});
+    end
 
-  switch protocol
-  case 'BandwidthEstimator'
-    % gather the data from the output files
-    kmax    = data(:, 1);
-    CI      = data(:, 2:3);
-    kcorr   = data(:, 4);
-    % put the data in a MATLAB table
-    dataTable = table(outfiles, kmax, CI, kcorr);
-  otherwise
-    disp('[ERROR] I don''t know which protocol you mean.')
+    switch protocol
+    case 'BandwidthEstimator'
+      % gather the data from the output files
+      kmax    = data(:, 1);
+      CI      = data(:, 2:3);
+      kcorr   = data(:, 4);
+      % put the data in a MATLAB table
+      dataTable = table(outfiles, kmax, CI, kcorr);
+    case 'KiloPlex'
+      % the data are a bunch of .mat files, so just gather the names of the files
+      dataTable = table(outfiles);
+    otherwise
+      corelib.verb(true, 'ERROR', 'I don''t know which protocol you mean.')
+    end
   end
 
   % return from whence you came
@@ -115,7 +140,12 @@ function dataTable = gather(self, filekey, dataTable0)
 
   % append to extant data table, if there is one
   if exist('dataTable0') && ~isempty(dataTable0)
-    dataTable = [dataTable0; dataTable];
+    if ~isempty(dataTable)
+      dataTable = [dataTable0; dataTable];
+    else
+    
+      dataTable = dataTable0;
+    end
   end
 
 end % function
