@@ -88,6 +88,13 @@ function dataTable = gather(self, filekey, dataTable0)
   % gather together all of the data points into a single matrix
   % find all of the files matching the namespec pattern
   files     = dir(filekey);
+  
+  if numel(files) == 0
+    corelib.verb(true, 'ERROR', 'no files found with filekey')
+    cd(returnToCWD)
+    return
+  end
+  
   % acquire the outfiles
   outfiles  = cell(size(files));
   for ii = 1:length(files)
