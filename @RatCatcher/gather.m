@@ -32,6 +32,7 @@ function dataTable = gather(self, filekey, dataTable0)
   expID     = self.expID;
   localpath = self.localpath;
   protocol  = self.protocol;
+  dataTable = [];
 
   if nargin < 2
     filekey = [];
@@ -40,7 +41,10 @@ function dataTable = gather(self, filekey, dataTable0)
   if isempty(filekey)
     % check the batchname property first
     if isempty(self.batchname)
-      filekey = ['output-' self.getBatchScriptName '*'];
+      filekey = self.getBatchScriptName();
+      for ii = 1:length(filekey)
+        filekey{ii} = ['output-' filekey{ii} '*'];
+      end
       corelib.verb(self.verbose, 'INFO', ['filekey determined automatically: ' filekey])
     else
       filekey = self.batchname;
@@ -95,7 +99,6 @@ function dataTable = gather(self, filekey, dataTable0)
   if numel(files) == 0
     corelib.verb(true, 'ERROR', 'no files found with filekey')
     cd(returnToCWD)
-    dataTable = [];
     return
   end
   
