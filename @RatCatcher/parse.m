@@ -22,12 +22,11 @@ function [filenames, filecodes] = parse(self)
     if size(expID, 1) ~= 1
       % expID is a cell array with multiple sets (i.e. rows)
       % construct the filenames and filecodes lists by reading each row
-      [filenames, filecodes] = parse_core(expID(1,:));
-      for ii = 2:size(expID, 1)
-        % iterate through the parsing and append the results
-        [filenames0, filecodes0] = parse_core(expID(ii,:));
-        filenames  = [filenames; filenames0];
-        filecodes   = [filecodes; filecodes0];
+      filenames = cell(size(expID, 1), 1);
+      filecodes = cell(size(expID, 1), 1);
+      for ii = 1:size(expID, 1)
+        % iterate through the parsing and add each cell array to the cell array
+        [filenames{ii}, filecodes{ii}] = parse_core(expID(ii,:));
       end
     else
       % if expID is a row vector cell array or a scalar cell array
