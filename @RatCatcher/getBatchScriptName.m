@@ -46,11 +46,11 @@ function batchname = getBatchScriptName(self)
       % expID is a single row cell array
       % the batch name is a character vector
       batchname = [strjoin(self.expID, '-') '-' self.protocol];
+    end
   else
     % expID is a character vector
     % the batch name is a character vector
     batchname = [self.expID '-' self.protocol];
-    end
   end
 
 end % function
