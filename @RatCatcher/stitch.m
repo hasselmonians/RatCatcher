@@ -11,8 +11,8 @@ function data = stitch(self, data)
   % Outputs:
     % data: m x n+2 table, the data table
 
-  [filenames, cellnums] = self.parse();
-  data2 = table(filenames, cellnums);
+  [filenames, filecodes] = self.parse();
+  data2 = table(filenames, filecodes);
   data = [data data2];
 
 end % function
