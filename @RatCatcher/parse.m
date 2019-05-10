@@ -1,7 +1,7 @@
 function [filenames, filecodes] = parse(self)
   % parses the name of a datafile listed within cluster_info.mat
   % extracts the main section of the filenames and the cell index
-
+  % 
   % Arguments:
   %   expects a RatCatcher object with the expID field
   % Outputs:
