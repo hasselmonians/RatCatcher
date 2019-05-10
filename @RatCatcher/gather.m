@@ -38,14 +38,18 @@ function dataTable = gather(self, filekey, dataTable0)
   end
 
   if isempty(filekey)
-    filekey = ['output-' self.getBatchScriptName '*'];
-    disp(['[INFO] Assuming filekey is: ' filekey])
+    % check the batchname property first
+    if isempty(self.batchname)
+      filekey = ['output-' self.getBatchScriptName '*'];
+      corelib.verb('INFO', ['filekey determined automatically: ' filekey])
+    else
+      corelib.verb('INFO', ['filekey set by batchname property: ' self.batchname])      
   else
-    disp('[INFO] Filekey set by user')
+    corelib.verb('INFO', ['filekey set by user: ' filekey])
   end
 
-  % filekey is a cell, operate recursively over filekeys
   if iscell(filekey)
+    % filekey is a cell, operate recursively over filekeys
 
     if exist('dataTable0', 'var')
       dataTable = dataTable0;
