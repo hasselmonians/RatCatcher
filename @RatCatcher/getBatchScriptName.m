@@ -28,7 +28,7 @@ function batchname = getBatchScriptName(self)
     return
   end
 
-  if iscell(self.expID)
+  if iscell(self.expID) & size(self.expID, 1) > 1
     batchname = cell(size(self.expID, 1), 1);
 
     for ii = 1:size(self.expID, 1)
