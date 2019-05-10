@@ -41,12 +41,12 @@ function dataTable = gather(self, filekey, dataTable0)
     % check the batchname property first
     if isempty(self.batchname)
       filekey = ['output-' self.getBatchScriptName '*'];
-      corelib.verb('INFO', ['filekey determined automatically: ' filekey])
+      corelib.verb(self.verbose, 'INFO', ['filekey determined automatically: ' filekey])
     else
-      corelib.verb('INFO', ['filekey set by batchname property'])
+      corelib.verb(self.verbose, 'INFO', ['filekey set by batchname property'])
     end      
   else
-    corelib.verb('INFO', ['filekey set by user: ' filekey])
+    corelib.verb(self.verbose, 'INFO', ['filekey set by user: ' filekey])
   end
 
   if iscell(filekey)
