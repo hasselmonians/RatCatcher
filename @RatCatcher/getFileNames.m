@@ -1,11 +1,13 @@
 function filepaths = getFileNames(identifiers, filesig, masterpath)
 
   % constructs a list of filepaths that fit a certain pattern
-  % if the directory paths are not absolute, rebase looks within the current working directory
+  % if the directory paths are not absolute, getFileNames looks within the current working directory
   %
   % filepaths = RatCatcher.getFileNames(identifiers, filesig)
   %
   % filepaths = RatCatcher.getFileNames(identifiers, filesig, masterpath)
+  % 
+  % Ex: filepaths = RatCatcher.getFileNames({'winny', 'gabriella'; 'winny', 'troy'}, 'raw*.mat', '/mnt/hasselmogrp/hoyland/data/raw/')
   %
   % Arguments:
   %   identifiers: a cell array of directory paths in which to search
