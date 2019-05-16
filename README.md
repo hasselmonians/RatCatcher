@@ -3,22 +3,34 @@ A general utility for parsing data and passing to analysis scripts.
 
 In its simplest form, `RatCatcher` is an uncomplicated class that contains all the relevant information to find data on the cluster and produce batch files. You can use it to create a batch script that can be run on a high-performance computing cluster from your raw data and a custom analysis function, and then gather your data into a table afterwards.
 
+It is agnostic to the format of the data, and to the type of analysis performed,
+so that `RatCatcher` can be used to perform any number of analyses on any type of data.
+`RatCatcher` scales well with increasing numbers of data files.
+
 ## How do I install it?
 The best way is to clone the repository, or to download and unzip. Then, just add it to your MATLAB path. It is dependent on [`mtools`](https://github.com/sg-s/srinivas.gs_mtools).
 
 ## Usage example
 
+In this example, we will load up MATLAB on our local computer,
+and tell `RatCatcher` to collect from Caitlin's "A" and "B" data sets,
+and perform the "Bandwidth Estimator" analysis.
+On the cluster, we will run the auto-generated script, 
+then back in MATLAB on our local computer, we will gather the data into a table.
+
 Create the `RatCatcher` object.
+At minimum, the following fields need to be filled out.
 
 ```matlab
-r = RatCatcher;
-r.expID = {'Caitlin', 'A'; 'Caitlin', 'B'; 'Caitlin', 'C'};
-r.remotepath = '/projectnb/hasselmogrp/hoyland/MLE-time-course/cluster';
-r.localpath = '/mnt/hasselmogrp/hoyland/MLE-time-course/cluster';
-r.protocol = 'BandwidthEstimator';
+r             = RatCatcher;
+r.expID       = {'Caitlin', 'A'; 'Caitlin', 'B'};
+r.remotepath  = '/projectnb/mypath2folder/cluster';
+r.localpath   = '/mnt/mypath2folder/cluster';
+r.protocol    = 'BandwidthEstimator';
 ```
 
 Create the batch scripts.
+This will generate files in `r.localpath`.
 
 ```matlab
 r.batchify();
@@ -28,7 +40,7 @@ Go onto the cluster and submit the script.
 
 ```bash
 ssh username@foo.bar
-cd /projectnb/hasselmogrp/hoyland/MLE-time-course/cluster
+cd /projectnb/mypath2folder/cluster
 qsub Caitlin-A-Caitlin-B-BandwidthEstimator.sh
 ```
 
@@ -106,7 +118,7 @@ expID =
     {'Caitlin'}    {'C'}
 ```
 
-This would indicate that this is Caitlin's data from clusters `A`, `B`, and `C`. The power of the `expID` is that as long as it is specified in the `batchify` function what to do with a certain `expID` pattern, it works. You can also bypass the `expID` process by delivering a list of filenames directly to the `RatCatcher` functions. You can get a list of filenames with the `RatCatcher.getFileNames()` function.
+This would indicate that this is Caitlin's data from clusters `A`, `B`, and `C`. The power of the `expID` is that as long as it is specified in the `parse` function what to do with a certain `expID` pattern, it works. You can also bypass the `expID` process by delivering a list of filenames directly to the `RatCatcher` functions. You can get a list of filenames with the `RatCatcher.getFileNames()` function.
 
 The `protocol` field determines which analysis should be performed. `RatCatcher` doesn't actually do any real calculations, but sets up the batch files needed to run the computations on a high-performance computing cluster. It looks for somewhere on your path where a function named `[protocol '.batchFunction']` is.
 
@@ -118,6 +130,8 @@ The `localpath` field contains the absolute path to where the batch files should
 
 There are a host of other properties
 
+* filenames
+* filecodes
 * batchname
 * batchfuncpath
 * batchscriptpath
@@ -128,6 +142,7 @@ By manually setting any of these class properties to be non-empty, `RatCatcher` 
 
 The defaults are determined by running a series of functions
 
+* `r.getFileNames()`
 * `r.getBatchScriptName()`
 * `r.getBatchScriptPath()`
 * `r.getBatchFuncPath()`
@@ -163,8 +178,8 @@ Set up your `RatCatcher` object.
 r = RatCatcher;
 r.expID         = {};
 r.protocol      = 'BandwidthEstimator';
-r.remotepath    = '/projectnb/hasselmogrp/hoyland/MLE-time-course/cluster';
-r.localpath     = '/mnt/hasselmogrp/hoyland/MLE-time-course/cluster';
+r.remotepath    = '/projectnb/mypath2folder/cluster';
+r.localpath     = '/mnt/mypath2folder/cluster';
 r.project       = 'hasselmogrp';
 ```
 
@@ -290,8 +305,7 @@ path2BatchFunction = which([r.protocol '.batchFunction']);
 so it's best if the batch function is a static method of a class, or part of a package.
 See below for more details.
 
-You can also provide the path to a custom batch script as an argument to `batchify`.
-`pathname` is the full path to your custom batch function.
+You can also provide the path to a custom batch script by filling out the `batchfuncpath` property of the `RatCatcher` object.
 
 ## Running your scripts
 
