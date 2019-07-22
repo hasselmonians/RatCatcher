@@ -47,11 +47,15 @@ function dataTable = gather(self, filekey, dataTable0)
       corelib.verb(self.verbose, 'INFO', ['filekey determined automatically: ' filekey])
     else
       filekey = self.batchname;
-      for ii = 1:length(filekey)
-        filekey{ii} = ['output-' filekey{ii} '*'];
+      if iscell(filekey)
+        for ii = 1:length(filekey)
+          filekey{ii} = ['output-' filekey{ii} '*'];
+        end
+      else
+        filekey = ['output-' filekey '*'];
       end
       corelib.verb(self.verbose, 'INFO', ['filekey set by batchname property'])
-    end      
+    end
   else
     corelib.verb(self.verbose, 'INFO', ['filekey set by user: ' filekey])
   end
@@ -98,7 +102,7 @@ function dataTable = gather(self, filekey, dataTable0)
   % gather together all of the data points into a single matrix
   % find all of the files matching the namespec pattern
   files     = dir(filekey);
-  
+
   if numel(files) == 0
     dataTable = table();
     corelib.verb(true, 'ERROR', 'no files found with filekey')
@@ -143,7 +147,7 @@ function dataTable = gather(self, filekey, dataTable0)
     if ~isempty(dataTable)
       dataTable = [dataTable0; dataTable];
     else
-    
+
       dataTable = dataTable0;
     end
   end
