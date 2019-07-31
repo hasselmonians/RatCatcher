@@ -15,7 +15,7 @@ The best way is to clone the repository, or to download and unzip. Then, just ad
 In this example, we will load up MATLAB on our local computer,
 and tell `RatCatcher` to collect from Caitlin's "A" and "B" data sets,
 and perform the "Bandwidth Estimator" analysis.
-On the cluster, we will run the auto-generated script, 
+On the cluster, we will run the auto-generated script,
 then back in MATLAB on our local computer, we will gather the data into a table.
 
 Create the `RatCatcher` object.
@@ -295,7 +295,15 @@ It does not necessarily even have to be a MATLAB function either, if a custom ba
 
 ### Customizing your protocol
 
-A "protocol" is some process that operates on your data to get useful results. If this is computationally expensive and needs to happen on a lot of data, it's best to run it on a high-performance computing cluster. So far, the only complete `RatCatcher`-compatible analysis is called [BandwidthEstimator](https://github.com/hasselmonians/BandwidthEstimator).
+A "protocol" is some process that operates on your data to get useful results.
+If this is computationally expensive and needs to happen on a lot of data,
+it's best to run it on a high-performance computing cluster.
+
+Currently, the following protocols exist for `RatCatcher`:
+
+* [CellSorter](https://github.com/hasselmonians/CellSorter)
+* [BandWidthEstimator](https://github.com/hasselmonians/BandWidthEstimator)
+* [KiloPlex](https://github.com/hasselmonians/KiloPlex)
 
 The only requirement is that your analysis have a _batch function_ defined for it. It finds it by looking at:
 
