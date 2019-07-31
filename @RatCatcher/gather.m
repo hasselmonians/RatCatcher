@@ -139,7 +139,7 @@ function dataTable = gather(self, filekey, dataTable0)
       % the first index is over time steps of the recording
       % the second index is over channels in a tetrode
       % the units are milliseconds
-      waveforms = data;
+      waveforms = {data};
       dataTable = table(waveforms);
     otherwise
       corelib.verb(true, 'ERROR', 'I don''t know which protocol you mean.')
