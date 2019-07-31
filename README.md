@@ -302,7 +302,7 @@ it's best to run it on a high-performance computing cluster.
 Currently, the following protocols exist for `RatCatcher`:
 
 * [CellSorter](https://github.com/hasselmonians/CellSorter)
-* [BandWidthEstimator](https://github.com/hasselmonians/BandWidthEstimator)
+* [BandwidthEstimator](https://github.com/hasselmonians/BandwidthEstimator)
 * [KiloPlex](https://github.com/hasselmonians/KiloPlex)
 
 The only requirement is that your analysis have a _batch function_ defined for it. It finds it by looking at:
