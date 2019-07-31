@@ -134,6 +134,13 @@ function dataTable = gather(self, filekey, dataTable0)
     case 'KiloPlex'
       % the data are a bunch of .mat files, so just gather the names of the files
       dataTable = table(outfiles);
+    case 'CellSorter'
+      % the data are waveforms in a 50x4 matrix
+      % the first index is over time steps of the recording
+      % the second index is over channels in a tetrode
+      % the units are milliseconds
+      waveforms = data;
+      dataTable = table(waveforms);
     otherwise
       corelib.verb(true, 'ERROR', 'I don''t know which protocol you mean.')
     end
