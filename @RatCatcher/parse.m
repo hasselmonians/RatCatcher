@@ -60,7 +60,7 @@ function [filenames, filecodes] = parse_core(expID, verbosity)
       catch
         try
           load(fullfile(self.localpath, cluster_info, '.mat'));
-          corelib.verb(verbosity, 'parse', ['successfully loaded filenames/codes from ' fullfile(self.localpath, cluster_info, '.mat'])
+          corelib.verb(verbosity, 'parse', ['successfully loaded filenames/codes from ' fullfile(self.localpath, cluster_info, '.mat')])
         catch
           try
             if numel(which('cluster_info.mat')) == 0
