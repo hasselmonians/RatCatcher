@@ -1,17 +1,17 @@
 function [filenames, filecodes] = parse(self)
   % parses the name of a datafile listed within cluster_info.mat
   % extracts the main section of the filenames and the cell index
-  % 
+  %
   % Arguments:
-  % 
+  %
   % self: expects a RatCatcher object with the expID field
-  % 
+  %
   % Outputs:
-  % 
+  %
   % filenames: cell array or character vector containing the filenames specified
   %   if expID is 1 x n, the cell array contains character vectors of the full file paths
   %   if expID is m x n, the cell array contains cell arrays of character vectors of the full file paths
-  % 
+  %
   % filecodes: cell array or matrix containing the filecodes specified
   %   if expID is 1 x n, the cell array contains matrix of the numerical identifiers
   %   if expID is m x n, the cell array contains cell arrays of matrix of the numerical identifiers
@@ -57,7 +57,7 @@ function [filenames, filecodes] = parse_core(expID)
         load('/mnt/hasselmogrp/hoyland/cluster_info.mat');
       catch
         try
-          load(fullfile(self.localpath, cluster_info.mat'));
+          load(fullfile(self.localpath, cluster_info, '.mat'));
         catch
           try
             load(which('cluster_info.mat'));
@@ -101,7 +101,27 @@ function [filenames, filecodes] = parse_core(expID)
     end
 
   case 'Holger'
-    error('[ERROR] I don''t know what to do yet.')
+    % error('[ERROR] I don''t know what to do yet.')
+    try
+      load('/projectnb/hasselmogrp/hoyland/holger/data.mat');
+    catch
+      try
+        load('/mnt/hasselmogrp/hoyland/holger/data.mat');
+      catch
+        try
+          load(fullfile(self.localpath, data, '.mat'));
+        catch
+          try
+            load(which('data.mat'));
+          catch
+            error('[ERROR] data could not be found.');
+          end
+        end
+      end
+    end
+
+
+
 
   case 'Winny'
     error('[ERROR] I don''t know what to do yet.')
