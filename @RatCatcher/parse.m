@@ -28,20 +28,20 @@ function [filenames, filecodes] = parse(self)
       filecodes = cell(size(expID, 1), 1);
       for ii = 1:size(expID, 1)
         % iterate through the parsing and add each cell array to the cell array
-        [filenames{ii}, filecodes{ii}] = parse_core(expID(ii,:));
+        [filenames{ii}, filecodes{ii}] = parse_core(expID(ii,:), self.verbose);
       end
     else
       % if expID is a row vector cell array or a scalar cell array
-      [filenames, filecodes] = parse_core(expID(1,:));
+      [filenames, filecodes] = parse_core(expID(1,:), self.verbose);
     end
   else
     % if expID is a character vector
-    [filenames, filecodes] = parse_core({expID});
+    [filenames, filecodes] = parse_core({expID}, self.verbose);
   end
 
 end % function
 
-function [filenames, filecodes] = parse_core(expID)
+function [filenames, filecodes] = parse_core(expID, verbosity)
   % accepts an expID just like parse; performs the core function
   % parse calls this function a number of times depending on its inputs
 
@@ -51,16 +51,23 @@ function [filenames, filecodes] = parse_core(expID)
     % expects expID in the form: {'Caitlin', cluster_letter}
     % load the cluster info file
     try
-      load('/projectnb/hasselmogrp/hoyland/cluster_info.mat');
+      load('/projectnb/hasselmogrp/hoyland/data/caitlin/cluster_info.mat');
+      corelib.verb(verbosity, 'parse', ['successfully loaded filenames/codes from /projectnb/hasselmogrp/hoyland/data/caitlin/cluster_info.mat'])
     catch
       try
-        load('/mnt/hasselmogrp/hoyland/cluster_info.mat');
+        load('/mnt/hasselmogrp/hoyland/data/caitlin/cluster_info.mat');
+        corelib.verb(verbosity, 'parse', ['successfully loaded filenames/codes from /mnt/hasselmogrp/hoyland/data/caitlin/cluster_info.matt'])
       catch
         try
           load(fullfile(self.localpath, cluster_info, '.mat'));
+          corelib.verb(verbosity, 'parse', ['successfully loaded filenames/codes from ' fullfile(self.localpath, cluster_info, '.mat'])
         catch
           try
+            if numel(which('cluster_info.mat')) == 0
+              error('cluster_info.mat not found on path')
+            end
             load(which('cluster_info.mat'));
+            corelib.verb(verbosity, 'parse', ['successfully loaded filenames/codes from' which('cluster_info.mat')])
           catch
             error('[ERROR] Cluster info could not be found.');
           end
@@ -103,24 +110,29 @@ function [filenames, filecodes] = parse_core(expID)
   case 'Holger'
     % error('[ERROR] I don''t know what to do yet.')
     try
-      load('/projectnb/hasselmogrp/hoyland/holger/data.mat');
+      load('/projectnb/hasselmogrp/hoyland/data/holger/data.mat');
+      corelib.verb(verbosity, 'parse', ['successfully loaded filenames/codes from /projectnb/hasselmogrp/hoyland/data/holger/data.mat'])
     catch
       try
-        load('/mnt/hasselmogrp/hoyland/holger/data.mat');
+        load('/mnt/hasselmogrp/hoyland/data/holger/data.mat');
+        corelib.verb(verbosity, 'parse', ['successfully loaded filenames/codes from /mnt/hasselmogrp/hoyland/data/holger/data.mat'])
       catch
         try
           load(fullfile(self.localpath, data, '.mat'));
+          corelib.verb(verbosity, 'parse', ['successfully loaded filenames/codes from ' fullfile(self.localpath, data, '.mat')])
         catch
           try
+            if numel(which('data.mat')) == 0
+              error('data.mat not found on path')
+            end
             load(which('data.mat'));
+            corelib.verb(verbosity, 'parse', ['successfully loaded filenames/codes from ' which('data.mat')])
           catch
-            error('[ERROR] data could not be found.');
+            error('[parse] data could not be found.');
           end
         end
       end
     end
-
-
 
 
   case 'Winny'
