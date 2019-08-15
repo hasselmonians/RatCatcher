@@ -116,9 +116,8 @@ function dataTable = gather(self, filekey, dataTable0)
     outfiles  = self.natsortfiles(outfiles);
     % get the dimensions of the data
     dim1      = length(outfiles);
-    dim2      = length(csvread(outfiles{1}));
     % read through the files and write the data to a matrix
-    data      = NaN(dim1, dim2);
+    data      = NaN([dim1 size(csvread(outfiles{1}))]);
     for ii = 1:dim1
       data(ii, :) = csvread(outfiles{ii});
     end
