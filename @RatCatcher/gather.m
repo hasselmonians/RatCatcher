@@ -153,7 +153,7 @@ function dataTable = gather(self, filekey, dataTable0)
       waveforms = {data};
       dataTable = table(waveforms);
     otherwise
-      corelib.verb(true, 'ERROR', 'I don''t know which protocol you mean.')
+      corelib.verb(true, 'gather', 'I don''t know which protocol you mean.')
     end
   end
 
