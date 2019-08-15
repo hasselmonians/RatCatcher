@@ -133,6 +133,7 @@ function dataTable = gather(self, filekey, dataTable0)
 
     switch protocol
     case 'BandwidthEstimator'
+      corelib.verb(self.verbose, 'gather', ['protocol ' protocol ' identified'])
       % gather the data from the output files
       kmax    = data(:, 1);
       CI      = data(:, 2:3);
@@ -140,9 +141,11 @@ function dataTable = gather(self, filekey, dataTable0)
       % put the data in a MATLAB table
       dataTable = table(outfiles, kmax, CI, kcorr);
     case 'KiloPlex'
+      corelib.verb(self.verbose, 'gather', ['protocol ' protocol ' identified'])
       % the data are a bunch of .mat files, so just gather the names of the files
       dataTable = table(outfiles);
     case 'CellSorter'
+      corelib.verb(self.verbose, 'gather', ['protocol ' protocol ' identified'])
       % the data are waveforms in a 50x4 matrix
       % the first index is over time steps of the recording
       % the second index is over channels in a tetrode
