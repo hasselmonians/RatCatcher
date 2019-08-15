@@ -118,8 +118,17 @@ function dataTable = gather(self, filekey, dataTable0)
     dim1      = length(outfiles);
     % read through the files and write the data to a matrix
     data      = NaN([dim1 size(csvread(outfiles{1}))]);
-    for ii = 1:dim1
-      data(ii, :) = csvread(outfiles{ii});
+    corelib.verb(self.verbose, 'gather', 'reading outfiles to build data matrix')
+
+    if self.verbose
+      for ii = 1:dim1
+        corelib.textbar(ii, dim1)
+        data(ii, :) = corelib.vectorise(csvread(outfiles{ii}));
+      end
+    else
+      for ii = 1:dim1
+        data(ii, :) = corelib.vectorise(csvread(outfiles{ii}));
+      end
     end
 
     switch protocol
