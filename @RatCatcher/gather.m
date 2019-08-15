@@ -150,7 +150,10 @@ function dataTable = gather(self, filekey, dataTable0)
       % the first index is over time steps of the recording
       % the second index is over channels in a tetrode
       % the units are milliseconds
-      waveforms = {data};
+      waveforms = cell(dim1, 1);
+      for ii = 1:dim1
+        waveforms{ii} = squeeze(data(ii, :, :));
+      end
       dataTable = table(waveforms);
     otherwise
       corelib.verb(true, 'gather', 'I don''t know which protocol you mean.')
