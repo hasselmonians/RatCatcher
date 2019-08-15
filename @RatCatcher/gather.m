@@ -44,7 +44,7 @@ function dataTable = gather(self, filekey, dataTable0)
       for ii = 1:length(filekey)
         filekey{ii} = ['output-' filekey{ii} '*'];
       end
-      corelib.verb(self.verbose, 'INFO', ['filekey determined automatically: ' filekey])
+      corelib.verb(self.verbose, 'gather', ['filekey determined automatically: ' filekey])
     else
       filekey = self.batchname;
       if iscell(filekey)
@@ -54,10 +54,10 @@ function dataTable = gather(self, filekey, dataTable0)
       else
         filekey = ['output-' filekey '*'];
       end
-      corelib.verb(self.verbose, 'INFO', ['filekey set by batchname property'])
+      corelib.verb(self.verbose, 'gather', ['filekey set by batchname property'])
     end
   else
-    corelib.verb(self.verbose, 'INFO', ['filekey set by user: ' filekey])
+    corelib.verb(self.verbose, 'gather', ['filekey set by user: ' filekey])
   end
 
   if iscell(filekey)
@@ -96,7 +96,7 @@ function dataTable = gather(self, filekey, dataTable0)
   if ~isempty(localpath)
     cd(localpath)
   else
-    disp(['[INFO] No local path set, not changing directories'])
+    disp(['[gather] No local path set, not changing directories'])
   end
 
   % gather together all of the data points into a single matrix
@@ -105,7 +105,7 @@ function dataTable = gather(self, filekey, dataTable0)
 
   if numel(files) == 0
     dataTable = table();
-    corelib.verb(true, 'ERROR', 'no files found with filekey')
+    corelib.verb(self.verbose, 'gather', 'no files found with filekey')
   else
     % acquire the outfiles
     outfiles  = cell(size(files));
