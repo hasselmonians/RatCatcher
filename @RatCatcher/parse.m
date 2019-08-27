@@ -52,22 +52,22 @@ function [filenames, filecodes] = parse_core(expID, verbosity)
     % load the cluster info file
     try
       load('/projectnb/hasselmogrp/hoyland/data/caitlin/cluster_info.mat');
-      corelib.verb(verbosity, 'parse', ['successfully loaded filenames/codes from /projectnb/hasselmogrp/hoyland/data/caitlin/cluster_info.mat'])
+      corelib.verb(verbosity, 'RatCatcher::parse', ['successfully loaded filenames/codes from /projectnb/hasselmogrp/hoyland/data/caitlin/cluster_info.mat'])
     catch
       try
         load('/mnt/hasselmogrp/hoyland/data/caitlin/cluster_info.mat');
-        corelib.verb(verbosity, 'parse', ['successfully loaded filenames/codes from /mnt/hasselmogrp/hoyland/data/caitlin/cluster_info.matt'])
+        corelib.verb(verbosity, 'RatCatcher::parse', ['successfully loaded filenames/codes from /mnt/hasselmogrp/hoyland/data/caitlin/cluster_info.matt'])
       catch
         try
           load(fullfile(self.localpath, cluster_info, '.mat'));
-          corelib.verb(verbosity, 'parse', ['successfully loaded filenames/codes from ' fullfile(self.localpath, cluster_info, '.mat')])
+          corelib.verb(verbosity, 'RatCatcher::parse', ['successfully loaded filenames/codes from ' fullfile(self.localpath, cluster_info, '.mat')])
         catch
           try
             if numel(which('cluster_info.mat')) == 0
               error('cluster_info.mat not found on path')
             end
             load(which('cluster_info.mat'));
-            corelib.verb(verbosity, 'parse', ['successfully loaded filenames/codes from' which('cluster_info.mat')])
+            corelib.verb(verbosity, 'RatCatcher::parse', ['successfully loaded filenames/codes from' which('cluster_info.mat')])
           catch
             error('[ERROR] Cluster info could not be found.');
           end
@@ -111,22 +111,22 @@ function [filenames, filecodes] = parse_core(expID, verbosity)
     % error('[ERROR] I don''t know what to do yet.')
     try
       load('/projectnb/hasselmogrp/hoyland/data/holger/data.mat');
-      corelib.verb(verbosity, 'parse', ['successfully loaded filenames/codes from /projectnb/hasselmogrp/hoyland/data/holger/data.mat'])
+      corelib.verb(verbosity, 'RatCatcher::parse', ['successfully loaded filenames/codes from /projectnb/hasselmogrp/hoyland/data/holger/data.mat'])
     catch
       try
         load('/mnt/hasselmogrp/hoyland/data/holger/data.mat');
-        corelib.verb(verbosity, 'parse', ['successfully loaded filenames/codes from /mnt/hasselmogrp/hoyland/data/holger/data.mat'])
+        corelib.verb(verbosity, 'RatCatcher::parse', ['successfully loaded filenames/codes from /mnt/hasselmogrp/hoyland/data/holger/data.mat'])
       catch
         try
           load(fullfile(self.localpath, data, '.mat'));
-          corelib.verb(verbosity, 'parse', ['successfully loaded filenames/codes from ' fullfile(self.localpath, data, '.mat')])
+          corelib.verb(verbosity, 'RatCatcher::parse', ['successfully loaded filenames/codes from ' fullfile(self.localpath, data, '.mat')])
         catch
           try
             if numel(which('data.mat')) == 0
               error('data.mat not found on path')
             end
             load(which('data.mat'));
-            corelib.verb(verbosity, 'parse', ['successfully loaded filenames/codes from ' which('data.mat')])
+            corelib.verb(verbosity, 'RatCatcher::parse', ['successfully loaded filenames/codes from ' which('data.mat')])
           catch
             error('[parse] data could not be found.');
           end
