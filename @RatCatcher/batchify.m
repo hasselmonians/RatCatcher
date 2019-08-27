@@ -39,7 +39,7 @@ function self = batchify(self)
   else
     batchify_core(self, self.batchname, self.filenames, self.filecodes, dummyScriptPath);
     corelib.verb(self.verbose, 'RatCatcher::batchify', 'batch script edited')
-    corelib.verb(self.verbose, 'RatCatcher::batchify', ['run this: $ qsub ' self.remotepath filesep 'batchscript-', self.batchname, '.sh'])
+    corelib.verb(self.verbose, 'RatCatcher::batchify', ['run this: $ cd ' self.remotepath '; qsub ' 'batchscript-', self.batchname, '.sh'])
   end
 
 
