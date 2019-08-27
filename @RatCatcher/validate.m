@@ -1,6 +1,11 @@
 function self = validate(self)
 
   % validates secondary properties of RatCatcher prior to batchifying
+  % If you want to fully flesh out your RatCatcher object but *not* batch it,
+  % use this function
+
+  % Example:
+  % r = r.validate;
 
   % batch name
 
