@@ -19,7 +19,7 @@ function clean(self, keepthis)
     count = clean_core(self, self.batchname, keepthis);
   end
 
-  corelib.verb(self.verbose, 'INFO', ['all old files removed (', num2str(count), ' files)'])
+  corelib.verb(self.verbose, 'RatCatcher::clean', ['all old files removed (', num2str(count), ' files)'])
 
   warning on all
 
