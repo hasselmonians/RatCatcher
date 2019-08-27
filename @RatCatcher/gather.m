@@ -44,7 +44,7 @@ function dataTable = gather(self, filekey, dataTable0)
       for ii = 1:length(filekey)
         filekey{ii} = ['output-' filekey{ii} '*'];
       end
-      corelib.verb(self.verbose, 'gather', ['filekey determined automatically: ' filekey])
+      corelib.verb(self.verbose, 'RatCatcher::gather', ['filekey determined automatically: ' filekey])
     else
       filekey = self.batchname;
       if iscell(filekey)
@@ -54,10 +54,10 @@ function dataTable = gather(self, filekey, dataTable0)
       else
         filekey = ['output-' filekey '*'];
       end
-      corelib.verb(self.verbose, 'gather', ['filekey set by batchname property'])
+      corelib.verb(self.verbose, 'RatCatcher::gather', ['filekey set by batchname property'])
     end
   else
-    corelib.verb(self.verbose, 'gather', ['filekey set by user: ' filekey])
+    corelib.verb(self.verbose, 'RatCatcher::gather', ['filekey set by user: ' filekey])
   end
 
   if iscell(filekey)
@@ -105,7 +105,7 @@ function dataTable = gather(self, filekey, dataTable0)
 
   if numel(files) == 0
     dataTable = table();
-    corelib.verb(self.verbose, 'gather', 'no files found with filekey')
+    corelib.verb(self.verbose, 'RatCatcher::gather', 'no files found with filekey')
   else
     % acquire the outfiles
     outfiles  = cell(size(files));
@@ -118,7 +118,7 @@ function dataTable = gather(self, filekey, dataTable0)
     dim1      = length(outfiles);
     % read through the files and write the data to a matrix
     data      = NaN([dim1 size(csvread(outfiles{1}))]);
-    corelib.verb(self.verbose, 'gather', 'reading outfiles to build data matrix')
+    corelib.verb(self.verbose, 'RatCatcher::gather', 'reading outfiles to build data matrix')
 
     if self.verbose
       for ii = 1:dim1
@@ -133,7 +133,7 @@ function dataTable = gather(self, filekey, dataTable0)
 
     switch protocol
     case 'BandwidthEstimator'
-      corelib.verb(self.verbose, 'gather', ['protocol ' protocol ' identified'])
+      corelib.verb(self.verbose, 'RatCatcher::gather', ['protocol ' protocol ' identified'])
       % gather the data from the output files
       kmax    = data(:, 1);
       CI      = data(:, 2:3);
@@ -141,11 +141,11 @@ function dataTable = gather(self, filekey, dataTable0)
       % put the data in a MATLAB table
       dataTable = table(outfiles, kmax, CI, kcorr);
     case 'KiloPlex'
-      corelib.verb(self.verbose, 'gather', ['protocol ' protocol ' identified'])
+      corelib.verb(self.verbose, 'RatCatcher::gather', ['protocol ' protocol ' identified'])
       % the data are a bunch of .mat files, so just gather the names of the files
       dataTable = table(outfiles);
     case 'CellSorter'
-      corelib.verb(self.verbose, 'gather', ['protocol ' protocol ' identified'])
+      corelib.verb(self.verbose, 'RatCatcher::gather', ['protocol ' protocol ' identified'])
       % the data are waveforms in a 50x4 matrix
       % the first index is over time steps of the recording
       % the second index is over channels in a tetrode
@@ -156,7 +156,7 @@ function dataTable = gather(self, filekey, dataTable0)
       end
       dataTable = table(waveforms);
     otherwise
-      corelib.verb(true, 'gather', 'I don''t know which protocol you mean.')
+      corelib.verb(true, 'RatCatcher::gather', 'I don''t know which protocol you mean.')
     end
   end
 

@@ -11,14 +11,14 @@ function self = validate(self)
     self.batchname = self.getBatchScriptName();
 
     if self.verbose
-      disp('[INFO] batch name determined automatically')
+      disp('[RatCatcher::validate] batch name determined automatically')
     end
 
   else
     % batch name was preset by the user
 
     if self.verbose
-      disp('[INFO] batch name determined by user')
+      disp('[RatCatcher::validate] batch name determined by user')
     end
 
   end
@@ -31,13 +31,13 @@ function self = validate(self)
     [self.filenames, self.filecodes] = self.parse();
 
     if self.verbose
-      disp('[INFO] filenames and filecodes determined automatically')
+      disp('[RatCatcher::validate] filenames and filecodes determined automatically')
     end
 
   else
 
     if self.verbose
-      disp('[INFO] filenames and filecodes determined by user')
+      disp('[RatCatcher::validate] filenames and filecodes determined by user')
     end
 
   end
@@ -62,7 +62,7 @@ function self = validate(self)
       % batch function name was found automatically
 
       if self.verbose
-        disp(['[INFO] batch function name determined automatically'])
+        disp(['[RatCatcher::validate] batch function name determined automatically'])
       end
 
     end
@@ -71,7 +71,7 @@ function self = validate(self)
     % the batch function name was already provided
 
     if self.verbose
-      disp(['[INFO] batch function name determined by user'])
+      disp(['[RatCatcher::validate] batch function name determined by user'])
     end
 
   end
@@ -84,12 +84,12 @@ function self = validate(self)
     self.batchscriptpath = self.getBatchScriptPath();
 
     if self.verbose == true
-      disp(['[INFO] batch script determined automatically'])
+      disp(['[RatCatcher::validate] batch script determined automatically'])
     end
 
   else
     if self.verbose == true
-      disp('[INFO] batch script determined by user')
+      disp('[RatCatcher::validate] batch script determined by user')
     end
   end
 

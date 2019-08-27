@@ -35,7 +35,7 @@ function [protocolObject, dataObject] = extract(dataTable, index, protocol, verb
   dataObject.cel  = dataTable.filecodes(index, :);
 
   % determine next step based on protocol method
-  if verbose, disp('[INFO] set up protocol object'); end
+  corelib.verb(verbose, 'RatCatcher::extract', 'setting up protocol object')
   switch protocol
   case 'BandwidthEstimator'
     protocolObject = BandwidthEstimator(dataObject);

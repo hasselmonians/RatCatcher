@@ -25,7 +25,7 @@ function self = batchify(self)
 
   % copy over the new batch function
   copyfile(self.batchfuncpath, self.localpath);
-  corelib.verb(self.verbose, 'INFO', ['batch function copied to: ' self.localpath])
+  corelib.verb(self.verbose, 'RatCatcher::batchify', ['batch function copied to: ' self.localpath])
 
   %% Set up scripts
 
@@ -33,13 +33,13 @@ function self = batchify(self)
   if iscell(self.batchname)
     for ii = 1:length(self.batchname)
       batchify_core(self, self.batchname{ii}, self.filenames{ii}, self.filecodes{ii}, dummyScriptPath);
-      corelib.verb(self.verbose, 'INFO', 'batch script edited')
-      corelib.verb(self.verbose, 'INFO', ['run this: $ qsub ' self.remotepath filesep 'batchscript-', self.batchname{ii}, '.sh'])
+      corelib.verb(self.verbose, 'RatCatcher::batchify', 'batch script edited')
+      corelib.verb(self.verbose, 'RatCatcher::batchify', ['run this: $ qsub ' self.remotepath filesep 'batchscript-', self.batchname{ii}, '.sh'])
     end
   else
     batchify_core(self, self.batchname, self.filenames, self.filecodes, dummyScriptPath);
-    corelib.verb(self.verbose, 'INFO', 'batch script edited')
-    corelib.verb(self.verbose, 'INFO', ['run this: $ qsub ' self.remotepath filesep 'batchscript-', self.batchname, '.sh'])
+    corelib.verb(self.verbose, 'RatCatcher::batchify', 'batch script edited')
+    corelib.verb(self.verbose, 'RatCatcher::batchify', ['run this: $ qsub ' self.remotepath filesep 'batchscript-', self.batchname, '.sh'])
   end
 
 
@@ -56,12 +56,12 @@ function batchify_core(self, batchname, filenames, filecodes, dummyScriptPath)
 
   % write filecodes.csv
   csvwrite(fullfile(self.localpath, ['filecodes-' batchname, '.csv']), filecodes);
-  corelib.verb(self.verbose, 'INFO', 'filenames and filecodes parsed')
+  corelib.verb(self.verbose, 'RatCatcher::batchify', 'filenames and filecodes parsed')
 
   % name the batch script using the same format as the filenames and filecodes
   finalScriptPath = fullfile(self.localpath, ['batchscript-', batchname, '.sh']);
   copyfile(dummyScriptPath, finalScriptPath);
-  corelib.verb(self.verbose, 'INFO', ['batch script copied to: ' finalScriptPath])
+  corelib.verb(self.verbose, 'RatCatcher::batchify', ['batch script copied to: ' finalScriptPath])
 
   %% Edit the copied batch file
 

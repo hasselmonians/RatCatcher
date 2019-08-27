@@ -24,7 +24,7 @@ function output = index(self, dataTable)
       filenames   = dataTable.filenames;
       filecodes    = dataTable.filecodes;
     catch
-      disp('[ERROR] I don''t know what to do with this dataTable');
+      corelib.verb(self.verbose, 'RatCatcher::index ERROR', 'I don''t know what to do with this dataTable');
       output = [];
       return
     end
@@ -43,7 +43,7 @@ function output = index(self, dataTable)
         filecodes(ii, :) = dataTable{ii, 2};
       end
     else
-      disp('[ERROR] Cell array contains insufficient information, "filecodes" required')
+      corelib.verb(self.verbose, 'RatCatcher::index ERROR', 'Cell array contains insufficient information; "filecodes" required')
       output = [];
       return
     end
