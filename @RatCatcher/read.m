@@ -10,7 +10,11 @@ function [filename, filecode] = read(index, location, batchname)
 
     % load the entire filename file
     % this is slow, but MATLAB has clunky textread options
-    filename    = filelib.read(fullfile(location, ['filenames-', batchname, '.txt']));
+    try
+        filename    = filelib.read(fullfile(location, ['filenames-', batchname, '.txt']));
+    catch
+        error(['File not found at: ' fullfile(location, ['filenames-', batchname, '.txt'])])
+    end
     % acquire only the character vector corresponding to the indexed filename
     filename    = filename{index};
     % acquire the cell number using similarly clunky indexing
