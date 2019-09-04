@@ -14,7 +14,7 @@ function data = stitch(self, data)
     % data: m x n+2 table, the data table
 
   self = self.validate;
-  data2 = table(self.filenames, self.filecodes);
+  data2 = table('filenames', self.filenames, 'filecodes', self.filecodes);
 
   if exist('data', 'var')
     data = [data data2];
