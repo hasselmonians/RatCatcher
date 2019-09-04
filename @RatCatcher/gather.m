@@ -151,10 +151,14 @@ function dataTable = gather(self, filekey, dataTable0)
       % the second index is over channels in a tetrode
       % the units are milliseconds
       waveforms = cell(dim1, 1);
+      spike_width = NaN(dim1, 1);
+      firing_rate = NaN(dim1, 1);
       for ii = 1:dim1
-        waveforms{ii} = squeeze(data(ii, :, :));
+        waveforms{ii} = squeeze(data(ii, :, 1:end-1));
+        spike_width(ii) = squeeze(data(ii, 1, end));
+        firing_rate(ii) = squeeze(data(ii, 2, end));
       end
-      dataTable = table(waveforms);
+      dataTable = table(waveforms, spike_width, firing_rate);
     otherwise
       corelib.verb(true, 'RatCatcher::gather', 'I don''t know which protocol you mean.')
     end
