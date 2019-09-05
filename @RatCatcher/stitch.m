@@ -15,7 +15,7 @@ function data = stitch(self, data)
 
   self = self.validate;
 
-  if exist('data', 'var')
+  if ~exist('data', 'var')
     data = table;
   end
 
