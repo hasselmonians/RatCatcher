@@ -13,7 +13,19 @@ function data = stitch(self, data)
   % Outputs:
     % data: m x n+2 table, the data table
 
+
+  % check to make sure that your object is up-to-date
   self = self.validate;
+
+  % create a master list of all filenames by compressing the filenames cell structure (if any)
+  % expect an n x 1 cell array of character vectors
+  filenames = cat(1, self.filenames{:});
+
+  % create a master list of all filecodes the same way
+  % expect an n x m numerical matrix
+  filecodes = cat(1, self.filecodes{:});
+
+  % create a master list of all filecodes
 
   if ~exist('data', 'var')
     data = table;
