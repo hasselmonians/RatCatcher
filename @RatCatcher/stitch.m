@@ -18,26 +18,34 @@ function new_table = stitch(self, old_table)
 
   % create a master list of all filenames by compressing the filenames cell structure (if any)
   % expect an n x 1 cell array of character vectors
-  filenames = cat(1, self.filenames{:});
+  try
+    filenames = cat(1, self.filenames{:});
+  catch
+    filenames = self.filenames;
+  end
+
+  corelib.verb(self.verbose, 'stitch', 'found filenames')
 
   % create a master list of all filecodes the same way
   % expect an n x m numerical matrix
-  filecodes = cat(1, self.filecodes{:});
+  try
+    filecodes = cat(1, self.filecodes{:});
+  catch
+    filecodes = self.filecodes;
+  end
+
+  corelib.verb(self.verbose, 'stitch', 'found filecodes')
 
   % produce a new data table containing the filenames and filecodes
   new_table = table;
   new_table.filenames = filenames;
   new_table.filecodes = filecodes;
 
-  if ~exist('old_table', 'var')
-    return
-  end
-
   % attempt to add the new_table to the old_table
   try
     new_table = [old_table new_table];
   catch
-    core.verb(self.verbose, 'stitch', 'Couldn''t stitch tables together, returning the new table')
+    corelib.verb(self.verbose, 'stitch', 'couldn''t stitch tables together, returning the new table')
   end
 
 end % function
