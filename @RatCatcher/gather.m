@@ -33,12 +33,14 @@ function dataTable = gather(self, filekey, dataTable0)
   localpath = self.localpath;
   protocol  = self.protocol;
 
-  if nargin < 2
+  if ~exist('filekey', 'var')
     filekey = [];
   end
 
+  %% Generate the filekey
+
+  % check the batchname property first
   if isempty(filekey)
-    % check the batchname property first
     if isempty(self.batchname)
       filekey = self.getBatchScriptName();
       for ii = 1:length(filekey)
@@ -60,8 +62,8 @@ function dataTable = gather(self, filekey, dataTable0)
     corelib.verb(self.verbose, 'RatCatcher::gather', ['filekey set by user: ' filekey])
   end
 
+  % filekey is a cell, operate recursively over filekeys
   if iscell(filekey)
-    % filekey is a cell, operate recursively over filekeys
 
     if exist('dataTable0', 'var')
       dataTable = dataTable0;
@@ -96,7 +98,7 @@ function dataTable = gather(self, filekey, dataTable0)
   if ~isempty(localpath)
     cd(localpath)
   else
-    disp(['[gather] No local path set, not changing directories'])
+    corelib.verb(self.verbose, 'RatCatcher::gather', ['No local path set, not changing directories'])
   end
 
   % gather together all of the data points into a single matrix
@@ -120,6 +122,8 @@ function dataTable = gather(self, filekey, dataTable0)
     data      = NaN([dim1 size(csvread(outfiles{1}))]);
     corelib.verb(self.verbose, 'RatCatcher::gather', 'reading outfiles to build data matrix')
 
+    %% Collect the data from the csv files
+
     if self.verbose
       for ii = 1:dim1
         corelib.textbar(ii, dim1)
@@ -130,6 +134,8 @@ function dataTable = gather(self, filekey, dataTable0)
         data(ii, :) = corelib.vectorise(csvread(outfiles{ii}));
       end
     end
+
+    %% Package the data depending on the protocol
 
     switch protocol
     case 'BandwidthEstimator'
