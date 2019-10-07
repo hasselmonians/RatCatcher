@@ -79,7 +79,7 @@ function batchify_core(self, batchname, filenames, filecodes, dummyScriptPath)
 
   % determine the number of jobs
   script    = strrep(script, 'NUM_FILES', num2str(length(filenames)));
-  script    = strrep(script, 'NUM_BINS', self.nBins);
+  script    = strrep(script, 'NUM_BINS', self.nbins);
 
   % determine the argument to MATLAB batch function
   if self.parallel == false
