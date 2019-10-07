@@ -48,9 +48,13 @@ properties
   % the full path to the batch script
   % used to select the correct batch script during batchifying
 
-  verbose
+  verbose=true
   % logical
   % if true, functions output more descriptive text while running
+
+  parallel=false
+  % logical
+  % if true, try to use a parallelized batch function for increased speed
 
 
 
