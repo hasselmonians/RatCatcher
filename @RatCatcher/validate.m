@@ -49,7 +49,8 @@ function self = validate(self)
 
     else
       % batch function name was found automatically
-      corelib.verb(self.verbose, 'RatCatcher::validate', 'batch function name determined automatically'])
+      corelib.verb(self.verbose, 'RatCatcher::validate', 'batch function name determined automatically')
+    end
 
   else
     % the batch function name was already provided
