@@ -56,7 +56,10 @@ properties
   % logical
   % if true, try to use a parallelized batch function for increased speed
 
-
+  nbins@double
+  % positive integer
+  % only matters when parallel is true
+  % used to determine the number of batches run on the cluster
 
 end % properties
 
