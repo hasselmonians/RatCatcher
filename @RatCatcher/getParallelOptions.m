@@ -1,13 +1,20 @@
 % used in parallelized batch functions
 % to set up the parallel pool
 
+% This function is a static method of the RatCatcher class.
+% It should be called within parallelized batch functions only.
+% All four arguments are the same as the batch function arguments.
+
 % Arguments:
-%   bin_id:
-%   bin_total:
-%   location:
-%   batchname:
+%   bin_id: the index of where the first bin should start
+%   bin_total: the number of total bins for the entire cluster run
+%   location: the full path to where the cluster files are
+%   batchname: the batch name for the current run
 % Outputs:
-%
+%   bin_start: index in the filename list where the bin should start
+%   bin_finish: index in the filename list where the bin ends
+%   pc: the parallel pool cluster object
+%   parpool_tmpdir: where the job files are being stored
 
 function [bin_start, bin_finish, pc, parpool_tmpdir] = getParallelOptions(bin_id, bin_total, location, batchname)
 
