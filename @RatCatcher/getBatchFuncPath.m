@@ -9,7 +9,7 @@ function batchfuncpath = getBatchFuncPath(self)
 
   if numel(batchfuncpath) == 0
     batchfuncpath = [];
-    corelib.verb(self.verbose, 'getBatchFuncPath', 'no batch function found at '' batchfuncpath ''')
+    corelib.verb(self.verbose, 'getBatchFuncPath', ['no batch function found at ''' batchfuncpath ''''])
   end
 
 end
