@@ -12,19 +12,12 @@ function self = validate(self)
   if isempty(self.batchname)
     % no additional information specified by user
     % finding the batch name automatically
-
     self.batchname = self.getBatchScriptName();
-
-    if self.verbose
-      disp('[RatCatcher::validate] batch name determined automatically')
-    end
+    corelib.verb(self.verbose, 'RatCatcher::validate', 'batch name determined automatically')
 
   else
     % batch name was preset by the user
-
-    if self.verbose
-      disp('[RatCatcher::validate] batch name determined by user')
-    end
+    corelib.verb(self.verbose, 'RatCatcher::validate', 'batch name determined by user')
 
   end
 
@@ -34,16 +27,10 @@ function self = validate(self)
     % no additional information specified by user
     % finding filenames and filecodes automatically
     [self.filenames, self.filecodes] = self.parse();
-
-    if self.verbose
-      disp('[RatCatcher::validate] filenames and filecodes determined automatically')
-    end
+    corelib.verb(self.verbose, 'RatCatcher::validate', 'filenames and filecodes determined automatically')
 
   else
-
-    if self.verbose
-      disp('[RatCatcher::validate] filenames and filecodes determined by user')
-    end
+    corelib.verb(self.verbose, 'RatCatcher::validate', 'filenames and filecodes determined by user')
 
   end
 
@@ -57,27 +44,17 @@ function self = validate(self)
     if isempty(self.batchfuncpath)
       % couldn't find the batch function name automatically
       % error
-
-      if self.verbose
-        disp('[ERROR] batch function name not found')
-        return
-      end
+      corelib.verb(self.verbose, 'RatCatcher::validate', 'ERROR: could not find the batch function name automatically')
+      return
 
     else
       % batch function name was found automatically
-
-      if self.verbose
-        disp(['[RatCatcher::validate] batch function name determined automatically'])
-      end
-
+      corelib.verb(self.verbose, 'RatCatcher::validate', 'batch function name determined automatically')
     end
 
   else
     % the batch function name was already provided
-
-    if self.verbose
-      disp(['[RatCatcher::validate] batch function name determined by user'])
-    end
+    corelib.verb(self.verbose, 'RatCatcher::validate', 'batch function name determined by user')
 
   end
 
@@ -87,15 +64,11 @@ function self = validate(self)
     % batch script is not provided by user
     % determine automatically
     self.batchscriptpath = self.getBatchScriptPath();
-
-    if self.verbose == true
-      disp(['[RatCatcher::validate] batch script determined automatically'])
-    end
+    corelib.verb(self.verbose, 'RatCatcher::validate', 'batch script determined automatically')
 
   else
-    if self.verbose == true
-      disp('[RatCatcher::validate] batch script determined by user')
-    end
+    corelib.verb(self.verbose, 'RatCatcher::validate', 'batch script determined by user')
+
   end
 
   if numel(which(self.batchscriptpath)) == 0
@@ -112,7 +85,18 @@ function self = validate(self)
   props = properties(self);
   for ii = 1:length(props)
     if isempty(self.(props{ii}))
-      disp(['[WARNING] ' props{ii} ' property is empty'])
+      corelib.verb(true, 'RatCatcher::validate', ['WARN: ' props{ii} ' property is empty'])
+    end
+  end
+
+  % nbins
+
+  if self.parallel == true
+    if isempty(self.nbins)
+      self.nbins = ceil(length(self.filenames) / 16);
+      corelib.verb(self.verbose, 'RatCatcher::validate', 'nbins determined automatically')
+    else
+      corelib.verb(self.verbose, 'RatCatcher::validate', 'nbins determined by user')
     end
   end
 
