@@ -6,7 +6,7 @@ function filepaths = getFileNames(identifiers, filesig, masterpath)
   % filepaths = RatCatcher.getFileNames(identifiers, filesig)
   %
   % filepaths = RatCatcher.getFileNames(identifiers, filesig, masterpath)
-  % 
+  %
   % Ex: filepaths = RatCatcher.getFileNames({'winny', 'gabriella'; 'winny', 'troy'}, 'raw*.mat', '/mnt/hasselmogrp/hoyland/data/raw/')
   %
   % Arguments:
