@@ -20,7 +20,7 @@ function [bin_start, bin_finish] = getParallelOptions(bin_id, bin_total, locatio
   total_iterations = length(filelib.read(fullfile(location, ['filenames-', batchname, '.txt']))) - 1;
 
   % get the size of each bin
-  bin_size = total_iterations / bin_total;
+  bin_size = ceil(total_iterations / bin_total);
 
   % get the starting point of the bin
   bin_start = bin_size * (bin_id - 1) + 1;
