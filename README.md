@@ -1,5 +1,5 @@
 # RatCatcher
-A general utility for parsing data and passing to analysis scripts.
+A general utility for parsing data and passing to analysis scripts to be run on a high-performance computing cluster.
 
 In its simplest form, `RatCatcher` is an uncomplicated class that contains all the relevant information to find data on the cluster and produce batch files. You can use it to create a batch script that can be run on a high-performance computing cluster from your raw data and a custom analysis function, and then gather your data into a table afterwards.
 
@@ -7,16 +7,38 @@ It is agnostic to the format of the data, and to the type of analysis performed,
 so that `RatCatcher` can be used to perform any number of analyses on any type of data.
 `RatCatcher` scales well with increasing numbers of data files.
 
+## What does RatCatchjer actually do?
+
+`RatCatcher` generates files on a high-performance computing cluster (or local directory)
+that allow you to submit a batch job that will perform the same analysis function on many data files,
+and then gather the data afterwards into a table.
+
+Once the RatCatcher object is set up, running the `batchify()` function
+will create a `filenames.txt` file that contains a list of file paths to your raw data files,
+a `filecodes.csv` file that contains any numerical information needed to access the raw data,
+and a `batchscript.sh` script that will be submitted to execute the jobs on the cluster.
+This batch script will perform the chosen analysis on each file listed in `filenames.txt`.
+
+After the jobs have run, `RatCatcher` can gather the data into a table in your local MATLAB prompt.
+
 ## How do I install it?
-The best way is to clone the repository, or to download and unzip. Then, just add it to your MATLAB path. It is dependent on [`mtools`](https://github.com/sg-s/srinivas.gs_mtools).
+The best way is to clone the repository, or to download and unzip. Then, just add it to your MATLAB path.
+It is dependent on [`mtools`](https://github.com/sg-s/srinivas.gs_mtools), so you will need that as well.
 
 ## Usage example
 
 In this example, we will load up MATLAB on our local computer,
-and tell `RatCatcher` to collect from Caitlin's "A" and "B" data sets,
-and perform the "Bandwidth Estimator" analysis.
-On the cluster, we will run the auto-generated script,
-then back in MATLAB on our local computer, we will gather the data into a table.
+and tell `RatCatcher` to
+
+* collect from Caitlin's "A" and "B" data sets, and
+* perform the "Bandwidth Estimator" analysis.
+
+
+Then, on the cluster, we will
+
+* run the auto-generated script.
+
+Back in local MATLAB, we will gather the data into a table.
 
 Create the `RatCatcher` object.
 At minimum, the following fields need to be filled out.
