@@ -141,6 +141,9 @@ function [filenames, filecodes] = parse_core(expID, verbosity)
 
     pathname  = ['/projectnb/hasselmogroup/winnyning/data/' expID{2}];
 
+  case 'test'
+    corelib.verb(verbosity, 'RatCatcher::parse', 'this is a test, not doing anything...')
+
   otherwise
 
     error('[ERROR] expID not processed correctly')

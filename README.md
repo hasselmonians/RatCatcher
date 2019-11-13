@@ -25,7 +25,29 @@ After the jobs have run, `RatCatcher` can gather the data into a table in your l
 The best way is to clone the repository, or to download and unzip. Then, just add it to your MATLAB path.
 It is dependent on [`mtools`](https://github.com/sg-s/srinivas.gs_mtools), so you will need that as well.
 
-## Usage example
+## A (contrived) usage example
+
+This is how you can test `RatCatcher` on your setup.
+Run `script.m` in `RatCatcher/test/`.
+
+You will need to configure the paths first (see the script for details).
+
+Then, log into the cluster,
+and navigate to the directory you specified as `r.remotepath`.
+Then run the batch script by:
+
+```bash
+qsub batchscript-test-Test.sh
+```
+
+This should perform the trivial task of copying [1, 2] into output files.
+You can then gather the data locally with:
+
+```matlab
+dataTable = r.gather;
+```
+
+## A (real) usage example
 
 In this example, we will load up MATLAB on our local computer,
 and tell `RatCatcher` to
@@ -326,6 +348,7 @@ Currently, the following protocols exist for `RatCatcher`:
 * [CellSorter](https://github.com/hasselmonians/CellSorter)
 * [BandwidthEstimator](https://github.com/hasselmonians/BandwidthEstimator)
 * [KiloPlex](https://github.com/hasselmonians/KiloPlex)
+* [LNLModel](https://github.com/hasselmonians/ln-model-of-mec-neurons)
 
 The only requirement is that your analysis have a _batch function_ defined for it. It finds it by looking at:
 
