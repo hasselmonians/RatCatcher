@@ -6,10 +6,14 @@ r = RatCatcher;
 r.expID       = 'test';
 
 % NOTE: you will need to change the following paths to make sense for you
+% this should be the directory path to where you want to store files on the cluster
 r.remotepath  = '/projectnb/hasselmogrp/ahoyland/RatCatcher/cluster';
 
-% I have used sshfs to mount the cluster locally
-% If I didn't do this, I would have to specify a local path and then manually copy the files over.
+% NOTE:
+% I have used sshfs to mount the cluster locally, so that I can treat the cluster as part of my local filesystem.
+% If I didn't do this, I would have to specify a path accessible by my local computer,
+% and then manually copy the files over.
+% If this directory doesn't exist, you will have to create it.
 r.localpath   = '/mnt/hasselmogrp/ahoyland/RatCatcher/cluster';
 
 r.protocol    = 'Test';
