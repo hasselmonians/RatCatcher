@@ -24,6 +24,9 @@ function self = batchify(self)
   dummyScriptPath = which(self.batchscriptpath);
 
   % copy over the new batch function
+  if ~exist(self.localpath, 'dir')
+    mkdir(self.localpath);
+  end
   copyfile(self.batchfuncpath, self.localpath);
   corelib.verb(self.verbose, 'RatCatcher::batchify', ['batch function copied to: ' self.localpath])
 
