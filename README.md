@@ -7,7 +7,7 @@ It is agnostic to the format of the data, and to the type of analysis performed,
 so that `RatCatcher` can be used to perform any number of analyses on any type of data.
 `RatCatcher` scales well with increasing numbers of data files.
 
-## What does RatCatchjer actually do?
+## What does RatCatcher actually do?
 
 `RatCatcher` generates files on a high-performance computing cluster (or local directory)
 that allow you to submit a batch job that will perform the same analysis function on many data files,
