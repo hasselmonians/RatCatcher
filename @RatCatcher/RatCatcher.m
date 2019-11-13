@@ -10,24 +10,24 @@ properties
   % the columns are increasingly specific IDs to the parse function
   % the rows are new IDs (results are appended)
 
-  remotepath@char
+  remotepath
   % character vector
   % absolute path to where the output data should be stored on a computing cluster
 
-  localpath@char
+  localpath
   % character vector
   % absolute path to where the output data should be stored on a local computer
 
-  protocol@char
+  protocol
   % character vector
   % the name of the analysis protocol to be performed on the cluster
   % this is used to find the correct batchFunction
 
-  project@char
+  project
   % character vector
   % the name of the project paying for compute nodes on the cluster
 
-  batchname@char
+  batchname
   % the unique identifier which is part of every file name for files created by RatCatcher
 
   filenames
@@ -38,25 +38,25 @@ properties
   % a matrix of size m x n, where m is the number of filenames
   % contains numerical information used to find specific data inside of the paired filename
 
-  batchfuncpath@char
+  batchfuncpath
   % character vector
   % the full path to the batch function
   % used to select the correct batch function during batchifying
 
-  batchscriptpath@char
+  batchscriptpath
   % character vector
   % the full path to the batch script
   % used to select the correct batch script during batchifying
 
-  verbose@logical = true
+  verbose = true
   % logical
   % if true, functions output more descriptive text while running
 
-  parallel@logical = false
+  parallel = false
   % logical
   % if true, try to use a parallelized batch function for increased speed
 
-  nbins@double
+  nbins
   % positive integer
   % only matters when parallel is true
   % used to determine the number of batches run on the cluster
