@@ -28,15 +28,15 @@ function [filenames, filecodes] = parse(self)
       filecodes = cell(size(expID, 1), 1);
       for ii = 1:size(expID, 1)
         % iterate through the parsing and add each cell array to the cell array
-        [filenames{ii}, filecodes{ii}] = parse_core(expID(ii,:), self.verbose);
+        [filenames{ii}, filecodes{ii}] = RatCatcher.parse_core(expID(ii,:), self.verbose);
       end
     else
       % if expID is a row vector cell array or a scalar cell array
-      [filenames, filecodes] = parse_core(expID(1,:), self.verbose);
+      [filenames, filecodes] = RatCatcher.parse_core(expID(1,:), self.verbose);
     end
   else
     % if expID is a character vector
-    [filenames, filecodes] = parse_core({expID}, self.verbose);
+    [filenames, filecodes] = RatCatcher.parse_core({expID}, self.verbose);
   end
 
 end % function

@@ -253,7 +253,7 @@ The function `parse` performs a different operation based on who the experimente
 
 1. If you are a part of the Hasselmo, Howard, or Eichenbaum labs, send me an email. You know who I am.
 2. Generate a cell array of `filenames` and a list of `filecodes` by yourself and update the default (empty) properties in your `RatCatcher` object.
-3. Add a new experimenter name to the `parse_core` function (inside `parse`) switch/case statement that expresses what to do to find the correct data, given an experimenter name.
+3. Add a new experimenter name to the `parse_core` static method switch/case statement that expresses what to do to find the correct data, given an experimenter name.
 
 ### Customizing your batching
 
