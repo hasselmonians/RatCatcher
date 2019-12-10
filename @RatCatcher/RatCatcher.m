@@ -88,6 +88,7 @@ methods (Static)
   [filename, cellnum] = read(location, batchname, index)
   [filenames] = getFileNames(identifiers, filesig, masterpath)
   [bin_start, bin_finish, pc, parpool_tmpdir] = getParallelOptions(bin_id, bin_total, location, batchname)
+  [filenames, filecodes] = parse_core(expID, verbosity)
 
 end % static methods
 
