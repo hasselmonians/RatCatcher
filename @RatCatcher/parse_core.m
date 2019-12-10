@@ -8,12 +8,12 @@ function [filenames, filecodes] = parse_core(expID, verbosity)
     % expects expID in the form: {'Caitlin', cluster_letter}
     % load the cluster info file
     try
-      load('/projectnb/hasselmogrp/hoyland/data/caitlin/cluster_info.mat');
-      corelib.verb(verbosity, 'RatCatcher::parse', ['successfully loaded filenames/codes from /projectnb/hasselmogrp/hoyland/data/caitlin/cluster_info.mat'])
+      load('/projectnb/hasselmogrp/ahoyland/data/caitlin/cluster_info.mat');
+      corelib.verb(verbosity, 'RatCatcher::parse', ['successfully loaded filenames/codes from /projectnb/hasselmogrp/ahoyland/data/caitlin/cluster_info.mat'])
     catch
       try
-        load('/mnt/hasselmogrp/hoyland/data/caitlin/cluster_info.mat');
-        corelib.verb(verbosity, 'RatCatcher::parse', ['successfully loaded filenames/codes from /mnt/hasselmogrp/hoyland/data/caitlin/cluster_info.matt'])
+        load('/mnt/hasselmogrp/ahoyland/data/caitlin/cluster_info.mat');
+        corelib.verb(verbosity, 'RatCatcher::parse', ['successfully loaded filenames/codes from /mnt/hasselmogrp/ahoyland/data/caitlin/cluster_info.matt'])
       catch
         try
           load(fullfile(self.localpath, cluster_info, '.mat'));
@@ -52,7 +52,7 @@ function [filenames, filecodes] = parse_core(expID, verbosity)
       filenames      = strrep(filenames, old{ii}, new{ii});
     end
     for ii = 1:length(filenames)
-      filenames{ii}  = ['/projectnb/hasselmogrp/hoyland/data/caitlin/raw/' filenames{ii} '.mat'];
+      filenames{ii}  = ['/projectnb/hasselmogrp/ahoyland/data/caitlin/raw/' filenames{ii} '.mat'];
     end
 
     % parse the filecodes
@@ -67,12 +67,12 @@ function [filenames, filecodes] = parse_core(expID, verbosity)
   case 'Holger'
     % error('[ERROR] I don''t know what to do yet.')
     try
-      load('/projectnb/hasselmogrp/hoyland/data/holger/data.mat');
-      corelib.verb(verbosity, 'RatCatcher::parse', ['successfully loaded filenames/codes from /projectnb/hasselmogrp/hoyland/data/holger/data.mat'])
+      load('/projectnb/hasselmogrp/ahoyland/data/holger/data.mat');
+      corelib.verb(verbosity, 'RatCatcher::parse', ['successfully loaded filenames/codes from /projectnb/hasselmogrp/ahoyland/data/holger/data.mat'])
     catch
       try
-        load('/mnt/hasselmogrp/hoyland/data/holger/data.mat');
-        corelib.verb(verbosity, 'RatCatcher::parse', ['successfully loaded filenames/codes from /mnt/hasselmogrp/hoyland/data/holger/data.mat'])
+        load('/mnt/hasselmogrp/ahoyland/data/holger/data.mat');
+        corelib.verb(verbosity, 'RatCatcher::parse', ['successfully loaded filenames/codes from /mnt/hasselmogrp/ahoyland/data/holger/data.mat'])
       catch
         try
           load(fullfile(self.localpath, data, '.mat'));
@@ -117,12 +117,12 @@ end % functionfunction [filenames, filecodes] = parse_core(expID, verbosity)
     % expects expID in the form: {'Caitlin', cluster_letter}
     % load the cluster info file
     try
-      load('/projectnb/hasselmogrp/hoyland/data/caitlin/cluster_info.mat');
-      corelib.verb(verbosity, 'RatCatcher::parse', ['successfully loaded filenames/codes from /projectnb/hasselmogrp/hoyland/data/caitlin/cluster_info.mat'])
+      load('/projectnb/hasselmogrp/ahoyland/data/caitlin/cluster_info.mat');
+      corelib.verb(verbosity, 'RatCatcher::parse', ['successfully loaded filenames/codes from /projectnb/hasselmogrp/ahoyland/data/caitlin/cluster_info.mat'])
     catch
       try
-        load('/mnt/hasselmogrp/hoyland/data/caitlin/cluster_info.mat');
-        corelib.verb(verbosity, 'RatCatcher::parse', ['successfully loaded filenames/codes from /mnt/hasselmogrp/hoyland/data/caitlin/cluster_info.matt'])
+        load('/mnt/hasselmogrp/ahoyland/data/caitlin/cluster_info.mat');
+        corelib.verb(verbosity, 'RatCatcher::parse', ['successfully loaded filenames/codes from /mnt/hasselmogrp/ahoyland/data/caitlin/cluster_info.matt'])
       catch
         try
           load(fullfile(self.localpath, cluster_info, '.mat'));
@@ -161,7 +161,7 @@ end % functionfunction [filenames, filecodes] = parse_core(expID, verbosity)
       filenames      = strrep(filenames, old{ii}, new{ii});
     end
     for ii = 1:length(filenames)
-      filenames{ii}  = ['/projectnb/hasselmogrp/hoyland/data/caitlin/raw/' filenames{ii} '.mat'];
+      filenames{ii}  = ['/projectnb/hasselmogrp/ahoyland/data/caitlin/raw/' filenames{ii} '.mat'];
     end
 
     % parse the filecodes
@@ -176,12 +176,12 @@ end % functionfunction [filenames, filecodes] = parse_core(expID, verbosity)
   case 'Holger'
     % error('[ERROR] I don''t know what to do yet.')
     try
-      load('/projectnb/hasselmogrp/hoyland/data/holger/data.mat');
-      corelib.verb(verbosity, 'RatCatcher::parse', ['successfully loaded filenames/codes from /projectnb/hasselmogrp/hoyland/data/holger/data.mat'])
+      load('/projectnb/hasselmogrp/ahoyland/data/holger/data.mat');
+      corelib.verb(verbosity, 'RatCatcher::parse', ['successfully loaded filenames/codes from /projectnb/hasselmogrp/ahoyland/data/holger/data.mat'])
     catch
       try
-        load('/mnt/hasselmogrp/hoyland/data/holger/data.mat');
-        corelib.verb(verbosity, 'RatCatcher::parse', ['successfully loaded filenames/codes from /mnt/hasselmogrp/hoyland/data/holger/data.mat'])
+        load('/mnt/hasselmogrp/ahoyland/data/holger/data.mat');
+        corelib.verb(verbosity, 'RatCatcher::parse', ['successfully loaded filenames/codes from /mnt/hasselmogrp/ahoyland/data/holger/data.mat'])
       catch
         try
           load(fullfile(self.localpath, data, '.mat'));
