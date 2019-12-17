@@ -83,7 +83,7 @@ methods (Static)
   % both of these methods naturally sort, that is, by separating the name into syntactic phrases and then sorting hierarchically...for example, 'output-11' comes before 'output-21' when naturally sorted
   [X,ndx,dbg] = natsort(X,xpr,varargin)
   [X,ndx,dbg] = natsortfiles(X,varargin)
-  [protocolObject, dataObject] = extract(dataTable, index, analysis, verbose)
+  [protocolObject, dataObject] = extract(dataTable, index, protocol, preprocess_fcn, verbose)
   [p] = pref()
   [filename, cellnum] = read(location, batchname, index)
   [filenames] = getFileNames(identifiers, filesig, masterpath)
