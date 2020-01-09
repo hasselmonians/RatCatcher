@@ -4,7 +4,7 @@ function batchFunction_parallel(bin_id, bin_total, location, batchname, outfile,
 
   if ~test
     % add the proper directories to the MATLAB path
-    addpath(genpath('/projectnb/hasselmogrp/hoyland/RatCatcher'))
+    addpath(genpath('/projectnb/hasselmogrp/ahoyland/RatCatcher'))
     addpath(genpath('/projectnb/hasselmogrp/other/important/directories'))
   end
 

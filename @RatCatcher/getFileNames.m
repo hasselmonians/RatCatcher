@@ -7,7 +7,7 @@ function filepaths = getFileNames(identifiers, filesig, masterpath)
   %
   % filepaths = RatCatcher.getFileNames(identifiers, filesig, masterpath)
   %
-  % Ex: filepaths = RatCatcher.getFileNames({'winny', 'gabriella'; 'winny', 'troy'}, 'raw*.mat', '/mnt/hasselmogrp/hoyland/data/raw/')
+  % Ex: filepaths = RatCatcher.getFileNames({'winny', 'gabriella'; 'winny', 'troy'}, 'raw*.mat', '/mnt/hasselmogrp/ahoyland/data/raw/')
   %
   % Arguments:
   %   identifiers: a cell array of directory paths in which to search
