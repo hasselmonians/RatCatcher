@@ -7,6 +7,33 @@ It is agnostic to the format of the data, and to the type of analysis performed,
 so that `RatCatcher` can be used to perform any number of analyses on any type of data.
 `RatCatcher` scales well with increasing numbers of data files.
 
+
+Table of Contents
+=================
+
+   * [RatCatcher](#ratcatcher)
+      * [What does RatCatcher actually do?](#what-does-ratcatcher-actually-do)
+      * [How do I install it?](#how-do-i-install-it)
+      * [A (contrived) usage example](#a-contrived-usage-example)
+      * [A (real) usage example](#a-real-usage-example)
+      * [What does RatCatcher actually do?](#what-does-ratcatcher-actually-do-1)
+      * [Class properties](#class-properties)
+      * [Pre-Processing](#pre-processing)
+         * [Customizing parsing the raw data](#customizing-parsing-the-raw-data)
+         * [Customizing your batching](#customizing-your-batching)
+         * [Customizing your batch script](#customizing-your-batch-script)
+         * [Customizing your batch function](#customizing-your-batch-function)
+         * [Customizing your protocol](#customizing-your-protocol)
+      * [Running your scripts](#running-your-scripts)
+         * [What is the generic batch script?](#what-is-the-generic-batch-script)
+         * [Generating multiple scripts](#generating-multiple-scripts)
+      * [Post-Processing](#post-processing)
+      * [Using parallel mode](#using-parallel-mode)
+      * [Extra features](#extra-features)
+      * [Setting a preference file](#setting-a-preference-file)
+      * [License Information](#license-information)
+
+
 ## What does RatCatcher actually do?
 
 `RatCatcher` generates files on a high-performance computing cluster (or local directory)
@@ -485,4 +512,7 @@ If this function exists, all future instantiated `RatCatcher` objects will have 
 
 ## License Information
 
-`RatCatcher` is written by Alec Hoyland and is released under the GNU General Public License 3.0. The `natsort` functions were written by Stephen Cobeldick (c) 2018. `mtools` were written and/or archived by [sg-s](https://github.com/sg-s).
+`RatCatcher` is written by Alec Hoyland and is released under the GNU General Public License 3.0.
+The `natsort` functions were written by Stephen Cobeldick (c) 2018.
+`mtools` were written and/or archived by [sg-s](https://github.com/sg-s).
+The table of contents was created by [gh-md-toc](https://github.com/ekalinin/github-markdown-toc)
