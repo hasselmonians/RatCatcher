@@ -515,4 +515,4 @@ If this function exists, all future instantiated `RatCatcher` objects will have 
 `RatCatcher` is written by Alec Hoyland and is released under the GNU General Public License 3.0.
 The `natsort` functions were written by Stephen Cobeldick (c) 2018.
 `mtools` were written and/or archived by [sg-s](https://github.com/sg-s).
-The table of contents was created by [gh-md-toc](https://github.com/ekalinin/github-markdown-toc)
+The table of contents was created by [gh-md-toc](https://github.com/ekalinin/github-markdown-toc).
