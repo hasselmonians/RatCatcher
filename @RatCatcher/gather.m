@@ -165,6 +165,15 @@ function dataTable = gather(self, filekey, dataTable0)
         firing_rate(ii) = squeeze(data(ii, 2, end));
       end
       dataTable = table(waveforms, spike_width, firing_rate);
+    case 'NeuralDecoder'
+      corelib.verb(self.verbose, 'RatCatcher::gather', ['protocol ' protocol ' identified'])
+      % collect the parameter vectors by parameter name
+      alpha   = data(:, 1, 1);
+      mu      = data(:, 1, 2);
+      sigma   = data(:, 1, 3);
+      tau     = data(:, 1, 4);
+      % concatenate into a table
+      dataTable = table(alpha, mu, sigma, tau);
     otherwise
       corelib.verb(true, 'RatCatcher::gather', 'I don''t know which protocol you mean.')
     end
