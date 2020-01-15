@@ -60,7 +60,9 @@ Then, on the cluster, we will
 
 * run the auto-generated script.
 
-Back in local MATLAB, we will gather the data into a table.
+Back in local MATLAB, we will
+
+* gather the data into a table.
 
 Create the `RatCatcher` object.
 At minimum, the following fields need to be filled out.
@@ -77,7 +79,7 @@ Create the batch scripts.
 This will generate files in `r.localpath`.
 
 ```matlab
-r.batchify();
+r = r.batchify();
 ```
 
 Go onto the cluster and submit the script.
@@ -192,6 +194,12 @@ The defaults are determined by running a series of functions
 * `r.getBatchFuncPath()`
 
 which is performed inside the `r.validate()` function, and is automatically performed during `batchify`ing.
+
+> What's the difference between `batchify` and `validate`?
+> `validate` updates the `RatCatcher` object by updating the filenames,
+> batch script name, batch script path, and batchfunction path properties.
+> `batchify` does all of this (it runs `validate`) and also
+> creates batch files on the cluster in `r.localpath`.
 
 The `batchname` is the canonical kernel of text that appears in every file created by `RatCatcher`.
 By default, it is a combination of all the parts of the `expID` and the `protocol`,
