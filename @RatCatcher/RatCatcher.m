@@ -89,6 +89,7 @@ methods (Static)
   [filenames] = getFileNames(identifiers, filesig, masterpath)
   [bin_start, bin_finish, pc, parpool_tmpdir] = getParallelOptions(bin_id, bin_total, location, batchname)
   [filenames, filecodes] = parse_core(expID, verbosity)
+  [varargout] = wrangle(filenames_file, varargin)
 
 end % static methods
 
