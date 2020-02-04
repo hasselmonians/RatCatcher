@@ -4,7 +4,23 @@ function [filename, filecode] = read(index, location, batchname)
     % and returns a filename as a character array and a filecode pair as a 1x2 vector
     % This is particularly useful in a batch function.
     %
-    %   [filenames, filecodes] = RatCatcher.READ(location, batchname, index)
+    %% Arguments
+    %   index: a linear index indicating the line of the filenames file to read
+    %       if the index is empty, all filenames and filecodes will be returned
+    %   location: the directory where the filenames file is
+    %   batchname: a unique identifier for finding the correct filenames file
+    %
+    %% Outputs
+    %   filename: the filename as a character vector
+    %       if index is empty, the filename is instead a cell array of filenames
+    %   filecode: the 1x2 vector of cell number and tetrode number
+    %       if index is empty, all filecodes are returned in an n x 2 matrix
+    %
+    %% Examples
+    %   Return filename and filecode for a given index
+    %       [filename, filecode] = RatCatcher.READ(index, location, batchname)
+    %   Return all filenames and filecodes
+    %       [filenames, filecodes] = RatCatcher.read([], location, batchname)
     %
     % See also RATCATCHER, RATCATCHER.BATCHIFY
 
@@ -15,9 +31,15 @@ function [filename, filecode] = read(index, location, batchname)
     catch
         error(['File not found at: ' fullfile(location, ['filenames-', batchname, '.txt'])])
     end
-    % acquire only the character vector corresponding to the indexed filename
-    filename    = filename{index};
-    % acquire the cell number using similarly clunky indexing
-    filecode    = csvread(fullfile(location, ['filecodes-', batchname, '.csv']), index-1, 0, [index-1, 0, index-1, 1]);
+
+    if ~isempty(index)
+        % acquire only the character vector corresponding to the indexed filename
+        filename    = filename{index};
+        % acquire the cell number using similarly clunky indexing
+        filecode    = csvread(fullfile(location, ['filecodes-', batchname, '.csv']), index-1, 0, [index-1, 0, index-1, 1]);
+    else
+        % return all the filenames and filecodes
+        filecode    = readmatrix(['filecodes-', batchname, '.csv']);
+    end
 
 end % function
