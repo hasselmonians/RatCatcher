@@ -12,4 +12,4 @@ module load matlab/2019b
 
 export SGE_TOTAL_BINS=NUM_BINS
 
-matlab -nodisplay -singleCompThread -r "batchFunction_parallel(ARGUMENT); exit;"
+matlab -nodisplay -r "batchFunction_parallel(ARGUMENT); exit;"
