@@ -80,12 +80,10 @@ function batchify_core(self, batchname, filenames, filecodes, dummyScriptPath)
   script    = strrep(script, 'PROJECT_NAME', self.project);
 
   % determine the number of jobs
-  switch self.mode
-  case {'parallel', 'array'}
-      script    = strrep(script, 'NUM_FILES', num2str(length(filenames)));
-      script    = strrep(script, 'NUM_BINS', num2str(self.nbins));
-  otherwise
-      script    = strrep(script, 'NUM_FILES', num2str(1));
+  % set the number of files (occurs for parallel and array jobs)
+  script    = strrep(script, 'NUM_FILES', num2str(length(filenames)));
+  % set the number of bins (occurs for only parallel jobs)
+  script    = strrep(script, 'NUM_BINS', num2str(self.nbins));
 
   % determine the argument to MATLAB batch function
   switch self.mode
