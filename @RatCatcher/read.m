@@ -27,19 +27,23 @@ function [filename, filecode] = read(index, location, batchname)
     % load the entire filename file
     % this is slow, but MATLAB has clunky textread options
     try
-        filename    = filelib.read(fullfile(location, ['filenames-', batchname, '.txt']));
+        filename = filelib.read(fullfile(location, ['filenames-', batchname, '.txt']));
     catch
         error(['File not found at: ' fullfile(location, ['filenames-', batchname, '.txt'])])
     end
 
     if ~isempty(index)
         % acquire only the character vector corresponding to the indexed filename
-        filename    = filename{index};
+        filename = filename{index};
         % acquire the cell number using similarly clunky indexing
-        filecode    = csvread(fullfile(location, ['filecodes-', batchname, '.csv']), index-1, 0, [index-1, 0, index-1, 1]);
+        filecode = csvread(fullfile(location, ['filecodes-', batchname, '.csv']), index-1, 0, [index-1, 0, index-1, 1]);
     else
         % return all the filenames and filecodes
-        filecode    = readmatrix(['filecodes-', batchname, '.csv']);
+        if isempty(filename{end})
+            % strip off empty line at the end of file
+            filename = filename(1:end-1);
+        end
+        filecode = readmatrix(['filecodes-', batchname, '.csv']);
     end
 
 end % function
