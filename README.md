@@ -512,6 +512,8 @@ end
 
 ## Extra features
 
+`RatCatcher` also provides tools for wrangling data.
+
 You can go from a saved `data_table` to an analysis object and the `Session` object
 (from [`CMBHOME`](https://github.com/hasselmonians/CMBHOME))
 by using the `extract` function.
@@ -525,6 +527,12 @@ Conversely, a `data_table` can be indexed to find the indices which correspond t
 
 ```matlab
 index = r.index(data_table);
+```
+
+Furthermore, you can use `RatCatcher.getFileNames()` and `RatCatcher.wrangle()`
+to gather lists of file names and file codes
+and to sequentially load files to build `filenames.txt` and `filecodes.csv`
+metadata files.
 
 ## Setting a preference file
 

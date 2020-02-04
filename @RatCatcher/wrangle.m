@@ -1,5 +1,10 @@
 function [varargout] = wrangle(filenames_file, varargin)
 
+    % Takes a list of files pointing to raw data in the form of CMBHOME.Session objects,
+    % loads the raw data and extracts the filecodes.
+    % The function then builds a filenames list and a filecodes list,
+    % and optionally saves them to disk.
+
     %% Arguments
     %   filenames_file: path to a text file with a .mat filename on each line
     %       files are expected to have been saved on the shared computing cluster (SCC)
@@ -12,9 +17,9 @@ function [varargout] = wrangle(filenames_file, varargin)
     %
     %% Examples
     %
-    % [options] = wrangle()
+    % [options] = RatCatcher.wrangle()
     %
-    % [filenames, filecodes, file_missing] = wrangle(filenames_file, 'Name', Value, ...)
+    % [filenames, filecodes, file_missing] = RatCatcher.wrangle(filenames_file, 'Name', Value, ...)
     %
     %% Notes
     % this function requires access to the cluster at /mnt/hasselmogrp
@@ -69,10 +74,10 @@ function [varargout] = wrangle(filenames_file, varargin)
             % update the filecodes matrix
             filecodes((end+1):(end+size(these_filecodes, 1)), :) = these_filecodes;
 
-            corelib.verb(options.Verbosity, 'grid-cell-spiking/wrangle', 'success!')
+            corelib.verb(options.Verbosity, 'RatCatcher::wrangle', 'success!')
         catch
             file_missing(ii) = true;
-            corelib.verb(options.Verbosity, 'grid-cell-spiking/wrangle', 'file missing!')
+            corelib.verb(options.Verbosity, 'RatCatcher::wrangle', 'file missing!')
         end
     end
 
