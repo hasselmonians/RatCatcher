@@ -3,9 +3,11 @@ function batchscriptpath = getBatchScriptPath(self)
 
   switch self.mode
   case 'parallel'
-      batchscriptpath = which('RatCatcher-generic-script.sh');
-  otherwise
       batchscriptpath = which('RatCatcher-generic-script-parallel.sh');
+  case 'array'
+      batchscriptpath = which('RatCatcher-generic-script-array.sh');
+  otherwise
+      batchscriptpath = which('RatCatcher-generic-script.sh');
   end
 
   assert(~isempty(batchscriptpath), 'batch script path not found, is it on the MATLAB path?')
