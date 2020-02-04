@@ -54,7 +54,7 @@ properties
 
   mode = 'array'
   % character vector
-  % if true, try to use a parallelized batch function for increased speed
+  % can be 'array' or 'parallel'
 
   nbins
   % positive integer
