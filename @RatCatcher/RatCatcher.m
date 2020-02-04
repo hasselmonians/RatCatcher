@@ -54,7 +54,7 @@ properties
 
   mode = 'array'
   % character vector
-  % can be 'array' or 'parallel'
+  % can be 'array', 'singular', or 'parallel'
 
   nbins
   % positive integer
