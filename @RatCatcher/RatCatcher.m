@@ -52,13 +52,13 @@ properties
   % logical
   % if true, functions output more descriptive text while running
 
-  parallel = false
-  % logical
-  % if true, try to use a parallelized batch function for increased speed
+  mode = 'array'
+  % character vector
+  % can be 'array', 'singular', or 'parallel'
 
   nbins
   % positive integer
-  % only matters when parallel is true
+  % only matters when mode = 'parallel'
   % used to determine the number of batches run on the cluster
 
 end % properties

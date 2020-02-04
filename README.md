@@ -18,6 +18,8 @@ Table of Contents
       * [A (real) usage example](#a-real-usage-example)
       * [What does RatCatcher actually do?](#what-does-ratcatcher-actually-do-1)
       * [Class properties](#class-properties)
+        * [Mode](#mode)
+        * [Other properties](#other-properties)
       * [Pre-Processing](#pre-processing)
          * [Customizing parsing the raw data](#customizing-parsing-the-raw-data)
          * [Customizing your batching](#customizing-your-batching)
@@ -71,7 +73,7 @@ This should perform the trivial task of copying [1, 2] into output files.
 You can then gather the data locally with:
 
 ```matlab
-dataTable = r.gather;
+data_table = r.gather;
 ```
 
 ## A (real) usage example
@@ -120,8 +122,8 @@ qsub Caitlin-A-Caitlin-B-BandwidthEstimator.sh
 Wait until the run has completed, then
 
 ```matlab
-dataTable = r.gather;
-dataTable = r.stitch(dataTable);
+data_table = r.gather;
+data_table = r.stitch(data_table);
 ```
 
 This will gather the data into a `table` in MATLAB on your local computer.
@@ -158,7 +160,7 @@ Once the script finishes running, output files are produced in the directory spe
 You can gather the data into a `table` in MATLAB with
 
 ```matlab
-dataTable = r.gather();
+data_table = r.gather();
 ```
 
 ## Class properties
@@ -200,6 +202,37 @@ The `localpath` field contains the absolute path to where the batch files should
 > For instance, if you mounted your cluster on your local machine at `/mnt/myproject/cluster/` then that is your `localpath`. If from the cluster's perspective (when accessing via `ssh`), your files are at `/projectnb/myproject/cluster` then that is your `remotepath`. If your local computer does not have the cluster mounted, `localpath` will be some path in your local file system and you will have to copy the files `RatCatcher` produces over to the `remotepath` before running the script on the cluster.
 
 `project` is the name of the project on the cluster (who has to pay for the computer usage).
+
+### Mode
+
+Another important property is `mode`.
+The mode can be set to one of three values.
+
+In the default `'array'` mode, `RatCatcher` will generate an array job on the cluster,
+which will use many nodes in parallel.
+This can be combined with parallelism inside of the batch function,
+so single-threaded and multi-threaded jobs can be performed many times faster.
+
+In `'parallel'` mode, `RatCatcher` partitions the array job out,
+so that each node is multi-threaded, and each thread is handling a different input file.
+This is *very* fast, usually around 200x faster than non-array, non-parallel jobs at least,
+but the batch function can be difficult to code.
+
+Finally, you can run `RatCatcher` in `'singular'` mode.
+Actually, you can name this mode whatever you want, because `RatCatcher` defaults to it
+if it's unsure what you want.
+`'singular'` mode doesn't set up an array job, nor does it automatically use parallelism.
+This mode is useful when the analysis you're doing is very lightweight
+and spawning many jobs (and loading up MATLAB hundreds of times) would take longer
+than just iterating through a loop (perhaps even in parallel).
+
+You can set the mode by:
+
+```MATLAB
+r.mode = 'array';
+```
+
+### Other properties
 
 There are a host of other properties
 
@@ -426,13 +459,13 @@ with the correctly specified `RatCatcher` object.
 Once the jobs have been run, the data can be gathered.
 
 ```matlab
-dataTable = r.gather();
+data_table = r.gather();
 ```
 
 The paths to the raw data can be stitched onto the data table, for easy reference.
 
 ```matlab
-dataTable = r.stitch(dataTable);
+data_table = r.stitch(data_table);
 ```
 
 ## Using `parallel` mode
@@ -479,20 +512,27 @@ end
 
 ## Extra features
 
-You can go from a saved `dataTable` to an analysis object and the `Session` object
+`RatCatcher` also provides tools for wrangling data.
+
+You can go from a saved `data_table` to an analysis object and the `Session` object
 (from [`CMBHOME`](https://github.com/hasselmonians/CMBHOME))
 by using the `extract` function.
 
 ```matlab
-[best, root] = RatCatcher.extract(dataTable, index, 'BandwidthEstimator');
+[best, root] = RatCatcher.extract(data_table, index, 'BandwidthEstimator');
 ```
 
-Conversely, a `dataTable` can be indexed to find the indices which correspond to a given filename and cell number.
+Conversely, a `data_table` can be indexed to find the indices which correspond to a given filename and cell number.
 `parse` is called to determine the filenames and file codes.
 
 ```matlab
-index = r.index(dataTable);
+index = r.index(data_table);
 ```
+
+Furthermore, you can use `RatCatcher.getFileNames()` and `RatCatcher.wrangle()`
+to gather lists of file names and file codes
+and to sequentially load files to build `filenames.txt` and `filecodes.csv`
+metadata files.
 
 ## Setting a preference file
 
