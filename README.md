@@ -73,7 +73,7 @@ This should perform the trivial task of copying [1, 2] into output files.
 You can then gather the data locally with:
 
 ```matlab
-dataTable = r.gather;
+data_table = r.gather;
 ```
 
 ## A (real) usage example
@@ -122,8 +122,8 @@ qsub Caitlin-A-Caitlin-B-BandwidthEstimator.sh
 Wait until the run has completed, then
 
 ```matlab
-dataTable = r.gather;
-dataTable = r.stitch(dataTable);
+data_table = r.gather;
+data_table = r.stitch(data_table);
 ```
 
 This will gather the data into a `table` in MATLAB on your local computer.
@@ -160,7 +160,7 @@ Once the script finishes running, output files are produced in the directory spe
 You can gather the data into a `table` in MATLAB with
 
 ```matlab
-dataTable = r.gather();
+data_table = r.gather();
 ```
 
 ## Class properties
@@ -459,13 +459,13 @@ with the correctly specified `RatCatcher` object.
 Once the jobs have been run, the data can be gathered.
 
 ```matlab
-dataTable = r.gather();
+data_table = r.gather();
 ```
 
 The paths to the raw data can be stitched onto the data table, for easy reference.
 
 ```matlab
-dataTable = r.stitch(dataTable);
+data_table = r.stitch(data_table);
 ```
 
 ## Using `parallel` mode
@@ -512,20 +512,19 @@ end
 
 ## Extra features
 
-You can go from a saved `dataTable` to an analysis object and the `Session` object
+You can go from a saved `data_table` to an analysis object and the `Session` object
 (from [`CMBHOME`](https://github.com/hasselmonians/CMBHOME))
 by using the `extract` function.
 
 ```matlab
-[best, root] = RatCatcher.extract(dataTable, index, 'BandwidthEstimator');
+[best, root] = RatCatcher.extract(data_table, index, 'BandwidthEstimator');
 ```
 
-Conversely, a `dataTable` can be indexed to find the indices which correspond to a given filename and cell number.
+Conversely, a `data_table` can be indexed to find the indices which correspond to a given filename and cell number.
 `parse` is called to determine the filenames and file codes.
 
 ```matlab
-index = r.index(dataTable);
-```
+index = r.index(data_table);
 
 ## Setting a preference file
 
