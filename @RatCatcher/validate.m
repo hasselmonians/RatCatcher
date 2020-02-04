@@ -91,13 +91,16 @@ function self = validate(self)
 
   % nbins
 
-  if self.parallel == true
+  switch self.mode
+  case 'parallel'
     if isempty(self.nbins)
       self.nbins = ceil(length(self.filenames) / 16);
       corelib.verb(self.verbose, 'RatCatcher::validate', 'nbins determined automatically')
     else
       corelib.verb(self.verbose, 'RatCatcher::validate', 'nbins determined by user')
     end
+  otherwise
+      % do nothing
   end
 
 end % function
