@@ -80,18 +80,23 @@ function batchify_core(self, batchname, filenames, filecodes, dummyScriptPath)
   script    = strrep(script, 'PROJECT_NAME', self.project);
 
   % determine the number of jobs
-  script    = strrep(script, 'NUM_FILES', num2str(length(filenames)));
-  script    = strrep(script, 'NUM_BINS', num2str(self.nbins));
+  switch self.mode
+  case {'parallel', 'array'}
+      script    = strrep(script, 'NUM_FILES', num2str(length(filenames)));
+      script    = strrep(script, 'NUM_BINS', num2str(self.nbins));
+  otherwise
+      script    = strrep(script, 'NUM_FILES', num2str(1));
 
   % determine the argument to MATLAB batch function
-  if self.parallel == false
+  switch self.mode
+  case 'array'
     outfile   = fullfile(self.remotepath, ['output-', batchname, '-', '$SGE_TASK_ID', '.csv']);
     script  = strrep(script, 'ARGUMENT', ['$SGE_TASK_ID' ', ' ...
               tt self.remotepath tt ', ' ...
               tt batchname tt ', ' ...
               tt outfile tt ', ' ...
               'false']);
-  else
+  case 'parallel'
     outfile   = fullfile(self.remotepath, ['output-', batchname]);
     script  = strrep(script, 'ARGUMENT', ['$SGE_TASK_ID' ', ' ...
               '$SGE_TOTAL_BINS' ',' ...
@@ -99,6 +104,13 @@ function batchify_core(self, batchname, filenames, filecodes, dummyScriptPath)
               tt batchname tt ', ' ...
               tt outfile tt ', ' ...
               'false']);
+  otherwise
+      outfile = fullfile(self.remotepath, ['output-', batchname]);
+      script  = strrep(script, 'ARGUMENT', ['$SGE_TASK_ID' ', ' ...
+                tt self.remotepath tt ', ' ...
+                tt batchname tt ', ' ...
+                tt outfile tt ', ' ...
+                'false']);
   end
 
   % write to file
