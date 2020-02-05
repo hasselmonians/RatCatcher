@@ -470,6 +470,7 @@ Currently, the following protocols exist for `RatCatcher`:
 * [KiloPlex](https://github.com/hasselmonians/KiloPlex)
 * [LightDark](https://github.com/hasselmonians/grid-cell-spiking)
 * [LNLModel](https://github.com/hasselmonians/ln-model-of-mec-neurons)
+* [NeuralDecoder](https://github.com/hasselmonians/NeuralDecoder)
 
 The only requirement is that your analysis have a _batch function_ defined for it. It finds it by looking at:
 
