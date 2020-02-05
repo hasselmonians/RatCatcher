@@ -76,6 +76,12 @@ methods
     end
   end % function
 
+  function self = set.mode(self, value)
+      assert(any(strcmp(value, {'array', 'parallel', 'singular'})), ...
+      'mode must be ''array'', ''parallel'', or ''singular'' ');
+  end % function
+
+
 end % methods
 
 methods (Static)
