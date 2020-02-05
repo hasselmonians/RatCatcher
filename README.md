@@ -218,6 +218,41 @@ so that each node is multi-threaded, and each thread is handling a different inp
 This is *very* fast, usually around 200x faster than non-array, non-parallel jobs at least,
 but the batch function can be difficult to code.
 
+`RatCatcher` can take advantage of parallel processing to speed up analyses for large datasets.
+For costly analyses, this can dramatically speed up run-time,
+since the cluster will use more cores at once, though still one per data file.
+
+The `nbins` property is automatically set, but can be manually set or changed as well.
+For many files but not very time-consuming analysis, it is better to set the `nbins` property
+to be small, to limit the number of times `MATLAB` is opened on compute nodes.
+By default, the `nbins` property is set to optimally use the cluster,
+though the assumptions of optimality are not valid if each analysis takes less than two hours.
+
+In `'parallel'` mode, `RatCatcher` will expect the batch function to run in parallel.
+A parallelized batch function has the following function signature:
+
+```matlab
+function batchFunction(bin_id, bin_total, location, batchname, outfile, test)
+```
+
+The `batchify` function will automatically set up the correct arguments for you.
+Inside your function, however, you must call the `getParallelOptions` function,
+
+```matlab
+[bin_start, bin_finish] = RatCatcher.getParallelOptions(bin_id, bin_total, location, batchname)
+```
+
+and run your code inside of a `parfor` loop, e.g.
+
+```matlab
+parfor ii = bin_start:bin_finish
+  [filename, filecode] = RatCatcher.read(ii, location, batchname);
+  % do important calculations here
+  % then save your outfile
+  save(outfile, 'VariableName')
+end
+```
+
 Finally, you can run `RatCatcher` in `'singular'` mode.
 Actually, you can name this mode whatever you want, because `RatCatcher` defaults to it
 if it's unsure what you want.
@@ -226,9 +261,10 @@ This mode is useful when the analysis you're doing is very lightweight
 and spawning many jobs (and loading up MATLAB hundreds of times) would take longer
 than just iterating through a loop (perhaps even in parallel).
 
-You can set the mode by:
+You can set the mode by change the `mode` property:
 
 ```MATLAB
+% set the mode to 'array' (or 'parallel', or 'singular')
 r.mode = 'array';
 ```
 
@@ -416,6 +452,7 @@ Currently, the following protocols exist for `RatCatcher`:
 * [CellSorter](https://github.com/hasselmonians/CellSorter)
 * [BandwidthEstimator](https://github.com/hasselmonians/BandwidthEstimator)
 * [KiloPlex](https://github.com/hasselmonians/KiloPlex)
+* [LightDark](https://github.com/hasselmonians/grid-cell-spiking)
 * [LNLModel](https://github.com/hasselmonians/ln-model-of-mec-neurons)
 
 The only requirement is that your analysis have a _batch function_ defined for it. It finds it by looking at:
@@ -466,48 +503,6 @@ The paths to the raw data can be stitched onto the data table, for easy referenc
 
 ```matlab
 data_table = r.stitch(data_table);
-```
-
-## Using `parallel` mode
-
-`RatCatcher` can take advantage of parallel processing to speed up analyses for large datasets.
-For costly analyses, this can dramatically speed up run-time,
-since the cluster will use more cores at once, though still one per data file.
-To use this feature, you must set the `parallel` flag to `true`.
-
-```matlab
-r.parallel = true;
-```
-
-The `nbins` property is automatically set, but can be manually set or changed as well.
-For many files but not very time-consuming analysis, it is better to set the `nbins` property
-to be small, to limit the number of times `MATLAB` is opened on compute nodes.
-By default, the `nbins` property is set to optimally use the cluster,
-though the assumptions of optimality are not valid if each analysis takes less than two hours.
-
-In `parallel` mode, `RatCatcher` will expect the batch function to run in parallel.
-A parallelized batch function has the following function signature:
-
-```matlab
-function batchFunction(bin_id, bin_total, location, batchname, outfile, test)
-```
-
-The `batchify` function will automatically set up the correct arguments for you.
-Inside your function, however, you must call the `getParallelOptions` function,
-
-```matlab
-[bin_start, bin_finish] = RatCatcher.getParallelOptions(bin_id, bin_total, location, batchname)
-```
-
-and run your code inside of a `parfor` loop, e.g.
-
-```matlab
-parfor ii = bin_start:bin_finish
-  [filename, filecode] = RatCatcher.read(ii, location, batchname);
-  % do important calculations here
-  % then save your outfile
-  save(outfile, 'VariableName')
-end
 ```
 
 ## Extra features
