@@ -141,15 +141,10 @@ The batch script is a shell script that specifies options to the job scheduler (
 
 The `batchify` function also fills out several details, such as the name of the job. The most important
 job of the batch script is to tell the cluster to run MATLAB and a function called the batch function.
-This is a MATLAB function with the following form:
+This is a MATLAB function that performs the requisite analysis.
 
-```matlab
-function batchFunction(index, location, batchname, outfile, test)
-  ...
-end
-```
-
-Then, you can run the script on the cluster by submitting it using `qsub`.
+Then, you can run the batch script on the cluster by submitting it using `qsub`.
+It will evaluate the batch function over all specified files.
 
 ```bash
 # on the cluster
@@ -206,12 +201,31 @@ The `localpath` field contains the absolute path to where the batch files should
 ### Mode
 
 Another important property is `mode`.
-The mode can be set to one of three values.
+The mode can be set to one of three values: `'array'`, `'parallel'`, or `'singular'`.
+
+You can set the mode by change the `mode` property:
+
+```MATLAB
+% set the mode to 'array' (or 'parallel', or 'singular')
+r.mode = 'array';
+```
+
+### Array jobs
 
 In the default `'array'` mode, `RatCatcher` will generate an array job on the cluster,
 which will use many nodes in parallel.
 This can be combined with parallelism inside of the batch function,
 so single-threaded and multi-threaded jobs can be performed many times faster.
+
+The form for the batch function is:
+
+```matlab
+function batchFunction(index, location, batchname, outfile, test)
+  ...
+end
+```
+
+### Parallel jobs
 
 In `'parallel'` mode, `RatCatcher` partitions the array job out,
 so that each node is multi-threaded, and each thread is handling a different input file.
@@ -253,19 +267,21 @@ parfor ii = bin_start:bin_finish
 end
 ```
 
+
+### Singular jobs
+
 Finally, you can run `RatCatcher` in `'singular'` mode.
-Actually, you can name this mode whatever you want, because `RatCatcher` defaults to it
-if it's unsure what you want.
 `'singular'` mode doesn't set up an array job, nor does it automatically use parallelism.
 This mode is useful when the analysis you're doing is very lightweight
 and spawning many jobs (and loading up MATLAB hundreds of times) would take longer
 than just iterating through a loop (perhaps even in parallel).
 
-You can set the mode by change the `mode` property:
+The form of the batch function is
 
 ```MATLAB
-% set the mode to 'array' (or 'parallel', or 'singular')
-r.mode = 'array';
+function batchFunction(location, batchname, outfile, test)
+  ...
+end
 ```
 
 ### Other properties
