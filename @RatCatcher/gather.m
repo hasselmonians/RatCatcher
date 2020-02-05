@@ -174,6 +174,19 @@ function dataTable = gather(self, filekey, dataTable0)
       tau     = data(:, 1, 4);
       % concatenate into a table
       dataTable = table(alpha, mu, sigma, tau);
+  case 'LightDark'
+      corelib.verb(self.verbose, 'RatCatcher::gather', ['protocol ' protocol ' identified'])
+      % collect the parameter vectors by parameter name
+      l2d_h      = data(:, 1);
+      d2l_h      = data(:, 2);
+      l2d_p      = data(:, 3);
+      d2l_p      = data(:, 4);
+      l2d_tstat  = data(:, 5);
+      d2l_tstat  = data(:, 6);
+      l2d_df     = data(:, 7);
+      d2l_df     = data(:, 8);
+      % concatenate into a table
+      dataTable(l2d_h, l2d_p, l2d_tstat, l2d_df, d2l_h, d2l_p, d2l_tstat, d2l_df);
     otherwise
       corelib.verb(true, 'RatCatcher::gather', 'I don''t know which protocol you mean.')
     end

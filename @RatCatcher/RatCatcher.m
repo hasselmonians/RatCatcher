@@ -76,6 +76,42 @@ methods
     end
   end % function
 
+  function self = set.mode(self, value)
+      assert(any(strcmp(value, {'array', 'parallel', 'singular'})), ...
+      'mode must be ''array'', ''parallel'', or ''singular'' ');
+      self.mode = value;
+  end % function
+
+  function self = set.filenames(self, value)
+      if ischar(value)
+          corelib.verb(self.verbose, 'RatCatcher::set.filenames', ...
+          'treating ''value'' as filepath, attempting to read...')
+          % treat as file path and try to load it
+          % if your filenames are saved in a .mat file,
+          % just load them and set the property normally
+          filenames = filelib.read(value);
+          if isempty(filenames{end})
+              filenames = filenames(1:end-1);
+          end
+          self.filenames = filenames;
+      else
+          % set the property normally
+          self.filenames = value;
+      end
+  end % function
+
+  function self = set.filecodes(self, value)
+      if ischar(value)
+          corelib.verb(self.verbose, 'RatCatcher::set.filecodes', ...
+          'treating ''value'' as filepath, attempting to read...')
+          filecodes = readmatrix(value);
+          self.filecodes = filecodes;
+      else
+          self.filecodes = value;
+      end
+  end % function
+
+
 end % methods
 
 methods (Static)
