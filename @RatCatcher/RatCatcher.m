@@ -79,6 +79,7 @@ methods
   function self = set.mode(self, value)
       assert(any(strcmp(value, {'array', 'parallel', 'singular'})), ...
       'mode must be ''array'', ''parallel'', or ''singular'' ');
+      self.mode = value;
   end % function
 
   function self = set.filenames(self, value)
