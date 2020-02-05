@@ -85,7 +85,7 @@ methods
   function self = set.filenames(self, value)
       if ischar(value)
           corelib.verb(self.verbose, 'RatCatcher::set.filenames', ...
-          'treating ''value'' as filepath, attempting to read')
+          'treating ''value'' as filepath, attempting to read...')
           % treat as file path and try to load it
           % if your filenames are saved in a .mat file,
           % just load them and set the property normally
@@ -103,7 +103,7 @@ methods
   function self = set.filecodes(self, value)
       if ischar(value)
           corelib.verb(self.verbose, 'RatCatcher::set.filecodes', ...
-          'treating ''value'' as filepath, attempting to read')
+          'treating ''value'' as filepath, attempting to read...')
           filecodes = readmatrix(value);
           self.filecodes = filecodes;
       else
