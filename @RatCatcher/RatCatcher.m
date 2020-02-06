@@ -125,6 +125,10 @@ methods
       % if 'mode' is 'parallel', then 'threading' can only be 'multi'
       if strcmp(self.mode, 'parallel')
           self.threading = 'multi';
+          if ~strcmp(value, 'multi')
+              corelib.verb(self.verbose, 'RatCatcher::set.threading', ...
+                'if ''mode'' is ''parallel'', then ''threading'' can only be ''multi'' ')
+          end
       else
           self.threading = value;
       end
