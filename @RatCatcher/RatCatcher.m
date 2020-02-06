@@ -56,6 +56,10 @@ properties
   % character vector
   % can be 'array', 'singular', or 'parallel'
 
+  threading = 'single';
+  % character vector
+  % can be 'single' or 'multi'
+
   nbins
   % positive integer
   % only matters when mode = 'parallel'
@@ -109,6 +113,11 @@ methods
       else
           self.filecodes = value;
       end
+  end % function
+
+  function self = set.threading(self, value)
+      assert(strcmp(value, {'single', 'multi'}), '''threading'' must be either ''single'' or ''multi''')
+      self.threading = value;
   end % function
 
 
