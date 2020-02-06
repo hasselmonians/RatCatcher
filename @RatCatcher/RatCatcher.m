@@ -82,7 +82,7 @@ methods
 
   function self = set.mode(self, value)
       assert(any(strcmp(value, {'array', 'parallel', 'singular'})), ...
-        'mode must be ''array'', ''parallel'', or ''singular'' ');
+      'mode must be ''array'', ''parallel'', or ''singular'' ');
       self.mode = value;
       % make sure that 'mode' and 'threading' agree
       if strcmp(self.mode, 'parallel')
@@ -127,7 +127,7 @@ methods
           self.threading = 'multi';
           if ~strcmp(value, 'multi')
               corelib.verb(self.verbose, 'RatCatcher::set.threading', ...
-                'if ''mode'' is ''parallel'', then ''threading'' can only be ''multi'' ')
+              'if ''mode'' is ''parallel'', then ''threading'' can only be ''multi'' ')
           end
       else
           self.threading = value;
