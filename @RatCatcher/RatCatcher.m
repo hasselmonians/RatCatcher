@@ -82,7 +82,7 @@ methods
 
   function self = set.mode(self, value)
       assert(any(strcmp(value, {'array', 'parallel', 'singular'})), ...
-      'mode must be ''array'', ''parallel'', or ''singular'' ');
+        'mode must be ''array'', ''parallel'', or ''singular'' ');
       self.mode = value;
       % make sure that 'mode' and 'threading' agree
       if strcmp(self.mode, 'parallel')
@@ -120,7 +120,8 @@ methods
   end % function
 
   function self = set.threading(self, value)
-      assert(strcmp(value, {'single', 'multi'}), '''threading'' must be either ''single'' or ''multi''')
+      assert(any(strcmp(value, {'single', 'multi'})), ...
+        '''threading'' must be either ''single'' or ''multi''')
       % if 'mode' is 'parallel', then 'threading' can only be 'multi'
       if strcmp(self.mode, 'parallel')
           self.threading = 'multi';
