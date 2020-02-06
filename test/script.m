@@ -1,5 +1,5 @@
 % NOTE: you will need to change the following path to where you installed RatCatcher locally
-RatCatcher_path = '/home/alec/code/RatCatcher';
+RatCatcher_path = '/home/ahoyland/code/RatCatcher';
 
 r = RatCatcher;
 
