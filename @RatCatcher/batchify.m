@@ -73,19 +73,34 @@ function batchify_core(self, batchname, filenames, filecodes, dummyScriptPath)
 
   % TODO: make outfile more robust (accept more output types)
 
-  % determine the name of the job array
+  %% Determine the name of the job array
+
   script    = strrep(script, 'BATCH_NAME', batchname);
 
-  % determine the project name on the cluster
+  %% Determine the project name on the cluster
+
   script    = strrep(script, 'PROJECT_NAME', self.project);
 
-  % determine the number of jobs
+  %% Determine the number of jobs
+
   % set the number of files (occurs for parallel and array jobs)
   script    = strrep(script, 'NUM_FILES', num2str(length(filenames)));
   % set the number of bins (occurs for only parallel jobs)
   script    = strrep(script, 'NUM_BINS', num2str(self.nbins));
 
-  % determine the argument to MATLAB batch function
+  %% Add flags if necessary
+
+  % whether to use a single computational thread
+  % is determined by the 'threading' property
+  switch self.threading
+  case 'single'
+      script = strrep(script, 'FLAGS', '-singleCompThread');
+  case 'multi'
+      script = strrep(script, 'FLAGS', '');
+  end
+
+  %% Determine the argument to MATLAB batch function
+
   switch self.mode
   case 'array'
     outfile   = fullfile(self.remotepath, ['output-', batchname, '-', '$SGE_TASK_ID']);

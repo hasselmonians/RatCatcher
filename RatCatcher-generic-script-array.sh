@@ -10,4 +10,4 @@
 
 module load matlab/2019b
 
-matlab -nodisplay -singleCompThread -r "batchFunction(ARGUMENT); exit;"
+matlab -nodisplay FLAGS -r "batchFunction(ARGUMENT); exit;"
