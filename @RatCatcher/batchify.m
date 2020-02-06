@@ -95,8 +95,10 @@ function batchify_core(self, batchname, filenames, filecodes, dummyScriptPath)
   switch self.threading
   case 'single'
       script = strrep(script, 'FLAGS', '-singleCompThread');
+      script = strrep(script, 'THREADS', '');
   case 'multi'
       script = strrep(script, 'FLAGS', '');
+      script = strrep(script, 'THREADS', '#$ -pe omp 16');
   end
 
   %% Determine the argument to MATLAB batch function

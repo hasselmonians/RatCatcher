@@ -84,6 +84,10 @@ methods
       assert(any(strcmp(value, {'array', 'parallel', 'singular'})), ...
       'mode must be ''array'', ''parallel'', or ''singular'' ');
       self.mode = value;
+      % make sure that 'mode' and 'threading' agree
+      if strcmp(self.mode, 'parallel')
+          self.threading = 'multi';
+      end
   end % function
 
   function self = set.filenames(self, value)
@@ -117,7 +121,12 @@ methods
 
   function self = set.threading(self, value)
       assert(strcmp(value, {'single', 'multi'}), '''threading'' must be either ''single'' or ''multi''')
-      self.threading = value;
+      % if 'mode' is 'parallel', then 'threading' can only be 'multi'
+      if strcmp(self.mode, 'parallel')
+          self.threading = 'multi';
+      else
+          self.threading = value;
+      end
   end % function
 
 

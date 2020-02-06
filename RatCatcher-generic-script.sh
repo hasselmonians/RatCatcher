@@ -1,6 +1,6 @@
 #!/bin/bash -l
 
-#$ -pe omp 16
+THREADS
 #$ -o log
 #$ -e err
 #$ -P PROJECT_NAME
