@@ -119,7 +119,7 @@ function dataTable = gather(self, filekey, dataTable0)
     % get the dimensions of the data
     dim1      = length(outfiles);
     % read through the files and write the data to a matrix
-    data      = NaN([dim1 size(csvread(outfiles{1}))]);
+    data      = NaN([dim1 size(readmatrix(outfiles{1}))]);
     corelib.verb(self.verbose, 'RatCatcher::gather', 'reading outfiles to build data matrix')
 
     %% Collect the data from the csv files
