@@ -10,7 +10,14 @@ function nbins = getNBins(self)
     % nbins: a scalar if self.expID is a character vector or cell array row vector
     %   a vector if self.expID is a cell array column vector or matrix
     %   is empty is self.mode is not 'parallel'
-    
+    %
+    %% Example:
+    %
+    %   nbins = self.getNBins();
+    %
+
+    nThreads = 16;
+
     if strcmp(self.mode, 'parallel')
         if iscell(self.expID)
             % expID is a cell array
@@ -20,17 +27,17 @@ function nbins = getNBins(self)
                 nbins = NaN(size(self.expID, 1), 1);
                 % iterate through expID row-wise to generate the number of bins
                 for ii = 1:size(self.expID, 1)
-                    nbins(ii) = ceil(length(self.filenames{ii}) / 16);
+                    nbins(ii) = ceil(length(self.filenames{ii}) / nThreads);
                 end
             else
                 % expID is a single row cell array
                 % nbins is a scalar
-                nbins = ceil(length(self.filenames) / 16);
+                nbins = ceil(length(self.filenames) / nThreads);
             end
         else
             % expID is a character vector
             % nbins is a scalar
-            nbins = ceil(length(self.filenames) / 16);
+            nbins = ceil(length(self.filenames) / nThreads);
         end
     else
         nbins = [];
