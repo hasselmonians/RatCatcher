@@ -9,7 +9,7 @@ function nbins = getNBins(self)
     %% Outputs:
     % nbins: a scalar if self.expID is a character vector or cell array row vector
     %   a vector if self.expID is a cell array column vector or matrix
-    %   is empty is self.mode is not 'parallel'
+    %   is empty if self.mode is not 'parallel'
     %
     %% Example:
     %
