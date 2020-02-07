@@ -127,11 +127,11 @@ function dataTable = gather(self, filekey, dataTable0)
     if self.verbose
       for ii = 1:dim1
         corelib.textbar(ii, dim1)
-        data(ii, :) = corelib.vectorise(csvread(outfiles{ii}));
+        data(ii, :) = corelib.vectorise(readmatrix(outfiles{ii}));
       end
     else
       for ii = 1:dim1
-        data(ii, :) = corelib.vectorise(csvread(outfiles{ii}));
+        data(ii, :) = corelib.vectorise(readmatrix(outfiles{ii}));
       end
     end
 
