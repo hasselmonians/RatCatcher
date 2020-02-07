@@ -43,7 +43,7 @@ function [filename, filecode] = read(index, location, batchname)
             % strip off empty line at the end of file
             filename = filename(1:end-1);
         end
-        filecode = readmatrix(['filecodes-', batchname, '.csv']);
+        filecode = readmatrix(fullfile(location, ['filecodes-', batchname, '.csv']));
     end
 
 end % function
