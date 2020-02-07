@@ -119,7 +119,7 @@ function dataTable = gather(self, filekey, dataTable0)
     % get the dimensions of the data
     dim1      = length(outfiles);
     % read through the files and write the data to a matrix
-    data      = NaN([dim1 size(csvread(outfiles{1}))]);
+    data      = NaN([dim1 size(readmatrix(outfiles{1}))]);
     corelib.verb(self.verbose, 'RatCatcher::gather', 'reading outfiles to build data matrix')
 
     %% Collect the data from the csv files
@@ -127,11 +127,11 @@ function dataTable = gather(self, filekey, dataTable0)
     if self.verbose
       for ii = 1:dim1
         corelib.textbar(ii, dim1)
-        data(ii, :) = corelib.vectorise(csvread(outfiles{ii}));
+        data(ii, :) = corelib.vectorise(readmatrix(outfiles{ii}));
       end
     else
       for ii = 1:dim1
-        data(ii, :) = corelib.vectorise(csvread(outfiles{ii}));
+        data(ii, :) = corelib.vectorise(readmatrix(outfiles{ii}));
       end
     end
 
@@ -186,7 +186,7 @@ function dataTable = gather(self, filekey, dataTable0)
       l2d_df     = data(:, 7);
       d2l_df     = data(:, 8);
       % concatenate into a table
-      dataTable(l2d_h, l2d_p, l2d_tstat, l2d_df, d2l_h, d2l_p, d2l_tstat, d2l_df);
+      dataTable = table(l2d_h, l2d_p, l2d_tstat, l2d_df, d2l_h, d2l_p, d2l_tstat, d2l_df);
     otherwise
       corelib.verb(true, 'RatCatcher::gather', 'I don''t know which protocol you mean.')
     end

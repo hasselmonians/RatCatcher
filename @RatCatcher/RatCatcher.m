@@ -61,7 +61,7 @@ properties
   % can be 'single' or 'multi'
 
   nbins
-  % positive integer
+  % positive integer or vector of positive integers
   % only matters when mode = 'parallel'
   % used to determine the number of batches run on the cluster
 
