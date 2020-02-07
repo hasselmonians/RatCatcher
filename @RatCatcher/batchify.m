@@ -35,12 +35,12 @@ function self = batchify(self)
   % if self.batchname is a cell array, make a script for each contained character vector
   if iscell(self.batchname)
     for ii = 1:length(self.batchname)
-      batchify_core(self, self.batchname{ii}, self.filenames{ii}, self.filecodes{ii}, dummyScriptPath);
+      batchify_core(self, self.batchname{ii}, self.filenames{ii}, self.filecodes{ii}, self.nbins(ii), dummyScriptPath);
       corelib.verb(self.verbose, 'RatCatcher::batchify', 'batch script edited')
       corelib.verb(self.verbose, 'RatCatcher::batchify', ['run this: $ qsub ' self.remotepath filesep 'batchscript-', self.batchname{ii}, '.sh'])
     end
   else
-    batchify_core(self, self.batchname, self.filenames, self.filecodes, dummyScriptPath);
+    batchify_core(self, self.batchname, self.filenames, self.filecodes, self.nbins, dummyScriptPath);
     corelib.verb(self.verbose, 'RatCatcher::batchify', 'batch script edited')
     corelib.verb(self.verbose, 'RatCatcher::batchify', ['run this: $ cd ' self.remotepath '; qsub ' 'batchscript-', self.batchname, '.sh'])
   end
@@ -48,7 +48,7 @@ function self = batchify(self)
 
 end % function
 
-function batchify_core(self, batchname, filenames, filecodes, dummyScriptPath)
+function batchify_core(self, batchname, filenames, filecodes, nbins, dummyScriptPath)
   tt = '''';
 
   % save file names and cell numbers in a text file to be read out by the script
@@ -86,7 +86,7 @@ function batchify_core(self, batchname, filenames, filecodes, dummyScriptPath)
   % set the number of files (occurs for parallel and array jobs)
   script    = strrep(script, 'NUM_FILES', num2str(length(filenames)));
   % set the number of bins (occurs for only parallel jobs)
-  script    = strrep(script, 'NUM_BINS', num2str(self.nbins));
+  script    = strrep(script, 'NUM_BINS', num2str(nbins));
 
   %% Add flags if necessary
 
