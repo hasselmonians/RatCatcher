@@ -186,7 +186,7 @@ function dataTable = gather(self, filekey, dataTable0)
       l2d_df     = data(:, 7);
       d2l_df     = data(:, 8);
       % concatenate into a table
-      dataTable(l2d_h, l2d_p, l2d_tstat, l2d_df, d2l_h, d2l_p, d2l_tstat, d2l_df);
+      dataTable = table(l2d_h, l2d_p, l2d_tstat, l2d_df, d2l_h, d2l_p, d2l_tstat, d2l_df);
     otherwise
       corelib.verb(true, 'RatCatcher::gather', 'I don''t know which protocol you mean.')
     end
