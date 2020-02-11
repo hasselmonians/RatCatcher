@@ -546,6 +546,10 @@ to gather lists of file names and file codes
 and to sequentially load files to build `filenames.txt` and `filecodes.csv`
 metadata files.
 
+The `sort` function can be used to organize your `filenames` and `filecodes` alphabetically.
+Batch functions can take advantage of this organization by iterating over `filecodes`
+associated with a given filename without having to reload the same raw data file.
+
 ## Setting a preference file
 
 You can create a function called `pref.m` inside of `../RatCatcher/@RatCatcher/` to automatically set up a custom `RatCatcher` object every time you instantiate one. This file is ignored by git. It should look something like this:
