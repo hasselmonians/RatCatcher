@@ -19,15 +19,26 @@ function self = sort(self)
     %
     % See Also: RatCatcher.natsortfiles, RatCatcher.getFileNames
 
-    %% Preamble
-
-    if iscell(self.filenames) || iscell(self.filecodes)
-        disp('[RatCatcher::sort] this function does not yet operate on cells, aborting...')
-        return
-    end
-
     %% Sort the filenames
-    [self.filenames, I] = sort(self.filenames);
-    self.filecodes = self.filecodes(I);
+
+    if iscell(self.expID)
+        % expID is a cell array
+        if size(self.expID, 1) > 1
+            % expID is a cell array with multiple rows
+            % must iterate through rows of filenames/filecodes
+            for ii = 1:size(self.expID, 1)
+                [self.filenames{ii}, I] = sort(self.filenames{ii});
+                self.filecodes{ii} = self.filecodes{ii}(I, :);
+            end
+        else
+            % expID is a single row cell array
+            [self.filenames, I] = sort(self.filenames);
+            self.filecodes = self.filecodes(I, :);
+        end
+    else
+        % expID is a character vector
+        [self.filenames, I] = sort(self.filenames);
+        self.filecodes = self.filecodes(I, :);
+    end
 
 end % function
