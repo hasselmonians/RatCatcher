@@ -17,7 +17,7 @@ function self = validate(self)
 
   else
     % batch name was preset by the user
-    corelib.verb(self.verbose, 'RatCatcher::validate', 'batch name determined by user')
+    corelib.verb(self.verbose, 'RatCatcher::validate', 'batch name already set')
 
   end
 
@@ -30,7 +30,7 @@ function self = validate(self)
     corelib.verb(self.verbose, 'RatCatcher::validate', 'filenames and filecodes determined automatically')
 
   else
-    corelib.verb(self.verbose, 'RatCatcher::validate', 'filenames and filecodes determined by user')
+    corelib.verb(self.verbose, 'RatCatcher::validate', 'filenames and filecodes already set')
 
   end
 
@@ -54,7 +54,7 @@ function self = validate(self)
 
   else
     % the batch function name was already provided
-    corelib.verb(self.verbose, 'RatCatcher::validate', 'batch function name determined by user')
+    corelib.verb(self.verbose, 'RatCatcher::validate', 'batch function name already set')
 
   end
 
@@ -67,7 +67,7 @@ function self = validate(self)
     corelib.verb(self.verbose, 'RatCatcher::validate', 'batch script determined automatically')
 
   else
-    corelib.verb(self.verbose, 'RatCatcher::validate', 'batch script determined by user')
+    corelib.verb(self.verbose, 'RatCatcher::validate', 'batch script already set')
 
   end
 
@@ -97,7 +97,7 @@ function self = validate(self)
       self.nbins = self.getNBins();
       corelib.verb(self.verbose, 'RatCatcher::validate', 'nbins determined automatically')
     else
-      corelib.verb(self.verbose, 'RatCatcher::validate', 'nbins determined by user')
+      corelib.verb(self.verbose, 'RatCatcher::validate', 'nbins already set')
     end
   otherwise
       % do nothing
