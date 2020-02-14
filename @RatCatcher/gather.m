@@ -187,6 +187,13 @@ function dataTable = gather(self, filekey, dataTable0)
       d2l_df     = data(:, 8);
       % concatenate into a table
       dataTable = table(l2d_h, l2d_p, l2d_tstat, l2d_df, d2l_h, d2l_p, d2l_tstat, d2l_df);
+    case 'LightDark2'
+      corelib.verb(self.verbose, 'RatCatcher::gather', ['protocol ' protocol ' identified'])
+      % timestamps is the first row
+      timestamps = data(1, :);
+      % padded_spike_counts is the matrix less 1 on each side
+      spike_counts = data(2:end, 1:end-1);
+      dataTable = table(timestamps, spike_counts);
     otherwise
       corelib.verb(true, 'RatCatcher::gather', 'I don''t know which protocol you mean.')
     end
