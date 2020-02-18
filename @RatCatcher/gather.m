@@ -29,6 +29,9 @@ function dataTable = gather(self, filekey, dataTable0)
   %
   % See also RATCATCHER, RATCATCHER.BATCHIFY, RATCATCHER.STITCH, RATCATCHER.GETBATCHSCRIPTNAME, DIR
 
+
+  %% Preamble
+
   expID     = self.expID;
   localpath = self.localpath;
   protocol  = self.protocol;
@@ -91,6 +94,8 @@ function dataTable = gather(self, filekey, dataTable0)
     end
   end
 
+  %% Gather the data files
+
   % set out for an epic journey, but always remember your home
   returnToCWD = pwd;
 
@@ -105,92 +110,100 @@ function dataTable = gather(self, filekey, dataTable0)
   % find all of the files matching the namespec pattern
   files     = dir(filekey);
 
+  % exit early if no files can be found
   if numel(files) == 0
     dataTable = table();
-    corelib.verb(self.verbose, 'RatCatcher::gather', 'no files found with filekey')
+    corelib.verb(self.verbose, 'RatCatcher::gather', ['no files found with filekey: ' '''' filekey ''''])
+    return
+  end
+
+  % acquire the outfiles
+  outfiles  = {files.name};
+  % sort the outfiles in a sensible manner
+  outfiles  = self.natsortfiles(outfiles);
+  % get the dimensions of the data
+  dim1      = length(outfiles);
+  % read through the files and write the data to a matrix
+  data      = NaN([dim1 size(readmatrix(outfiles{1}))]);
+  corelib.verb(self.verbose, 'RatCatcher::gather', 'reading outfiles to build data matrix')
+
+  %% Collect the data from the outfiles
+
+  if self.verbose
+    for ii = 1:dim1
+      corelib.textbar(ii, dim1)
+      data(ii, :) = corelib.vectorise(readmatrix(outfiles{ii}));
+    end
   else
-    % acquire the outfiles
-    outfiles  = cell(size(files));
-    for ii = 1:length(files)
-      outfiles{ii} = files(ii).name;
-    end
-    % sort the outfiles in a sensible manner
-    outfiles  = self.natsortfiles(outfiles);
-    % get the dimensions of the data
-    dim1      = length(outfiles);
-    % read through the files and write the data to a matrix
-    data      = NaN([dim1 size(readmatrix(outfiles{1}))]);
-    corelib.verb(self.verbose, 'RatCatcher::gather', 'reading outfiles to build data matrix')
-
-    %% Collect the data from the csv files
-
-    if self.verbose
-      for ii = 1:dim1
-        corelib.textbar(ii, dim1)
-        data(ii, :) = corelib.vectorise(readmatrix(outfiles{ii}));
-      end
-    else
-      for ii = 1:dim1
-        data(ii, :) = corelib.vectorise(readmatrix(outfiles{ii}));
-      end
-    end
-
-    %% Package the data depending on the protocol
-
-    switch protocol
-    case 'BandwidthEstimator'
-      corelib.verb(self.verbose, 'RatCatcher::gather', ['protocol ' protocol ' identified'])
-      % gather the data from the output files
-      kmax    = data(:, 1);
-      CI      = data(:, 2:3);
-      kcorr   = data(:, 4);
-      % put the data in a MATLAB table
-      dataTable = table(outfiles, kmax, CI, kcorr);
-    case 'KiloPlex'
-      corelib.verb(self.verbose, 'RatCatcher::gather', ['protocol ' protocol ' identified'])
-      % the data are a bunch of .mat files, so just gather the names of the files
-      dataTable = table(outfiles);
-    case 'CellSorter'
-      corelib.verb(self.verbose, 'RatCatcher::gather', ['protocol ' protocol ' identified'])
-      % the data are waveforms in a 50x4 matrix
-      % the first index is over time steps of the recording
-      % the second index is over channels in a tetrode
-      % the units are milliseconds
-      waveforms = cell(dim1, 1);
-      spike_width = NaN(dim1, 1);
-      firing_rate = NaN(dim1, 1);
-      for ii = 1:dim1
-        waveforms{ii} = squeeze(data(ii, :, 1:end-1));
-        spike_width(ii) = squeeze(data(ii, 1, end));
-        firing_rate(ii) = squeeze(data(ii, 2, end));
-      end
-      dataTable = table(waveforms, spike_width, firing_rate);
-    case 'NeuralDecoder'
-      corelib.verb(self.verbose, 'RatCatcher::gather', ['protocol ' protocol ' identified'])
-      % collect the parameter vectors by parameter name
-      alpha   = data(:, 1, 1);
-      mu      = data(:, 1, 2);
-      sigma   = data(:, 1, 3);
-      tau     = data(:, 1, 4);
-      % concatenate into a table
-      dataTable = table(alpha, mu, sigma, tau);
-  case 'LightDark'
-      corelib.verb(self.verbose, 'RatCatcher::gather', ['protocol ' protocol ' identified'])
-      % collect the parameter vectors by parameter name
-      l2d_h      = data(:, 1);
-      d2l_h      = data(:, 2);
-      l2d_p      = data(:, 3);
-      d2l_p      = data(:, 4);
-      l2d_tstat  = data(:, 5);
-      d2l_tstat  = data(:, 6);
-      l2d_df     = data(:, 7);
-      d2l_df     = data(:, 8);
-      % concatenate into a table
-      dataTable = table(l2d_h, l2d_p, l2d_tstat, l2d_df, d2l_h, d2l_p, d2l_tstat, d2l_df);
-    otherwise
-      corelib.verb(true, 'RatCatcher::gather', 'I don''t know which protocol you mean.')
+    for ii = 1:dim1
+      data(ii, :) = corelib.vectorise(readmatrix(outfiles{ii}));
     end
   end
+
+  %% Package the data depending on the protocol
+
+  switch protocol
+  case 'BandwidthEstimator'
+    corelib.verb(self.verbose, 'RatCatcher::gather', ['protocol ' protocol ' identified'])
+    % gather the data from the output files
+    kmax    = data(:, 1);
+    CI      = data(:, 2:3);
+    kcorr   = data(:, 4);
+    % put the data in a MATLAB table
+    dataTable = table(outfiles, kmax, CI, kcorr);
+  case 'KiloPlex'
+    corelib.verb(self.verbose, 'RatCatcher::gather', ['protocol ' protocol ' identified'])
+    % the data are a bunch of .mat files, so just gather the names of the files
+    dataTable = table(outfiles);
+  case 'CellSorter'
+    corelib.verb(self.verbose, 'RatCatcher::gather', ['protocol ' protocol ' identified'])
+    % the data are waveforms in a 50x4 matrix
+    % the first index is over time steps of the recording
+    % the second index is over channels in a tetrode
+    % the units are milliseconds
+    waveforms = cell(dim1, 1);
+    spike_width = NaN(dim1, 1);
+    firing_rate = NaN(dim1, 1);
+    for ii = 1:dim1
+      waveforms{ii} = squeeze(data(ii, :, 1:end-1));
+      spike_width(ii) = squeeze(data(ii, 1, end));
+      firing_rate(ii) = squeeze(data(ii, 2, end));
+    end
+    dataTable = table(waveforms, spike_width, firing_rate);
+  case 'NeuralDecoder'
+    corelib.verb(self.verbose, 'RatCatcher::gather', ['protocol ' protocol ' identified'])
+    % collect the parameter vectors by parameter name
+    alpha   = data(:, 1, 1);
+    mu      = data(:, 1, 2);
+    sigma   = data(:, 1, 3);
+    tau     = data(:, 1, 4);
+    % concatenate into a table
+    dataTable = table(alpha, mu, sigma, tau);
+case 'LightDark'
+    corelib.verb(self.verbose, 'RatCatcher::gather', ['protocol ' protocol ' identified'])
+    % collect the parameter vectors by parameter name
+    l2d_h      = data(:, 1);
+    d2l_h      = data(:, 2);
+    l2d_p      = data(:, 3);
+    d2l_p      = data(:, 4);
+    l2d_tstat  = data(:, 5);
+    d2l_tstat  = data(:, 6);
+    l2d_df     = data(:, 7);
+    d2l_df     = data(:, 8);
+    % concatenate into a table
+    dataTable = table(l2d_h, l2d_p, l2d_tstat, l2d_df, d2l_h, d2l_p, d2l_tstat, d2l_df);
+  case 'LightDark2'
+    corelib.verb(self.verbose, 'RatCatcher::gather', ['protocol ' protocol ' identified'])
+    % timestamps is the first row
+    timestamps = data(1, :);
+    % padded_spike_counts is the matrix less 1 on each side
+    spike_counts = data(2:end, 1:end-1);
+    dataTable = table(timestamps, spike_counts);
+  otherwise
+    corelib.verb(true, 'RatCatcher::gather', 'I don''t know which protocol you mean.')
+  end
+
+  %% Cleanup
 
   % return from whence you came
   cd(returnToCWD)
