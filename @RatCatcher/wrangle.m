@@ -9,7 +9,7 @@ function [varargout] = wrangle(filenames_file, varargin)
     %   filenames_file: character vector or cell array of character vectors,
     %       if a character vector, treated as a path to a text file with a .mat filename on each line
     %       if a cell array, treated as a list of filenames to load
-    % 
+    %
     %       files are expected to have been saved on the shared computing cluster (SCC)
     %       see: https://github.com/hasselmonians/knowledge-base/wiki/Connecting-to-the-SCC#mounting-the-ssc-on-a-local-computer
     %
@@ -55,6 +55,8 @@ function [varargout] = wrangle(filenames_file, varargin)
         end
     else
         % do nothing, treat the filenames_file as a cell array of filenames
+        loaded_filenames = filenames_file;
+        filenames_file = [];
     end
 
     %% Load each .mat file
