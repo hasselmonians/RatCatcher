@@ -93,8 +93,8 @@ function [varargout] = wrangle(filenames_file, varargin)
     %% Output
 
     if ~isempty(options.SavePath)
-        filelib.write([options.SavePath, filesep, 'filenames.txt'], filenames);
-        writematrix(filecodes, [options.SavePath, filesep, 'filecodes.csv']);
+        filelib.write(fullfile(options.SavePath, 'filenames.txt'), filenames);
+        writematrix(filecodes, fullfile(options.SavePath, 'filecodes.csv'));
     end
 
     varargout{1} = filenames;
