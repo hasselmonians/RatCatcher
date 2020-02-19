@@ -6,7 +6,10 @@ function [varargout] = wrangle(filenames_file, varargin)
     % and optionally saves them to disk.
 
     %% Arguments
-    %   filenames_file: path to a text file with a .mat filename on each line
+    %   filenames_file: character vector or cell array of character vectors,
+    %       if a character vector, treated as a path to a text file with a .mat filename on each line
+    %       if a cell array, treated as a list of filenames to load
+    %
     %       files are expected to have been saved on the shared computing cluster (SCC)
     %       see: https://github.com/hasselmonians/knowledge-base/wiki/Connecting-to-the-SCC#mounting-the-ssc-on-a-local-computer
     %
@@ -41,13 +44,19 @@ function [varargout] = wrangle(filenames_file, varargin)
 
     options = corelib.parseNameValueArguments(options, varargin{:});
 
-    %% Load the filenames file
+    %% Load the filenames
 
-    loaded_filenames = filelib.read(filenames_file);
+    if ~iscell(filenames_file)
+        loaded_filenames = filelib.read(filenames_file);
 
-    % if saved with an empty last line, strip that off
-    if isempty(loaded_filenames{end})
-        loaded_filenames = loaded_filenames(1:end-1);
+        % if saved with an empty last line, strip that off
+        if isempty(loaded_filenames{end})
+            loaded_filenames = loaded_filenames(1:end-1);
+        end
+    else
+        % do nothing, treat the filenames_file as a cell array of filenames
+        loaded_filenames = filenames_file;
+        filenames_file = [];
     end
 
     %% Load each .mat file
@@ -84,8 +93,8 @@ function [varargout] = wrangle(filenames_file, varargin)
     %% Output
 
     if ~isempty(options.SavePath)
-        filelib.write([options.SavePath, filesep, 'filenames.txt'], filenames);
-        writematrix(filecodes, [options.SavePath, filesep, 'filecodes.csv']);
+        filelib.write(fullfile(options.SavePath, 'filenames.txt'), filenames);
+        writematrix(filecodes, fullfile(options.SavePath, 'filecodes.csv'));
     end
 
     varargout{1} = filenames;
