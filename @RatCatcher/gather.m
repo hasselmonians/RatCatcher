@@ -193,6 +193,7 @@ case {'LightDark', 'DarkLight'}
     % concatenate into a table
     dataTable = table(l2d_h, l2d_p, l2d_tstat, l2d_df, d2l_h, d2l_p, d2l_tstat, d2l_df);
   case {'LightDark2', 'DarkLight2'}
+    warn('this protocol is currently unavailable, try LightDark2.gather or DarkLight2.gather instead')
     corelib.verb(self.verbose, 'RatCatcher::gather', ['protocol ' protocol ' identified'])
     % timestamps is the first row
     timestamps = data(1, :);
