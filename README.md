@@ -468,7 +468,7 @@ Currently, the following protocols exist for `RatCatcher`:
 * [CellSorter](https://github.com/hasselmonians/CellSorter)
 * [BandwidthEstimator](https://github.com/hasselmonians/BandwidthEstimator)
 * [KiloPlex](https://github.com/hasselmonians/KiloPlex)
-* [LightDark](https://github.com/hasselmonians/grid-cell-spiking)
+* [LightDark](https://github.com/hasselmonians/light-modulation)
 * [LNLModel](https://github.com/hasselmonians/ln-model-of-mec-neurons)
 * [NeuralDecoder](https://github.com/hasselmonians/NeuralDecoder)
 
