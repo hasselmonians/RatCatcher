@@ -33,6 +33,7 @@ function [varargout] = wrangle(filenames_file, varargin)
 
     options = struct;
     options.Verbosity   = false; % true or false
+    options.Prefix      = ''; % prepended to filenames before trying to load
     options.SavePath    = ''; % if filled, save the outputs here
 
     options = orderfields(options);
@@ -69,7 +70,8 @@ function [varargout] = wrangle(filenames_file, varargin)
     for ii = 1:length(loaded_filenames)
         try
             % parse the filename and load the .mat file
-            this_filename = strrep(loaded_filenames{ii}, 'projectnb', 'mnt');
+            % this_filename = strrep(loaded_filenames{ii}, 'projectnb', 'mnt');
+            this_filename = fullfile(options.Prefix, loaded_filenames{ii});
             load(this_filename)
 
             % extract an n x 2 matrix of cell numbers
