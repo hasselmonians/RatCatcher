@@ -83,7 +83,8 @@ function [varargout] = wrangle(filenames_file, varargin)
             % update the filecodes matrix
             filecodes((end+1):(end+size(these_filecodes, 1)), :) = these_filecodes;
 
-            corelib.verb(options.Verbosity, 'RatCatcher::wrangle', 'success!')
+            corelib.verb(options.Verbosity, 'RatCatcher::wrangle', ...
+                ['success, ' num2str(length(these_filecodes)) ' filecodes found!'])
         catch
             file_missing(ii) = true;
             corelib.verb(options.Verbosity, 'RatCatcher::wrangle', 'file missing!')
