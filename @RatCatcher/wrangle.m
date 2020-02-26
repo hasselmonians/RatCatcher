@@ -12,6 +12,11 @@ function [varargout] = wrangle(filenames_file, varargin)
     %
     %       files are expected to have been saved on the shared computing cluster (SCC)
     %       see: https://github.com/hasselmonians/knowledge-base/wiki/Connecting-to-the-SCC#mounting-the-ssc-on-a-local-computer
+    %   options: either passed as a struct or as Name-value pairs
+    %       Verbosity: logical scalar, whether to print info text, default: false
+    %       PrefixLoad: character vector, prepended to filenames before trying to load, default: ''
+    %       PrefixSave: character vector, prepended to filenames before trying to save, default: ''
+    %       SavePath: character vector, save outputs here, default: ''
     %
     %% Outputs
     %   filenames: an n x 1 cell array of filenames
@@ -33,7 +38,8 @@ function [varargout] = wrangle(filenames_file, varargin)
 
     options = struct;
     options.Verbosity   = false; % true or false
-    options.Prefix      = ''; % prepended to filenames before trying to load
+    options.PrefixLoad  = ''; % prepended to filenames before trying to load
+    options.PrefixSave  = ''; % prepended to filenames before trying to save
     options.SavePath    = ''; % if filled, save the outputs here
 
     options = orderfields(options);
@@ -71,7 +77,7 @@ function [varargout] = wrangle(filenames_file, varargin)
         try
             % parse the filename and load the .mat file
             % this_filename = strrep(loaded_filenames{ii}, 'projectnb', 'mnt');
-            this_filename = fullfile(options.Prefix, loaded_filenames{ii});
+            this_filename = fullfile(options.PrefixLoad, loaded_filenames{ii});
             load(this_filename)
 
             % extract an n x 2 matrix of cell numbers
@@ -79,7 +85,7 @@ function [varargout] = wrangle(filenames_file, varargin)
 
             % update the filenames cell array
             for qq = 1:size(these_filecodes, 1)
-                filenames{end+1} = this_filename;
+                filenames{end+1} = fullfile(options.PrefixSave, loaded_filenames{ii});
             end
 
             % update the filecodes matrix
