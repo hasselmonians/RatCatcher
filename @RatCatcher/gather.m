@@ -179,7 +179,7 @@ function dataTable = gather(self, filekey, dataTable0)
     tau     = data(:, 1, 4);
     % concatenate into a table
     dataTable = table(alpha, mu, sigma, tau);
-case {'LightDark', 'DarkLight', 'LaserControl'}
+case {'LightDark', 'DarkLight', 'LaserControl', 'ControlLaser'}
     corelib.verb(self.verbose, 'RatCatcher::gather', ['protocol ' protocol ' identified'])
     % collect the parameter vectors by parameter name
     l2d_h      = data(:, 1);
@@ -192,7 +192,7 @@ case {'LightDark', 'DarkLight', 'LaserControl'}
     d2l_df     = data(:, 8);
     % concatenate into a table
     dataTable = table(l2d_h, l2d_p, l2d_tstat, l2d_df, d2l_h, d2l_p, d2l_tstat, d2l_df);
-  case {'LightDark2', 'DarkLight2'}
+case {'LightDark2', 'DarkLight2', 'LaserControl2', 'ControlLaser2'}
     warn('this protocol is currently unavailable, try LightDark2.gather or DarkLight2.gather instead')
     corelib.verb(self.verbose, 'RatCatcher::gather', ['protocol ' protocol ' identified'])
     % timestamps is the first row
