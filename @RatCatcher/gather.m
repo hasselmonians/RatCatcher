@@ -179,7 +179,7 @@ function dataTable = gather(self, filekey, dataTable0)
     tau     = data(:, 1, 4);
     % concatenate into a table
     dataTable = table(alpha, mu, sigma, tau);
-case {'LightDark', 'DarkLight'}
+case {'LightDark', 'DarkLight', 'LaserControl'}
     corelib.verb(self.verbose, 'RatCatcher::gather', ['protocol ' protocol ' identified'])
     % collect the parameter vectors by parameter name
     l2d_h      = data(:, 1);
