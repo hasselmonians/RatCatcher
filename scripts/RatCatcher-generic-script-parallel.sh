@@ -1,8 +1,8 @@
 #!/bin/bash -l
 
 #$ -pe omp 16
-#$ -o log
-#$ -e err
+#$ -o log-BATCH_NAME
+#$ -e err-BATCH_NAME
 #$ -P PROJECT_NAME
 #$ -N BATCH_NAME
 #$ -l h_rt=24:00:00
