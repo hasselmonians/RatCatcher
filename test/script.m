@@ -42,4 +42,16 @@ r.filenames   = strcat(r.remotepath, filesep, data_paths);
 copyfile(fullfile(RatCatcher_path, 'test', 'data', data_paths{1}), r.localpath);
 copyfile(fullfile(RatCatcher_path, 'test', 'data', data_paths{2}), r.localpath);
 
-r = r.batchify;
+%% Create the batch files on the cluster
+
+r = r.batchify();
+
+%% Run the analysis on the cluster
+
+return
+% cd /projectnb/hasselmogrp/ahoyland/RatCatcher/cluster
+% qsub batchscript-test-Test.sh
+
+%% Gather the data locally
+
+data_table = r.gather();
