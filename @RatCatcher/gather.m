@@ -107,7 +107,7 @@ function dataTable = gather(self, filekey, dataTable0)
   end
 
   % gather together all of the data points into a single matrix
-  % find all of the files matching the namespec pattern
+  % find all of the files matching the "filekey" pattern
   files     = dir(filekey);
 
   % exit early if no files can be found
@@ -121,24 +121,45 @@ function dataTable = gather(self, filekey, dataTable0)
   outfiles  = {files.name};
   % sort the outfiles in a sensible manner
   outfiles  = self.natsortfiles(outfiles);
-  % get the dimensions of the data
+  % how many output files to read from?
   dim1      = length(outfiles);
-  % read through the files and write the data to a matrix
-  data      = NaN([dim1 size(readmatrix(outfiles{1}))]);
-  corelib.verb(self.verbose, 'RatCatcher::gather', 'reading outfiles to build data matrix')
 
   %% Collect the data from the outfiles
 
-  if self.verbose
-    for ii = 1:dim1
-      corelib.textbar(ii, dim1)
-      data(ii, :) = corelib.vectorise(readmatrix(outfiles{ii}));
-    end
-  else
-    for ii = 1:dim1
-      data(ii, :) = corelib.vectorise(readmatrix(outfiles{ii}));
-    end
-  end
+  corelib.verb(self.verbose, 'RatCatcher::gather', 'reading outfiles to build data matrix')
+
+  switch protocol
+  case {'LightDark2', 'DarkLight2', 'LaserControl2', 'ControlLaser2'}
+    % data should be loaded as a cell array
+    data = cell(dim1, 1);
+
+    if r.verbose
+      for ii = 1:length(data)
+        corelib.textbar(ii, length(data))
+        data{ii} = readmatrix(outfiles{ii});
+      end
+    else
+      for ii = 1:length(data)
+        data{ii} = readmatrix(outfiles{ii});
+      end
+    end % self.verbose
+
+  otherwise
+    % data should be loaded as a matrix
+    data = NaN([dim1 size(readmatrix(outfiles{1}))]);
+
+    if self.verbose
+      for ii = 1:dim1
+        corelib.textbar(ii, dim1)
+        data(ii, :) = corelib.vectorise(readmatrix(outfiles{ii}));
+      end
+    else
+      for ii = 1:dim1
+        data(ii, :) = corelib.vectorise(readmatrix(outfiles{ii}));
+      end
+    end % self.verbose
+
+  end % switch
 
   %% Package the data depending on the protocol
 
@@ -179,7 +200,7 @@ function dataTable = gather(self, filekey, dataTable0)
     tau     = data(:, 1, 4);
     % concatenate into a table
     dataTable = table(alpha, mu, sigma, tau);
-case {'LightDark', 'DarkLight', 'LaserControl', 'ControlLaser'}
+  case {'LightDark', 'DarkLight', 'LaserControl', 'ControlLaser'}
     corelib.verb(self.verbose, 'RatCatcher::gather', ['protocol ' protocol ' identified'])
     % collect the parameter vectors by parameter name
     l2d_h      = data(:, 1);
@@ -192,7 +213,7 @@ case {'LightDark', 'DarkLight', 'LaserControl', 'ControlLaser'}
     d2l_df     = data(:, 8);
     % concatenate into a table
     dataTable = table(l2d_h, l2d_p, l2d_tstat, l2d_df, d2l_h, d2l_p, d2l_tstat, d2l_df);
-case {'LightDark2', 'DarkLight2', 'LaserControl2', 'ControlLaser2'}
+  case {'LightDark2', 'DarkLight2', 'LaserControl2', 'ControlLaser2'}
     warn('this protocol is currently unavailable, try LightDark2.gather or DarkLight2.gather instead')
     corelib.verb(self.verbose, 'RatCatcher::gather', ['protocol ' protocol ' identified'])
     % timestamps is the first row
