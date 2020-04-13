@@ -107,7 +107,7 @@ function dataTable = gather(self, filekey, dataTable0)
   end
 
   % gather together all of the data points into a single matrix
-  % find all of the files matching the namespec pattern
+  % find all of the files matching the "filekey" pattern
   files     = dir(filekey);
 
   % exit early if no files can be found
