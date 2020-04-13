@@ -31,8 +31,7 @@ r.project     = 'hasselmogrp';
 %% Manually add the test data
 
 % local, relative paths to the raw data files in the RatCatcher directory
-data_paths    = {fullfile('test', 'data', 'datafile_1.csv'),...
-                fullfile('test', 'data', 'datafile_2.csv')};
+data_paths    = {'datafile_1.csv', 'datafile_2.csv'};
 
 % local paths to the raw data files on the cluster
 r.filenames   = strcat(r.remotepath, data_paths);
@@ -40,7 +39,7 @@ r.filenames   = strcat(r.remotepath, data_paths);
 % copy the raw data files to the cluster location
 % in general, you won't need to do this
 % this is necessary here because of how contrived this example is
-copyfile(fullfile(RatCatcher_path, data_paths{1}), r.localpath);
-copyfile(fullfile(RatCatcher_path, data_paths{2}), r.localpath);
+copyfile(fullfile(RatCatcher_path, 'test', 'data', data_paths{1}), r.localpath);
+copyfile(fullfile(RatCatcher_path, 'test', 'data', data_paths{2}), r.localpath);
 
 r = r.batchify;
