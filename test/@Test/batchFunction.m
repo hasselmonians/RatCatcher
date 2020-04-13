@@ -15,7 +15,7 @@ function batchFunction(index, location, batchname, outfile, test)
 
   %% Read data
 
-  [filename, cellnum] = RatCatcher.read(index, location, batchname);
+  filename = RatCatcher.read(index, location, batchname);
 
   %% Load data
 
