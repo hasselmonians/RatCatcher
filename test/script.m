@@ -34,7 +34,7 @@ r.project     = 'hasselmogrp';
 data_paths    = {'datafile_1.csv', 'datafile_2.csv'};
 
 % local paths to the raw data files on the cluster
-r.filenames   = strcat(r.remotepath, data_paths);
+r.filenames   = strcat(r.remotepath, filesep, data_paths);
 
 % copy the raw data files to the cluster location
 % in general, you won't need to do this
