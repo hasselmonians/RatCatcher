@@ -1,5 +1,5 @@
 % NOTE: you will need to change the following path to where you installed RatCatcher locally
-RatCatcher_path = '/home/ahoyland/code/RatCatcher';
+RatCatcher_path = pathlib.strip(mfilename('fullpath'), 2);
 
 r = RatCatcher;
 
@@ -20,7 +20,7 @@ r.protocol    = 'Test';
 r.project     = 'hasselmogrp';
 
 % Manually add the test data
-r.filenames   = {fullfile(RatCatcher_path, 'test/data/datafile_1.csv'); ...
-                fullfile(RatCatcher_path, 'test/data/datafile_2.csv')};
+r.filenames   = {fullfile(RatCatcher_path, 'test', 'data', 'datafile_1.csv'); ...
+                fullfile(RatCatcher_path, 'test', 'data', 'datafile_2.csv')};
 
 r = r.batchify;
