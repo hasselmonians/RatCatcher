@@ -1,6 +1,7 @@
 function init(isCluster)
 
-    % sets the matlab path for the RatCatcher project
+    % sets the matlab path for the RatCatcher package
+    % depends on srinivas.gs_mtools package
 
     if ~exist('isCluster', 'var')
         isCluster = false;

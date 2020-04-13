@@ -53,6 +53,7 @@ After the jobs have run, `RatCatcher` can gather the data into a table in your l
 ## How do I install it?
 The best way is to clone the repository, or to download and unzip. Then, just add it to your MATLAB path.
 It is dependent on [`mtools`](https://github.com/sg-s/srinivas.gs_mtools), so you will need that as well.
+You can run `RatCatcher.init()` to add the correct directories to your path.
 
 ## A (contrived) usage example
 
