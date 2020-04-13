@@ -123,22 +123,43 @@ function dataTable = gather(self, filekey, dataTable0)
   outfiles  = self.natsortfiles(outfiles);
   % how many output files to read from?
   dim1      = length(outfiles);
-  % read through the files and write the data to a matrix
-  data      = NaN([dim1 size(readmatrix(outfiles{1}))]);
-  corelib.verb(self.verbose, 'RatCatcher::gather', 'reading outfiles to build data matrix')
 
   %% Collect the data from the outfiles
 
-  if self.verbose
-    for ii = 1:dim1
-      corelib.textbar(ii, dim1)
-      data(ii, :) = corelib.vectorise(readmatrix(outfiles{ii}));
-    end
-  else
-    for ii = 1:dim1
-      data(ii, :) = corelib.vectorise(readmatrix(outfiles{ii}));
-    end
-  end
+  corelib.verb(self.verbose, 'RatCatcher::gather', 'reading outfiles to build data matrix')
+
+  switch protocol
+  case {'LightDark2', 'DarkLight2', 'LaserControl2', 'ControlLaser2'}
+    % data should be loaded as a cell array
+    data = cell(dim1, 1);
+
+    if r.verbose
+      for ii = 1:length(data)
+        corelib.textbar(ii, length(data))
+        data{ii} = readmatrix(outfiles{ii});
+      end
+    else
+      for ii = 1:length(data)
+        data{ii} = readmatrix(outfiles{ii});
+      end
+    end % self.verbose
+
+  otherwise
+    % data should be loaded as a matrix
+    data = NaN([dim1 size(readmatrix(outfiles{1}))]);
+
+    if self.verbose
+      for ii = 1:dim1
+        corelib.textbar(ii, dim1)
+        data(ii, :) = corelib.vectorise(readmatrix(outfiles{ii}));
+      end
+    else
+      for ii = 1:dim1
+        data(ii, :) = corelib.vectorise(readmatrix(outfiles{ii}));
+      end
+    end % self.verbose
+
+  end % switch
 
   %% Package the data depending on the protocol
 
