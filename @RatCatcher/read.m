@@ -35,15 +35,21 @@ function [filename, filecode] = read(index, location, batchname)
     if ~isempty(index)
         % acquire only the character vector corresponding to the indexed filename
         filename = filename{index};
-        % acquire the cell number using similarly clunky indexing
-        filecode = csvread(fullfile(location, ['filecodes-', batchname, '.csv']), index-1, 0, [index-1, 0, index-1, 1]);
+
+        if nargout == 2
+            % acquire the cell number using similarly clunky indexing
+            filecode = csvread(fullfile(location, ['filecodes-', batchname, '.csv']), index-1, 0, [index-1, 0, index-1, 1]);
+        end
     else
         % return all the filenames and filecodes
         if isempty(filename{end})
             % strip off empty line at the end of file
             filename = filename(1:end-1);
         end
-        filecode = readmatrix(fullfile(location, ['filecodes-', batchname, '.csv']));
-    end
+
+        if nargout == 2
+            filecode = readmatrix(fullfile(location, ['filecodes-', batchname, '.csv']));
+        end
+    end % ~isempty(index)
 
 end % function
