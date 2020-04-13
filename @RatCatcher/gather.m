@@ -221,6 +221,14 @@ function dataTable = gather(self, filekey, dataTable0)
     % padded_spike_counts is the matrix less 1 on each side
     spike_counts = data(2:end, 1:end-1);
     dataTable = table(timestamps, spike_counts);
+  case 'Test'
+    corelib.verb(self.verbose, 'RatCatcher::gather', ['protocol ' protocol ' identified'])
+    % gather the data from the output files
+    some_zeros  = data(:, 1);
+    some_ones   = data(:, 2);
+    % put the data in a MATLAB table
+    dataTable = table(some_zeros, some_ones);
+
   otherwise
     corelib.verb(true, 'RatCatcher::gather', 'I don''t know which protocol you mean.')
   end
