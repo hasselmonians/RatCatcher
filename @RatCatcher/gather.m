@@ -121,7 +121,7 @@ function dataTable = gather(self, filekey, dataTable0)
   outfiles  = {files.name};
   % sort the outfiles in a sensible manner
   outfiles  = self.natsortfiles(outfiles);
-  % get the dimensions of the data
+  % how many output files to read from?
   dim1      = length(outfiles);
   % read through the files and write the data to a matrix
   data      = NaN([dim1 size(readmatrix(outfiles{1}))]);
