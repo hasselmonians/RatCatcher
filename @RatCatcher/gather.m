@@ -224,8 +224,8 @@ function dataTable = gather(self, filekey, dataTable0)
   case 'Test'
     corelib.verb(self.verbose, 'RatCatcher::gather', ['protocol ' protocol ' identified'])
     % gather the data from the output files
-    some_zeros  = data(:, 1);
-    some_ones   = data(:, 2);
+    some_zeros  = data(1, :)';
+    some_ones   = data(2, :)';
     % put the data in a MATLAB table
     dataTable = table(some_zeros, some_ones);
 
