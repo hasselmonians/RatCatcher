@@ -9,7 +9,13 @@ function [varargin] = extract(data_table, varargin)
   %     if not, the Index argument indexes for you
   %   varargin
   %     either a struct of options
-  %     or name-value argument pairs
+  %     or name-value argument pairs:
+  %
+  %       Index         = 1; % logical scalar, linear index into data table
+  %       Protocol      = []; % character vector, the RatCatcher protocol
+  %       PreprocessFcn = []; % function handle, how to parse raw data filenames before loading
+  %       Verbosity     = false; % logical scalar, how much info text to print
+  %
   %   protocol: a character vector that describes which protocol object to build
   %   preprocess_fcn: a function handle that operates on data_table.filenames(index) before loading the data
   %     example: preprocess_fcn = @(x) strrep(x, 'projectnb', 'mnt')
