@@ -50,6 +50,8 @@ function [protocolObject, dataObject] = extract(dataTable, index, protocol, prep
   switch protocol
   case 'BandwidthEstimator'
     protocolObject = BandwidthEstimator(dataObject);
+  case 'NeuralDecoder'
+    protocolObject = NeuralDecoder(dataObject);
   otherwise
     disp('[ERROR] I don''t know which protocol method you mean')
   end % switch
