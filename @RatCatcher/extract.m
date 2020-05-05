@@ -1,57 +1,98 @@
-function [protocolObject, dataObject] = extract(dataTable, index, protocol, preprocess_fcn, verbose)
-  % extracts the raw data and builds an protocol object
-  % Arguments:
-    % dataTable: the table built by RatCatcher.gather where the data information are stored
-      % should be indexed already (e.g. be a 1 x n table)
-      % if not, the index argument indexes for you
-    % protocol: a character vector that describes which protocol object to build
-    % index: a scalar index that tells you how to index the datafile
-    % preprocess_fcn: a function handle that operates on dataTable.filenames(index) before loading the data
-    %   example: preprocess_fcn = @(x) strrep(x, 'projectnb', 'mnt')
-    % verbose: a boolean flag for how much info text to print
-  % Outputs:
+function [varargin] = extract(data_table, varargin)
+
+  %% Description
+  %   extracts the raw data and builds a protocol object
+  %
+  %% Arguments:
+  %   data_table: 1 x n or m x n table, the table built by RatCatcher.gather where the data information are stored
+  %     should be indexed already (e.g. be a 1 x n table)
+  %     if not, the Index argument indexes for you
+  %   varargin
+  %     either a struct of options
+  %     or name-value argument pairs:
+  %
+  %       Index         = 1; % logical scalar, linear index into data table
+  %       Protocol      = []; % character vector, the RatCatcher protocol
+  %       PreProcessFcn = []; % function handle, how to parse raw data filenames before loading
+  %       Verbosity     = false; % logical scalar, how much info text to print
+  %
+  %% Outputs:
     % protocolObject: the struct produced by the protocol method
-    % dataObject: the root (Session) object specified by the dataTable and index
+    % dataObject: the root (Session) object specified by the data_table and index
+    %
+  %% Examples:
+  %   options = RatCatcher.extract()
+  %
+  %   [protocolObject, dataObject] = RatCatcher.extract(data_table, 'Protocol', 'BandwidthEstimator')
+  %
+  %   [protocolObject, dataObject] = RatCatcher.extract(data_table, ...
+  %     'Protocol', 'BandwidthEstimator', ...
+  %     'Index', 1, ...
+  %     'PreProcessFcn', @(x) strrep(x, 'projectnb', 'mnt'), ...
+  %     'Verbosity', true)
+  %
+  %% See Also: RatCatcher/index, RatCatcher/gather, RatCatcher/stitch
 
-  if size(dataTable, 1) == 1
-    % if dataTable is 1 x n
-    index = 1;
+  %% Preamble
+
+  options = struct;
+  options.Index         = 1; % logical scalar, linear index into data table
+  options.Protocol      = []; % character vector, the RatCatcher protocol
+  options.PreProcessFcn = []; % function handle, how to parse raw data filenames before loading
+  options.Verbosity     = false; % logical scalar, how much info text to print
+
+  options = orderfields(options);
+
+  if ~nargin & nargout
+    varargout{1} = options;
+    return
+  end
+
+  options = corelib.parseNameValueArguments(options, varargin{:});
+
+  % parse Index
+  if size(data_table, 1) == 1
+    % then data_table is size 1 x n
+    options.Index = 1;
   else
-    % if dataTable is m x n
-    assert(exist('index', 'var') && isscalar(index), 'If dataTable is an m x n table, then index should be a positive integer.')
+    % then data_table is size m x n
+    assert(isscalar(options.Index), 'Index must be a positive integer')
+    assert(options.Index > 0, 'Index must be a positive integer')
   end
 
-  if ~exist('protocol', 'var') || isempty(protocol)
-      protocol = 'BandwidthEstimator';
-  end
+  %% Load the data
 
-  if ~exist('verbose', 'var') || isempty(verbose)
-      verbose = false;
-  end
-
-  % load the data file
   corelib.verb(verbose, 'RatCatcher::extract', 'loading the data file')
 
-  if ~exist('preprocess_fcn') || isempty(preprocess_fcn)
-      load(dataTable.filenames{index});
+  if isempty(options.PreProcessFcn)
+    load(data_table.filenames{options.Index});
   else
-      load(preprocess_fcn(dataTable.filenames{index}));
+    load(options.PreProcessFcn(data_table.filenames{options.Index}));
   end
 
+  % post-process the loaded CMBHOME object
   root            = root.AppendKalmanVel;
   root            = root.FixTime;
   dataObject      = root;
+
   % process the data file
-  dataObject.cel  = dataTable.filecodes(index, :);
+  dataObject.cel  = data_table.filecodes(options.Index, :);
 
   % determine next step based on protocol method
-  corelib.verb(verbose, 'RatCatcher::extract', 'setting up protocol object')
+  corelib.verb(options.Verbosity, 'RatCatcher::extract', 'setting up protocol object')
 
-  switch protocol
+  switch options.Protocol
   case 'BandwidthEstimator'
     protocolObject = BandwidthEstimator(dataObject);
+  case 'NeuralDecoder'
+    protocolObject = NeuralDecoder(dataObject);
   otherwise
     disp('[ERROR] I don''t know which protocol method you mean')
   end % switch
+
+  %% Outputs
+
+  varargin{1} = protocolObject;
+  varargin{2} = dataObject;
 
 end % function
