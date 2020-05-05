@@ -4,17 +4,17 @@ function [varargin] = extract(data_table, varargin)
   %   extracts the raw data and builds a protocol object
   %
   %% Arguments:
-    % data_table: 1 x n or m x n table, the table built by RatCatcher.gather where the data information are stored
-      % should be indexed already (e.g. be a 1 x n table)
-      % if not, the Index argument indexes for you
-    % varargin
-    %   either a struct of options
-    %   or name-value argument pairs
-    % protocol: a character vector that describes which protocol object to build
-    % preprocess_fcn: a function handle that operates on data_table.filenames(index) before loading the data
-    %   example: preprocess_fcn = @(x) strrep(x, 'projectnb', 'mnt')
-    % verbose: a boolean flag for how much info text to print
-    %
+  %   data_table: 1 x n or m x n table, the table built by RatCatcher.gather where the data information are stored
+  %     should be indexed already (e.g. be a 1 x n table)
+  %     if not, the Index argument indexes for you
+  %   varargin
+  %     either a struct of options
+  %     or name-value argument pairs
+  %   protocol: a character vector that describes which protocol object to build
+  %   preprocess_fcn: a function handle that operates on data_table.filenames(index) before loading the data
+  %     example: preprocess_fcn = @(x) strrep(x, 'projectnb', 'mnt')
+  %   verbose: a boolean flag for how much info text to print
+  %
   %% Outputs:
     % protocolObject: the struct produced by the protocol method
     % dataObject: the root (Session) object specified by the data_table and index
@@ -23,7 +23,7 @@ function [varargin] = extract(data_table, varargin)
   %   options = RatCatcher.extract()
   %
   %   [protocolObject, dataObject] = RatCatcher.extract(data_table, 'Protocol', 'BandwidthEstimator')
-  % 
+  %
   %   [protocolObject, dataObject] = RatCatcher.extract(data_table, ...
   %     'Protocol', 'BandwidthEstimator', ...
   %     'Index', 1, ...
