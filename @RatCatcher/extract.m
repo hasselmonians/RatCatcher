@@ -13,7 +13,7 @@ function [varargin] = extract(data_table, varargin)
   %
   %       Index         = 1; % logical scalar, linear index into data table
   %       Protocol      = []; % character vector, the RatCatcher protocol
-  %       PreprocessFcn = []; % function handle, how to parse raw data filenames before loading
+  %       PreProcessFcn = []; % function handle, how to parse raw data filenames before loading
   %       Verbosity     = false; % logical scalar, how much info text to print
   %
   %   protocol: a character vector that describes which protocol object to build
@@ -43,7 +43,7 @@ function [varargin] = extract(data_table, varargin)
   options = struct;
   options.Index         = 1; % logical scalar, linear index into data table
   options.Protocol      = []; % character vector, the RatCatcher protocol
-  options.PreprocessFcn = []; % function handle, how to parse raw data filenames before loading
+  options.PreProcessFcn = []; % function handle, how to parse raw data filenames before loading
   options.Verbosity     = false; % logical scalar, how much info text to print
 
   options = orderfields(options);
