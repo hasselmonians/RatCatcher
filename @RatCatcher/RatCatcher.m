@@ -144,7 +144,7 @@ methods (Static)
   % for example, 'output-11' comes before 'output-21' when naturally sorted
   [X,ndx,dbg] = natsort(X,xpr,varargin)
   [X,ndx,dbg] = natsortfiles(X,varargin)
-  [protocolObject, dataObject] = extract(dataTable, index, protocol, preprocess_fcn, verbose)
+  [varargout] = extract(dataTable, varargin)
   [p] = pref()
   [filename, cellnum] = read(location, batchname, index)
   [filenames] = getFileNames(identifiers, filesig, masterpath)

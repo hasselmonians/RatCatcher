@@ -1,4 +1,4 @@
-function [varargin] = extract(data_table, varargin)
+function [varargout] = extract(data_table, varargin)
 
   %% Description
   %   extracts the raw data and builds a protocol object
