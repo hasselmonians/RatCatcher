@@ -92,7 +92,7 @@ function [varargout] = extract(data_table, varargin)
 
   %% Outputs
 
-  varargin{1} = protocolObject;
-  varargin{2} = dataObject;
+  varargout{1} = protocolObject;
+  varargout{2} = dataObject;
 
 end % function
