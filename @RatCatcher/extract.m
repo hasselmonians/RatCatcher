@@ -62,7 +62,7 @@ function [varargin] = extract(data_table, varargin)
 
   %% Load the data
 
-  corelib.verb(verbose, 'RatCatcher::extract', 'loading the data file')
+  corelib.verb(options.Verbosity, 'RatCatcher::extract', 'loading the data file')
 
   if isempty(options.PreProcessFcn)
     load(data_table.filenames{options.Index});
