@@ -17,9 +17,9 @@ function [varargout] = extract(data_table, varargin)
   %       Verbosity     = false; % logical scalar, how much info text to print
   %
   %% Outputs:
-    % protocolObject: the struct produced by the protocol method
-    % dataObject: the root (Session) object specified by the data_table and index
-    %
+  %   protocolObject: the struct produced by the protocol method
+  %   dataObject: the root (Session) object specified by the data_table and index
+  %
   %% Examples:
   %   options = RatCatcher.extract()
   %
